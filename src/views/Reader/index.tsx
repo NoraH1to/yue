@@ -8,6 +8,7 @@ import fs from '@/modules/fs';
 import { TFsBook } from '@/modules/fs/Fs';
 import useReaderParams from '@/router/hooks/useReaderParams';
 import { Box, Collapse, Stack, alpha, useColorScheme } from '@mui/material';
+import * as BSL from 'body-scroll-lock-upgrade';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -53,6 +54,20 @@ const Reader = () => {
     document.title = `${book.title} -
     ${currentNav.title}`;
   }, [book, currentNav]);
+
+  // 移动端 safari 添加到主屏幕后会触发过度滚动
+  useEffect(() => {
+    BSL.disableBodyScroll(document.body);
+    return () => {
+      BSL.enableBodyScroll(document.body);
+    };
+  }, []);
+  useEffect(() => {
+    openActionLayer && BSL.enableBodyScroll(document.body);
+    return () => {
+      openActionLayer && BSL.disableBodyScroll(document.body);
+    };
+  }, [openActionLayer]);
 
   // 系统配置、主题相关
   const [setting, { setColorMode }] = useSetting();

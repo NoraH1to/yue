@@ -25,6 +25,9 @@ dependencies:
   anysort-typed:
     specifier: ^3.3.1
     version: 3.3.1
+  body-scroll-lock-upgrade:
+    specifier: ^1.0.3
+    version: 1.0.3
   browser-fs-access:
     specifier: ^0.33.1
     version: 0.33.1
@@ -3056,6 +3059,10 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.2
     dev: true
+
+  /body-scroll-lock-upgrade@1.0.3:
+    resolution: {integrity: sha512-Ew+ZLMiGTkT/G+DF7m5XKDXx6d+9eR8i4lt/7ehi4iJhitTWrzndnBZplrQ9lKTsclc1v/RYh6Lzeqb0+wvMXA==}
+    dev: false
 
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}

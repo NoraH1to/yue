@@ -25,6 +25,7 @@
     "@mui/system": "^5.12.3",
     "ahooks": "^3.7.7",
     "anysort-typed": "^3.3.1",
+    "body-scroll-lock-upgrade": "^1.0.3",
     "browser-fs-access": "^0.33.1",
     "dexie": "^3.2.3",
     "dexie-react-hooks": "^1.1.3",

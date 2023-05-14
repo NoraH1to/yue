@@ -3,7 +3,7 @@ import { ROUTE_PATH } from '@/router';
 import { Button, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export type WebDavErrorProps = {
   title: string;
@@ -11,6 +11,7 @@ export type WebDavErrorProps = {
 
 const WebDavError: FC<WebDavErrorProps> = ({ title }) => {
   const { t } = useTranslation();
+  const nav = useNavigate();
   return (
     <StatusWrapper>
       <Typography variant="h5" color="text.secondary">
@@ -19,9 +20,9 @@ const WebDavError: FC<WebDavErrorProps> = ({ title }) => {
       <Typography variant="subtitle1" color="text.secondary">
         {title}
       </Typography>
-      <Link to={`/${ROUTE_PATH.SETTING}`}>
-        <Button variant="outlined">{t('goto setting')}</Button>
-      </Link>
+      <Button variant="outlined" onClick={() => nav(`/${ROUTE_PATH.SETTING}`)}>
+        {t('goto setting')}
+      </Button>
     </StatusWrapper>
   );
 };

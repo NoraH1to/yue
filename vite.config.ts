@@ -32,7 +32,7 @@ export default defineConfig({
   resolve: {
     alias: [{ find: '@', replacement: path.resolve(__dirname, './src') }],
   },
-  base: './',
+  base: '/',
   server: {
     port: process.env.pwa ? 5112 : 5111,
     host: '0.0.0.0',

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="/normalize.css" />
+    <style>
+      html {
+        @media (prefers-color-scheme: dark) {
+          background-color: black;
+        }
+      }
+      :root,
+      body,
+      #root {
+        height: 100%;
+        overflow: hidden;
+        touch-action: auto;
+      }
+      :root,
+      :root * {
+        box-sizing: border-box;
+        transition: background 0.1s, border-radius 0.1s,
+          padding 0.1s, margin 0.1s;
+      }
+      a {
+        /* 去除移动端点击时的蓝色背景 */
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

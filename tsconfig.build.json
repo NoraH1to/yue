@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "outDir": "dist"
+  },
+  "include": ["vite.config.ts", "rollup.config.mjs", "shim-node.d.ts"]
+}

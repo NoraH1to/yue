@@ -1,0 +1,72 @@
+import DetailToolbar from '@/components/DetailToolbar';
+import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
+import useSetting from '@/hooks/useSetting';
+import useWebDAVClient from '@/hooks/useWebDAVClient';
+import {
+  BrightnessMediumRounded,
+  CheckCircleOutlineRounded,
+  DarkModeRounded,
+  ErrorOutlineRounded,
+  HelpOutlineRounded,
+  LightModeOutlined,
+} from '@mui/icons-material';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  Skeleton,
+  Stack,
+  ToggleButton,
+  ToggleButtonGroup,
+  styled,
+} from '@mui/material';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import WebDAVSetting from './WebDAVSetting';
+
+const StyledListSubheader = styled(ListSubheader)({
+  background: 'transparent',
+  marginLeft: '0.25em',
+});
+
+const Setting = () => {
+  const [setting, { setColorMode }] = useSetting();
+  const { t } = useTranslation();
+  const DarkModeIconSx = { mr: 1 };
+  return (
+    <Stack pt={1} height={1}>
+      <DetailToolbar title={t('setting')} />
+      <List sx={{ px: 2, flexGrow: 1, height: 0, overflow: 'auto' }}>
+        <StyledListSubheader>{t('dark mode')}</StyledListSubheader>
+        <ListItem>
+          <ToggleButtonGroup
+            exclusive
+            color="primary"
+            value={setting.colorMode}
+            onChange={(e, v) => {
+              setColorMode(v);
+            }}
+            sx={{ flexWrap: 'wrap' }}>
+            <ToggleButton value="light">
+              <LightModeOutlined sx={DarkModeIconSx} />
+              {t('darkMode.light')}
+            </ToggleButton>
+            <ToggleButton value="dark">
+              <DarkModeRounded sx={DarkModeIconSx} />
+              {t('darkMode.dark')}
+            </ToggleButton>
+            <ToggleButton value="system">
+              <BrightnessMediumRounded sx={DarkModeIconSx} />
+              {t('darkMode.system')}
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </ListItem>
+        <StyledListSubheader>{t('webDAV')}</StyledListSubheader>
+        <WebDAVSetting />
+      </List>
+    </Stack>
+  );
+};
+
+export default Setting;

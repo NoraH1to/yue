@@ -398,6 +398,16 @@ export const flatArrayWithKey = <T extends Record<string, any>>(
   }, []);
 };
 
+export const cancelAble = <T>(p: Promise<T>) => {
+  const promiser = new Promiser<T | 'cancel'>();
+  const cancel = () => {
+    promiser.resolve('cancel');
+  };
+  p.then(promiser.resolve);
+  p.catch(promiser.reject);
+  return [promiser.promise, cancel] as const;
+};
+
 export type GetPath<
   T extends object,
   K extends keyof T = keyof T,

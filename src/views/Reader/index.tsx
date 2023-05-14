@@ -1,5 +1,5 @@
 import { MemoTocList, TocListProps } from '@/components/BookItem/TocList';
-import { delFalsy } from '@/helper';
+import { cancelAble, delFalsy } from '@/helper';
 import { useBook } from '@/hooks/useBook';
 import useLoading from '@/hooks/useLoading';
 import useSetting from '@/hooks/useSetting';
@@ -176,9 +176,11 @@ const Reader = () => {
       setLoaded(true);
     };
     if (loaded) return;
-    addLoading(load());
+    const [loadPromise, cancelLoad] = cancelAble(load());
+    addLoading(loadPromise);
     return () => {
       cancel = true;
+      cancelLoad();
     };
   }, [book, params, loaded]);
 

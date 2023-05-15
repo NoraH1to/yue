@@ -1,23 +1,27 @@
+import { delFalsy } from '@/helper';
 import { createClient } from '@/modules/fs/webDAV';
-import { useLocalStorageState } from 'ahooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FileStat, ResponseDataDetailed, WebDAVClient } from 'webdav';
 import useMinDelay from './useMinDelay';
+import useSetting from './useSetting';
+
+const DEFAULT_SOURCE_KEY = '_default_';
 
 const useWebDAVClient = () => {
-  const [info, setInfo] = useLocalStorageState<{
-    url: string;
-    username: string;
-    password: string;
-  }>('web-dav-info');
+  const [{ source }, { setSource }] = useSetting();
   const [client, setClient] = useState<WebDAVClient>();
   const [error, setError] = useState<string>();
+  const info = useMemo(() => {
+    return source[DEFAULT_SOURCE_KEY]?.info;
+  }, [source[DEFAULT_SOURCE_KEY]]);
 
   const _setInfo = (i: typeof info) => {
-    setInfo(i);
     if (!i) {
+      setSource(DEFAULT_SOURCE_KEY);
       setClient(undefined);
       setError(undefined);
+    } else {
+      setSource(DEFAULT_SOURCE_KEY, { type: 'webdav', info: i });
     }
   };
 
@@ -26,10 +30,13 @@ const useWebDAVClient = () => {
   useEffect(() => {
     if (!info) return;
     let cancel = false;
-    const _client = createClient(info.url, {
-      username: info.username,
-      password: info.password,
-    });
+    const _client = createClient(
+      info.url,
+      delFalsy({
+        username: info.username || '',
+        password: info.password || '',
+      }),
+    );
     _client
       .getDirectoryContents('/', { deep: false, details: true })
       .then((res) => {

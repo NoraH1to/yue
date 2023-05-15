@@ -1,4 +1,5 @@
-import { TAppSetting } from '@/modules/setting';
+import { emptyFn } from '@/helper';
+import { TAppSetting, TSource } from '@/modules/setting';
 import { useLocalStorageState } from 'ahooks';
 import {
   FC,
@@ -6,9 +7,11 @@ import {
   createContext,
   useCallback,
   useContext,
+  useMemo,
 } from 'react';
 
 const defaultSetting: TAppSetting = {
+  source: {},
   colorMode: 'system',
   readerTheme: {
     dark: {
@@ -23,22 +26,29 @@ const defaultSetting: TAppSetting = {
 
 type SettingContextValue = [
   defaultSetting: TAppSetting,
-  actions: { setColorMode: (colorMode: TAppSetting['colorMode']) => void },
+  actions: {
+    setColorMode: (colorMode: TAppSetting['colorMode']) => void;
+    setSource: (key: string, source?: TSource) => void;
+  },
 ];
 
 const SettingContext = createContext<SettingContextValue>([
   defaultSetting,
   {
-    setColorMode: () => {
-      /* empty */
-    },
+    setColorMode: emptyFn,
+    setSource: emptyFn,
   },
 ]);
 
 export const SettingProvide: FC<PropsWithChildren> = ({ children }) => {
-  const [setting, setSetting] = useLocalStorageState('setting', {
+  const [_setting, setSetting] = useLocalStorageState('setting', {
     defaultValue: defaultSetting,
   });
+  // 兼容旧版数据结构
+  const setting = useMemo(
+    () => ({ ..._setting!, source: _setting?.source || {} }),
+    [_setting],
+  );
 
   const setColorMode = useCallback(
     (colorMode: TAppSetting['colorMode']) => {
@@ -47,8 +57,17 @@ export const SettingProvide: FC<PropsWithChildren> = ({ children }) => {
     [setSetting],
   );
 
+  const setSource = useCallback(
+    (key: string, source?: TSource) => {
+      if (!source) delete setting!.source[key];
+      else setting.source[key] = source;
+      setSetting({ ...setting! });
+    },
+    [setting, setSetting],
+  );
+
   return (
-    <SettingContext.Provider value={[setting!, { setColorMode }]}>
+    <SettingContext.Provider value={[setting, { setColorMode, setSource }]}>
       {children}
     </SettingContext.Provider>
   );

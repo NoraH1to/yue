@@ -408,6 +408,10 @@ export const cancelAble = <T>(p: Promise<T>) => {
   return [promiser.promise, cancel] as const;
 };
 
+export const emptyFn = () => {
+  /* empty */
+};
+
 export type GetPath<
   T extends object,
   K extends keyof T = keyof T,

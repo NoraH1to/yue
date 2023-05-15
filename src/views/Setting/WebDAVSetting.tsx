@@ -27,7 +27,6 @@ const WebDAVSetting = () => {
   const handleClickItem = () => setOpenDialog(true);
   const handleCloseDialog = () => setOpenDialog(false);
   const handleSubmitSetting = (i: typeof info) => {
-    console.log('submit', i);
     setInfo(i);
     setOpenDialog(false);
   };

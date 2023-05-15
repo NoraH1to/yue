@@ -1,14 +1,12 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
 import react from '@vitejs/plugin-react-swc';
-import ssl from '@vitejs/plugin-basic-ssl';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    process.env.https ? ssl() : undefined,
     process.env.pwa
       ? pwa({
           workbox: {

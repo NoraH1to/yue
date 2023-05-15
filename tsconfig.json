@@ -20,6 +20,5 @@
     }
   },
   "include": ["src"],
-  "files": ["electron/elec-env.d.ts"],
   "references": [{ "path": "./tsconfig.build.json" }]
 }

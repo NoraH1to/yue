@@ -96,7 +96,7 @@ export class EpubBook extends ABook<string, string> {
     }
   }
 
-  ReaderComponent: FC<ReaderCompProps> = ({ readerTheme }) => {
+  ReaderComponent: FC<ReaderCompProps> = ({ readerTheme, colorMode }) => {
     useEffect(() => {
       this.render('epub-reader-content');
     }, []);
@@ -116,9 +116,10 @@ export class EpubBook extends ABook<string, string> {
               : undefined,
           },
           '*': {
-            color: readerTheme.color
-              ? `${readerTheme.color} !important`
-              : undefined,
+            color:
+              !readerTheme.color || colorMode === 'light'
+                ? undefined
+                : `${readerTheme.color} !important`,
           },
         });
         this.epub.rendition.display(p?.value);
@@ -215,7 +216,7 @@ export class EpubBook extends ABook<string, string> {
 
   getLoc() {
     const loc = this.epub.rendition?.currentLocation?.();
-    return loc.start ? loc : (this.epub.rendition.location || null);
+    return loc.start ? loc : this.epub.rendition.location || null;
   }
 
   async getCurrentProcess() {

@@ -1,6 +1,7 @@
 import StyledMuiIconButton from '@/components/Styled/MuiIconButton';
 import ToolbarColumn from '@/components/Toolbar/ToolbarColumn';
 import ToolbarRow from '@/components/Toolbar/ToolbarRow';
+import ToolbarRowSpace from '@/components/Toolbar/ToolbarRowSpace';
 import useSetting from '@/hooks/useSetting';
 import { TAppSetting } from '@/modules/setting';
 import {
@@ -10,6 +11,7 @@ import {
   FullscreenRounded,
   LightModeRounded,
   MenuRounded,
+  SettingsRounded,
 } from '@mui/icons-material';
 import { FC, useCallback, useState } from 'react';
 
@@ -17,12 +19,14 @@ export type ToolbarActionProps = {
   onOpenNav: () => void;
   onToggleColorMode: (mode: TAppSetting['colorMode']) => void;
   onToggleFullscreen: (fullscreen: boolean) => void;
+  onOpenSetting: () => void;
 };
 
 const ToolbarAction: FC<ToolbarActionProps> = ({
   onOpenNav,
   onToggleColorMode,
   onToggleFullscreen,
+  onOpenSetting,
 }) => {
   const [setting] = useSetting();
   const ColorIcon =
@@ -60,6 +64,10 @@ const ToolbarAction: FC<ToolbarActionProps> = ({
         </StyledMuiIconButton>
         <StyledMuiIconButton onClick={handleFullscreenClick}>
           <FullscreenIcon />
+        </StyledMuiIconButton>
+        <ToolbarRowSpace />
+        <StyledMuiIconButton onClick={onOpenSetting}>
+          <SettingsRounded />
         </StyledMuiIconButton>
       </ToolbarRow>
     </ToolbarColumn>

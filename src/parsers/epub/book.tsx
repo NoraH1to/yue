@@ -5,7 +5,7 @@ import {
   TBookConstructorInfo,
 } from '@/modules/book/Book';
 import { IToc } from '@/modules/book/Toc';
-import { Book as EpubInstance, Spine as __Spine } from 'epubjs';
+import { Contents, Book as EpubInstance, Spine as __Spine } from 'epubjs';
 import { RenditionOptions } from 'epubjs/types/rendition';
 import _Spine from 'epubjs/types/spine';
 import { FC, useEffect } from 'react';
@@ -57,6 +57,7 @@ export class EpubBook extends ABook<string, string> {
         manager: 'continuous',
         snap: false,
         minSpreadWidth: 9999, // make sure in single page
+        allowScriptedContent: true,
       };
       let re;
       // 这里 if else 是为了 ts 的报错，非常逆天
@@ -96,7 +97,11 @@ export class EpubBook extends ABook<string, string> {
     }
   }
 
-  ReaderComponent: FC<ReaderCompProps> = ({ readerTheme, colorMode }) => {
+  ReaderComponent: FC<ReaderCompProps> = ({
+    readerTheme,
+    readerSetting,
+    colorMode,
+  }) => {
     useEffect(() => {
       this.render('epub-reader-content');
     }, []);
@@ -104,27 +109,47 @@ export class EpubBook extends ABook<string, string> {
       (async () => {
         await this.ready;
         try {
-          this.epub.rendition.clear();
+          // this.epub.rendition.clear();
         } catch {
           /* empty */
         }
-        const p = await this.getCurrentProcess();
+        /**
+         * epubjs 没有处理旧主题，样式无法完全覆盖上次的
+         * 每次应用主题前先清理旧主题，方法较为 hack
+         * 参考 https://github.com/futurepress/epub.js/blob/0963efe979e34d53507fee1dc10827ecb07fdc75/src/contents.js#L728
+         */
+        const contents = this.epub.rendition.getContents();
+        for (const content of contents as unknown as Contents[]) {
+          // @ts-ignore
+          const sheetDom = content?._getStylesheetNode(
+            'default',
+          ) as HTMLStyleElement;
+          if (!sheetDom) break;
+          sheetDom.remove();
+        }
+        // 应用主题
         this.epub.rendition.themes.default({
           body: {
             background: readerTheme.backgroundColor
               ? `${readerTheme.backgroundColor} !important`
               : undefined,
+            'font-size': `${readerSetting.fontSize}px !important`,
           },
           '*': {
             color:
               !readerTheme.color || colorMode === 'light'
                 ? undefined
-                : `${readerTheme.color} !important`,
+                : `${readerTheme.color}`,
+          },
+          p: {
+            'letter-spacing': `${readerSetting.letterGap}em !important`,
+            'line-height': `${readerSetting.lineHeight} !important`,
+            'margin-top': `${readerSetting.paragraphGap}px !important`,
+            'margin-bottom': `${readerSetting.paragraphGap}px !important`,
           },
         });
-        this.epub.rendition.display(p?.value);
       })();
-    }, [readerTheme]);
+    }, [readerTheme, readerSetting, colorMode]);
     return (
       <div id="epub-reader-content" style={{ height: '100%', width: '100%' }} />
     );

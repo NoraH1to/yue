@@ -20,6 +20,8 @@ import GestureLayer from './components/GestureLayer';
 import InfoBarBottom from './components/InfoBarBottom';
 import InfoBarTop from './components/InfoBarTop';
 import LoadingLayer from './components/LoadingLayer';
+import { MemoReaderSettingNumberItem } from './components/ReaderSetting/ReaderSettingNumberItem';
+import ReaderSetting from './components/ReaderSetting';
 
 // TODO: 拆分代码
 // TODO: 键盘快捷键、鼠标滚轮
@@ -46,7 +48,9 @@ const Reader = () => {
     [book],
   );
   const [openActionLayer, setOpenActionLayer] = useState(false);
-  const [showToc, setShowToc] = useState(false);
+  const [showWhichExtendedLayer, setShowWhichExtendedLayer] = useState<
+    'toc' | 'readerSetting' | undefined | false
+  >();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -83,6 +87,7 @@ const Reader = () => {
     () => setting.readerTheme[realMode],
     [setting, realMode],
   );
+  const readerSetting = useMemo(() => setting.readerSetting, [setting]);
   const infoColor = useMemo(
     () => readerTheme.color && alpha(readerTheme.color, 0.8),
     [readerTheme],
@@ -202,8 +207,8 @@ const Reader = () => {
   // 操作层
   const handleCloseActionLayer = useCallback(() => {
     setOpenActionLayer(false);
-    setShowToc(false);
-  }, [setOpenActionLayer, setShowToc]);
+    setShowWhichExtendedLayer(false);
+  }, [setOpenActionLayer, setShowWhichExtendedLayer]);
   const handleOpenActionLayer = useCallback(async () => {
     if (!book) return;
     // 打开的时候更新进度条
@@ -237,8 +242,18 @@ const Reader = () => {
   );
   // 操作
   const handleShowToc = useCallback(
-    () => setShowToc((showToc) => !showToc),
-    [setShowToc],
+    () =>
+      setShowWhichExtendedLayer((showWhichExtendedLayer) =>
+        showWhichExtendedLayer === 'toc' ? false : 'toc',
+      ),
+    [setShowWhichExtendedLayer],
+  );
+  const handleShowReaderSetting = useCallback(
+    () =>
+      setShowWhichExtendedLayer((showWhichExtendedLayer) =>
+        showWhichExtendedLayer === 'readerSetting' ? false : 'readerSetting',
+      ),
+    [setShowWhichExtendedLayer],
   );
   const ToolbarAct = useMemo(
     () =>
@@ -247,6 +262,7 @@ const Reader = () => {
           onToggleColorMode={setColorMode}
           onOpenNav={handleShowToc}
           onToggleFullscreen={handleFullscreen}
+          onOpenSetting={handleShowReaderSetting}
         />
       ),
     [book, setColorMode, handleShowToc],
@@ -261,7 +277,9 @@ const Reader = () => {
   const ToolbarTocList = useMemo(
     () =>
       book && (
-        <Collapse in={showToc} sx={{ maxHeight: '50vh', overflow: 'auto' }}>
+        <Collapse
+          in={showWhichExtendedLayer === 'toc'}
+          sx={{ maxHeight: '50vh', overflow: 'auto' }}>
           <Box>
             <MemoTocList
               tocList={book.toc}
@@ -272,7 +290,17 @@ const Reader = () => {
           </Box>
         </Collapse>
       ),
-    [book, showToc, currentNav, handleClickToc, t],
+    [book, showWhichExtendedLayer, currentNav, handleClickToc, t],
+  );
+  // 阅读器字体设置等
+  const ToolbarReaderSetting = useMemo(
+    () =>
+      book && (
+        <Collapse in={showWhichExtendedLayer === 'readerSetting'}>
+          <ReaderSetting />
+        </Collapse>
+      ),
+    [book, showWhichExtendedLayer],
   );
 
   return (
@@ -299,9 +327,13 @@ const Reader = () => {
           {useMemo(
             () =>
               BookComponent && (
-                <BookComponent colorMode={realMode} readerTheme={readerTheme} />
+                <BookComponent
+                  colorMode={realMode}
+                  readerTheme={readerTheme}
+                  readerSetting={readerSetting}
+                />
               ),
-            [BookComponent, realMode, readerTheme],
+            [BookComponent, realMode, readerTheme, readerSetting],
           )}
         </Box>
       </GestureLayer>
@@ -313,8 +345,9 @@ const Reader = () => {
       {book && (
         <ActionLayer open={openActionLayer} onClose={handleCloseActionLayer}>
           {ToolbarNav}
-          {ToolbarAct}
           {ToolbarTocList}
+          {ToolbarReaderSetting}
+          {ToolbarAct}
         </ActionLayer>
       )}
       <LoadingLayer open={loading} />

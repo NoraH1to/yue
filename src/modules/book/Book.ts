@@ -1,5 +1,5 @@
 import { FC, PropsWithRef } from 'react';
-import { TAppSetting, TReaderTheme } from '../setting';
+import { TAppSetting, TReaderSetting, TReaderTheme } from '../setting';
 import { IController } from './Controller';
 import { IToc } from './Toc';
 
@@ -29,6 +29,7 @@ export interface IBookInfo<P = unknown> {
 export type ReaderCompProps = PropsWithRef<{
   colorMode: keyof TAppSetting['readerTheme'];
   readerTheme: TReaderTheme;
+  readerSetting: TReaderSetting;
 }>;
 
 export abstract class ABook<P = unknown, CP = unknown>

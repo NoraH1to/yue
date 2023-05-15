@@ -1,7 +1,7 @@
 import { UniformType } from '@/helper';
 import { ITag } from '@/modules/book/Tag';
 import { ISorter, TFsBook, TFsItemDir, TFsItemFile } from '@/modules/fs/Fs';
-import { TAppSetting } from '@/modules/setting';
+import { TAppSetting, TReaderSetting } from '@/modules/setting';
 
 const sorter: Record<ISorter<object>['sort'], string> = {
   asc: '升序',
@@ -31,6 +31,13 @@ const darkMode: Record<TAppSetting['colorMode'], string> = {
   dark: '暗黑',
   light: '明亮',
   system: '系统',
+};
+
+const readerSetting: UniformType<TReaderSetting> = {
+  fontSize: '字大小',
+  letterGap: '字间距',
+  lineHeight: '行高',
+  paragraphGap: '段落间距',
 };
 
 export default {
@@ -70,6 +77,7 @@ export default {
   },
   'dark mode': '深色模式',
   darkMode,
+  readerSetting,
   sorter,
   bookInfo,
   tagInfo,

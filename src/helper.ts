@@ -408,6 +408,37 @@ export const cancelAble = <T>(p: Promise<T>) => {
   return [promiser.promise, cancel] as const;
 };
 
+function getPrecision(number: number) {
+  const numString = String(number);
+  const decimalIndex = numString.indexOf('.');
+
+  // 如果没有小数点，则返回 0
+  if (decimalIndex === -1) {
+    return 0;
+  }
+
+  // 计算小数位数精度
+  return numString.length - decimalIndex - 1;
+}
+
+export const multiply = (a: number, b: number) => {
+  const precision = getPrecision(a) + getPrecision(b);
+  const factor = Math.pow(10, precision);
+  return (a * factor * (b * factor)) / (factor * factor);
+};
+
+export const add = (a: number, b: number) => {
+  const precision = Math.max(getPrecision(a), getPrecision(b));
+  const factor = Math.pow(10, precision);
+  return (multiply(a, factor) + multiply(b, factor)) / factor;
+};
+
+export const subtract = (a: number, b: number) => {
+  const precision = Math.max(getPrecision(a), getPrecision(b));
+  const factor = Math.pow(10, precision);
+  return (multiply(a, factor) - multiply(b, factor)) / factor;
+};
+
 export const emptyFn = () => {
   /* empty */
 };

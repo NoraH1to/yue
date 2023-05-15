@@ -22,6 +22,14 @@ const defaultSetting: TAppSetting = {
       color: '#000000',
     },
   },
+  readerSetting: {
+    fontSize: 16,
+    lineHeight: 1.4,
+    letterGap: 0,
+    paragraphGap: 12,
+    verticalMargin: 20,
+    horizontalMargin: 30,
+  },
 };
 
 type SettingContextValue = [
@@ -29,6 +37,7 @@ type SettingContextValue = [
   actions: {
     setColorMode: (colorMode: TAppSetting['colorMode']) => void;
     setSource: (key: string, source?: TSource) => void;
+    setReaderSetting: (readerSetting: TAppSetting['readerSetting']) => void;
   },
 ];
 
@@ -37,6 +46,7 @@ const SettingContext = createContext<SettingContextValue>([
   {
     setColorMode: emptyFn,
     setSource: emptyFn,
+    setReaderSetting: emptyFn,
   },
 ]);
 
@@ -46,19 +56,23 @@ export const SettingProvide: FC<PropsWithChildren> = ({ children }) => {
   });
   // 兼容旧版数据结构
   const setting = useMemo(
-    () => ({ ..._setting!, source: _setting?.source || {} }),
+    () => ({
+      ..._setting!,
+      source: _setting?.source || defaultSetting.source,
+      readerSetting: _setting?.readerSetting || defaultSetting.readerSetting,
+    }),
     [_setting],
   );
 
-  const setColorMode = useCallback(
-    (colorMode: TAppSetting['colorMode']) => {
+  const setColorMode = useCallback<SettingContextValue['1']['setColorMode']>(
+    (colorMode) => {
       setSetting((setting) => ({ ...setting!, colorMode: colorMode }));
     },
     [setSetting],
   );
 
-  const setSource = useCallback(
-    (key: string, source?: TSource) => {
+  const setSource = useCallback<SettingContextValue['1']['setSource']>(
+    (key, source) => {
       if (!source) delete setting!.source[key];
       else setting.source[key] = source;
       setSetting({ ...setting! });
@@ -66,8 +80,18 @@ export const SettingProvide: FC<PropsWithChildren> = ({ children }) => {
     [setting, setSetting],
   );
 
+  const setReaderSetting = useCallback<
+    SettingContextValue['1']['setReaderSetting']
+  >(
+    (readerSetting) => {
+      setSetting((setting) => ({ ...setting!, readerSetting }));
+    },
+    [setSetting],
+  );
+
   return (
-    <SettingContext.Provider value={[setting, { setColorMode, setSource }]}>
+    <SettingContext.Provider
+      value={[setting, { setColorMode, setSource, setReaderSetting }]}>
       {children}
     </SettingContext.Provider>
   );

@@ -1,27 +1,19 @@
 import DetailToolbar from '@/components/DetailToolbar';
-import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import useSetting from '@/hooks/useSetting';
-import useWebDAVClient from '@/hooks/useWebDAVClient';
 import {
   BrightnessMediumRounded,
-  CheckCircleOutlineRounded,
   DarkModeRounded,
-  ErrorOutlineRounded,
-  HelpOutlineRounded,
   LightModeOutlined,
 } from '@mui/icons-material';
 import {
   List,
   ListItem,
-  ListItemText,
   ListSubheader,
-  Skeleton,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
   styled,
 } from '@mui/material';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import WebDAVSetting from './WebDAVSetting';
 

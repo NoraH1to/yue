@@ -392,7 +392,7 @@ export const flatArrayWithKey = <T extends Record<string, any>>(
 ): T[] => {
   return array.reduce<T[]>((result, item) => {
     if (Array.isArray(item[key]) && item[key].length) {
-      return result.concat(flatArrayWithKey(item[key], key));
+      return result.concat(item).concat(flatArrayWithKey(item[key], key));
     }
     return result.concat(item);
   }, []);

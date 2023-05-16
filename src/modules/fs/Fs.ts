@@ -73,6 +73,11 @@ export interface IFs {
    */
   getBooks(): Promise<TFsBookWithTags[]>;
   /**
+   * 获得最近阅读的图书
+   * @param limit 最大数量
+   */
+  getRecentReadsBooks(limit: number): Promise<TFsBookWithTags[]>;
+  /**
    * 根据哈希值获得一本图书信息
    * @param hash 图书哈希值
    */

@@ -94,6 +94,16 @@ const fs: IFs = {
     });
   },
 
+  async getRecentReadsBooks(limit) {
+    return db.transaction('r', db.books, db.bookAndTag, async () => {
+      const books = (await db.books.toCollection().sortBy('lastProcess.ts'))
+        .reverse()
+        .slice(0, limit)
+        .filter((book) => !!book.lastProcess.ts);
+      return Promise.all(books.map(dbBook2fsBookWithTag));
+    });
+  },
+
   async getBookByHash(hash) {
     return db.transaction('r?', db.books, db.bookAndTag, async () => {
       const book = await db.books.get(hash);

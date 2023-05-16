@@ -1,6 +1,8 @@
+import { BookDetailTitleSkeleton } from '@/components/BookDetail/Title';
 import { BookItemBaseCardCoverSkeleton } from '@/components/BookItem/BaseCard';
 import BookItemCover from '@/components/BookItem/Cover';
 import TocList, { TocListProps } from '@/components/BookItem/TocList';
+import DetailToolbar from '@/components/DetailToolbar';
 import FixedRatioBookCover from '@/components/FixedRatioWrapper/FixedRatioBookCover';
 import { delFalsy } from '@/helper';
 import useMinDelay from '@/hooks/useMinDelay';
@@ -12,9 +14,6 @@ import { Box, Card, Fade, Stack, Zoom } from '@mui/material';
 import { FC, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import DetailToolbar, {
-  DetailToolbarTitleSkeleton,
-} from '../../../components/DetailToolbar';
 import DetailFabRead from './FabRead';
 import DetailInfo, { DetailInfoProps, DetailInfoSkeleton } from './Info';
 
@@ -83,7 +82,7 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
   return (
     <Stack height={1} gap={{ xs: 1, md: 2 }} pt={1}>
       <DetailToolbar
-        title={loading ? <DetailToolbarTitleSkeleton /> : book.title}
+        title={loading ? <BookDetailTitleSkeleton /> : book.title}
         onBack={handleBack}
       />
       <Stack

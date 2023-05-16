@@ -1,17 +1,13 @@
 import { useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-export type TRouteReaderParams = [
-  params: {
-    hash: string;
-    value?: string;
-    href?: string | null;
-  },
-  searchParams: URLSearchParams,
-  setSearchParams: ReturnType<typeof useSearchParams>[1],
-];
+export type TRouteReaderParams = {
+  hash: string;
+  value?: string;
+  href?: string | null;
+};
 
-const useReaderParams = (): TRouteReaderParams => {
+const useReaderParams = () => {
   const { hash } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   if (!hash) throw new Error('need book hash');

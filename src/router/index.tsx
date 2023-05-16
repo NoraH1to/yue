@@ -3,6 +3,7 @@ import About from '@/views/About';
 import BookMgmt from '@/views/BookMgmt';
 import BookDetail from '@/views/BookMgmt/BookDetail';
 import BookListAll from '@/views/BookMgmt/BookListAll';
+import BookListRecentReads from '@/views/BookMgmt/BookListRecentReads';
 import BookListTag from '@/views/BookMgmt/BookListTag';
 import Dir from '@/views/BookMgmt/Dir';
 import Reader from '@/views/Reader';
@@ -14,6 +15,7 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 export enum ROUTE_PATH {
   ROOT = '/',
   TAG = 'tag',
+  RECENT = 'recent',
   DETAIL = 'detail',
   DIR = 'dir',
   READER = 'reader',
@@ -30,6 +32,7 @@ const router = createBrowserRouter([
         element: <BookMgmt />,
         children: [
           { index: true, element: <BookListAll /> },
+          { path: `${ROUTE_PATH.RECENT}`, element: <BookListRecentReads /> },
           {
             path: `${ROUTE_PATH.TAG}`,
             element: <Navigate to={ROUTE_PATH.ROOT} replace />,

@@ -1,9 +1,9 @@
-import StyledMuiAutoTooltipTypography from '@/components/Styled/MuiAutoTooltipTypography';
 import Toolbar from '@/components/Toolbar';
 import { ArrowBackRounded } from '@mui/icons-material';
 import { Box, Fade, IconButton, Skeleton } from '@mui/material';
 import { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BookDetailTitle from './BookDetail/Title';
 
 export const DetailToolbarTitleSkeleton = () => (
   <Skeleton animation="wave" height="32px" width="200px" variant="rounded" />
@@ -27,13 +27,7 @@ const DetailToolbar: FC<DetailToolbarProps> = ({ title, onBack }) => {
       </IconButton>
       <Box px={2}>
         <Fade in>
-          <StyledMuiAutoTooltipTypography
-            variant="h5"
-            fontWeight={100}
-            sx={(theme) => ({ color: theme.palette.text.primary })}
-            lineClampCount={1}>
-            {title}
-          </StyledMuiAutoTooltipTypography>
+          <BookDetailTitle title={title} />
         </Fade>
       </Box>
     </Toolbar>

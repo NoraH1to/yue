@@ -64,6 +64,7 @@ export default {
   'webDAV error msg': 'webDAV 错误，请确保你的网络环境和服务状态',
   'nothing here': '空空如也',
   'no tag': '无标签',
+  'recent reads': '最近阅读',
   diffDate: {
     'any days ago': '{{days}} 天前',
     'any hours ago': '{{hours}} 小时前',

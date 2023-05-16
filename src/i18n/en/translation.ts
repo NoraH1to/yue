@@ -64,6 +64,7 @@ export default {
     'webDAV error, please ensure your network environment and service status',
   'nothing here': 'nothing here',
   'no tag': 'no tag',
+  'recent reads': 'recent reads',
   diffDate: {
     'any days ago': '{{days}} days ago',
     'any hours ago': '{{hours}} hours ago',

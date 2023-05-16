@@ -1,8 +1,13 @@
+import StyledMuiAutoTooltipTypography from '@/components/Styled/MuiAutoTooltipTypography';
 import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import StyledMuiSwipeableDrawer from '@/components/Styled/MuiSwipeableDrawer';
 import useImportBook from '@/hooks/useImportBook';
 import { ROUTE_PATH } from '@/router';
-import { FolderOpenRounded, MenuBookRounded } from '@mui/icons-material';
+import {
+  FolderOpenRounded,
+  HistoryRounded,
+  MenuBookRounded,
+} from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -77,7 +82,13 @@ const SideBar: FC<{
       {({ isActive }) => (
         <StyledMuiListItemButton selected={isActive}>
           <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText primary={title} />
+          <ListItemText
+            primary={
+              <StyledMuiAutoTooltipTypography lineClampCount={1}>
+                {title}
+              </StyledMuiAutoTooltipTypography>
+            }
+          />
         </StyledMuiListItemButton>
       )}
     </RouterLink>
@@ -118,6 +129,11 @@ const SideBar: FC<{
       {/* 全部图书 */}
       <Grow {...animaProps}>
         {CommonLink(ROUTE_PATH.ROOT, t('all'), <MenuBookRounded />)}
+      </Grow>
+
+      {/* 最近阅读 */}
+      <Grow {...animaProps}>
+        {CommonLink(ROUTE_PATH.RECENT, t('recent reads'), <HistoryRounded />)}
       </Grow>
 
       {/* 文件夹 */}

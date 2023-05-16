@@ -19,14 +19,20 @@ import { gotoReader } from '@/router/routerHelper';
 import { Box, Card, Stack } from '@mui/material';
 import { StackProps } from '@mui/system';
 import { FC, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import StatusEmpty from '../components/StatusEmpty';
-import { useTranslation } from 'react-i18next';
 
 const coverSizeSx = { width: '33%', maxWidth: '180px' };
 
 const ItemContainer: FC<StackProps> = (props) => (
-  <Stack p={1.5} width={1} gap={1} direction="row" {...props}>
+  <Stack
+    p={1.5}
+    width={1}
+    gap={1}
+    direction="row"
+    alignItems="flex-start"
+    {...props}>
     {props.children}
   </Stack>
 );
@@ -81,7 +87,7 @@ const BookListRecentReads = () => {
         books.map((book) => (
           <StyledMuiListItemButton
             key={book.hash}
-            sx={{ p: 0 }}
+            sx={{ p: 0, flexGrow: 0 }}
             onClick={() => handleItemClick(book)}>
             <ItemContainer>
               <Card
@@ -93,6 +99,8 @@ const BookListRecentReads = () => {
                 }}>
                 <FixedRatioBookCover>
                   <BookItemCover
+                    height={1}
+                    width={1}
                     textCover={book.type}
                     src={book.cover && window.URL.createObjectURL(book.cover)}
                   />

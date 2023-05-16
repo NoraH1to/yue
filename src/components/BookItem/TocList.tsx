@@ -7,7 +7,7 @@ import {
   ListItemText,
   ListProps,
 } from '@mui/material';
-import { FC, Fragment, memo, useState } from 'react';
+import { FC, Fragment, memo, useEffect, useRef, useState } from 'react';
 import ContextMenuTrigger from '../ContextMenu/Trigger';
 import StyledMuiListItemButton from '../Styled/MuiListItemButton';
 
@@ -19,8 +19,8 @@ export type TocListProps = {
   deep?: number;
 } & ListProps;
 
-const hasChildProcess = (target: IToc, children?: IToc[]): boolean => {
-  if (!children) return false;
+const hasChildProcess = (target?: IToc, children?: IToc[]): boolean => {
+  if (!children || !target) return false;
   return children.some((child) => {
     return (
       child.href === target.href || hasChildProcess(target, child.children)
@@ -38,21 +38,29 @@ const TocList: FC<TocListProps> = (props) => {
     ...restProps
   } = props;
   const [collapseMap, setCollapseMap] = useState<Record<string, boolean>>({});
-  const handleToggleCollapse = (toc: IToc) => {
+  const handleToggleCollapse = (toc: IToc, open?: boolean) => {
     setCollapseMap((collapseMap) => ({
       ...collapseMap,
-      [toc.href]: !collapseMap[toc.href],
+      [toc.href]: open === undefined ? !collapseMap[toc.href] : open,
     }));
   };
+  const currentRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!currentRef.current) return;
+    currentRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [tocList, current]);
   return (
     <List {...restProps}>
       {tocList.map((toc) => {
         const Icon = collapseMap[toc.href]
           ? ExpandLessRounded
           : ExpandMoreRounded;
+        const isChildrenSelected = hasChildProcess(current, toc.children);
         const selected =
-          current &&
-          (current.href === toc.href || hasChildProcess(current, toc.children));
+          current && (current.href === toc.href || isChildrenSelected);
+        if (selected && isChildrenSelected && !collapseMap[toc.href]) {
+          handleToggleCollapse(toc, true);
+        }
         return (
           <Fragment key={toc.href}>
             <ContextMenuTrigger
@@ -60,6 +68,7 @@ const TocList: FC<TocListProps> = (props) => {
               disabled={!toc.children?.length}>
               {({ triggerProps, longPressTimer }) => (
                 <StyledMuiListItemButton
+                  ref={selected && !isChildrenSelected ?  currentRef : undefined}
                   sx={{ pl: 2 + 2 * deep }}
                   {...triggerProps}
                   selected={selected}
@@ -69,7 +78,7 @@ const TocList: FC<TocListProps> = (props) => {
                   }}>
                   <ListItemText
                     primary={toc.title}
-                    secondary={selected && currentTitle}
+                    secondary={selected && !isChildrenSelected && currentTitle}
                   />
                   {!!toc.children?.length && (
                     <IconButton

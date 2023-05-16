@@ -15,6 +15,7 @@
 - 标签分类
 
 ![](./res/book_list.png)
+![](./res/book_recent_reads.png)
 ![](./res/book_detail.png)
 ![](./res/webdav_list.png)
 

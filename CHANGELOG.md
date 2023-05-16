@@ -1,4 +1,17 @@
 # Changelog
+## [1.1.0](///compare/v0.0.0...v1.1.0) (2023-05-16)
+
+
+### Features
+
+* **recent-reads:** add recent reading page 7c43622
+
+
+### Bug Fixes
+
+* **parser-epub:** 尽量让文件本身有问题的图书显示正确的目录 1ad0f3e
+* **parser-epub:** 修正拍平嵌套目录的实现 d7f6ef5
+
 ## 0.0.0 (2023-05-15)
 
 

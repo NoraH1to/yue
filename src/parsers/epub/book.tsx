@@ -85,7 +85,7 @@ export class EpubBook extends ABook<string, string> {
           if (tocIndex < maxTocIndex) {
             tocIndex++;
           }
-        } else {
+        } else if (!this.hrefMap[sp.href]) {
           this.hrefMap[sp.href] = this.flatToc[prevTocIndex];
         }
       });

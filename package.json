@@ -25,7 +25,7 @@
     "@mui/system": "^5.12.3",
     "ahooks": "^3.7.7",
     "anysort-typed": "^3.3.1",
-    "body-scroll-lock-upgrade": "^1.0.3",
+    "body-scroll-lock": "4.0.0-beta.0",
     "browser-fs-access": "^0.33.1",
     "dexie": "^3.2.3",
     "dexie-react-hooks": "^1.1.3",
@@ -54,6 +54,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "@types/body-scroll-lock": "^3.1.0",
     "@types/hammerjs": "^2.0.41",
     "@types/mime": "^3.0.1",
     "@types/react": "^18.2.6",

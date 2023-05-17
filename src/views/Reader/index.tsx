@@ -8,7 +8,7 @@ import fs from '@/modules/fs';
 import { TFsBook } from '@/modules/fs/Fs';
 import useReaderParams from '@/router/hooks/useReaderParams';
 import { Box, Collapse, Stack, alpha, useColorScheme } from '@mui/material';
-import * as BSL from 'body-scroll-lock-upgrade';
+import * as BSL from 'body-scroll-lock';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,6 @@ import GestureLayer from './components/GestureLayer';
 import InfoBarBottom from './components/InfoBarBottom';
 import InfoBarTop from './components/InfoBarTop';
 import LoadingLayer from './components/LoadingLayer';
-import { MemoReaderSettingNumberItem } from './components/ReaderSetting/ReaderSettingNumberItem';
 import ReaderSetting from './components/ReaderSetting';
 
 // TODO: 拆分代码

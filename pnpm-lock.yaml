@@ -25,9 +25,9 @@ dependencies:
   anysort-typed:
     specifier: ^3.3.1
     version: 3.3.1
-  body-scroll-lock-upgrade:
-    specifier: ^1.0.3
-    version: 1.0.3
+  body-scroll-lock:
+    specifier: 4.0.0-beta.0
+    version: 4.0.0-beta.0
   browser-fs-access:
     specifier: ^0.33.1
     version: 0.33.1
@@ -108,6 +108,9 @@ devDependencies:
   '@commitlint/config-conventional':
     specifier: ^17.4.4
     version: 17.4.4
+  '@types/body-scroll-lock':
+    specifier: ^3.1.0
+    version: 3.1.0
   '@types/hammerjs':
     specifier: ^2.0.41
     version: 2.0.41
@@ -2395,6 +2398,10 @@ packages:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
     dev: true
 
+  /@types/body-scroll-lock@3.1.0:
+    resolution: {integrity: sha512-3owAC4iJub5WPqRhxd8INarF2bWeQq1yQHBgYhN0XLBJMpd5ED10RrJ3aKiAwlTyL5wK7RkBD4SZUQz2AAAMdA==}
+    dev: true
+
   /@types/estree@0.0.39:
     resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
     dev: true
@@ -2929,8 +2936,8 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /body-scroll-lock-upgrade@1.0.3:
-    resolution: {integrity: sha512-Ew+ZLMiGTkT/G+DF7m5XKDXx6d+9eR8i4lt/7ehi4iJhitTWrzndnBZplrQ9lKTsclc1v/RYh6Lzeqb0+wvMXA==}
+  /body-scroll-lock@4.0.0-beta.0:
+    resolution: {integrity: sha512-a7tP5+0Mw3YlUJcGAKUqIBkYYGlYxk2fnCasq/FUph1hadxlTRjF+gAcZksxANnaMnALjxEddmSi/H3OR8ugcQ==}
     dev: false
 
   /brace-expansion@1.1.11:

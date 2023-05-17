@@ -141,7 +141,7 @@ export class EpubBook extends ABook<string, string> {
                 ? undefined
                 : `${readerTheme.color}`,
           },
-          p: {
+          'p, div': {
             'letter-spacing': `${readerSetting.letterGap}em !important`,
             'line-height': `${readerSetting.lineHeight} !important`,
             'margin-top': `${readerSetting.paragraphGap}px !important`,

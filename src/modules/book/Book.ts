@@ -32,8 +32,8 @@ export type ReaderCompProps = PropsWithRef<{
   readerSetting: TReaderSetting;
 }>;
 
-export abstract class ABook<P = unknown, CP = unknown>
-  implements IBookInfo<P>, IController<P, CP>
+export abstract class ABook<P = unknown>
+  implements IBookInfo<P>, IController<P>
 {
   hash: string;
   readonly target: File;
@@ -63,7 +63,7 @@ export abstract class ABook<P = unknown, CP = unknown>
   abstract ready: Promise<void>;
   abstract nextPage(): Promise<void>;
   abstract prevPage(): Promise<void>;
-  abstract jumpTo(page: number | CP): Promise<void>;
+  abstract jumpTo(page: number | P): Promise<void>;
   abstract getPages(): number;
   abstract getCurrentSectionPages(): number;
   abstract getCurrentSectionCurrentPage(): number;

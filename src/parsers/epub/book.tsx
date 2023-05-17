@@ -19,7 +19,7 @@ export type TEpubBookInfo = TBookConstructorInfo<string> & {
 /**
  * // TODO: 频繁缩放窗口、翻页会导致无法翻页
  */
-export class EpubBook extends ABook<string, string> {
+export class EpubBook extends ABook<string> {
   epub: EpubInstance;
   cfiList: string[] = [];
   type = 'epub';

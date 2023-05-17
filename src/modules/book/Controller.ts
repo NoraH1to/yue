@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { IProcess, ReaderCompProps } from './Book';
 
-export interface IController<P = unknown, CP = unknown> {
+export interface IController<P = unknown> {
   ready: Promise<void>;
   nextPage(): Promise<void>;
   prevPage(): Promise<void>;
-  jumpTo(page: number | CP): Promise<void>;
+  jumpTo(page: number | P): Promise<void>;
   getPages(): number;
   getCurrentSectionPages(): number;
   getCurrentSectionCurrentPage(): number;

@@ -1,70 +1,103 @@
-# Yue
+# 📚 Yue（阅 yuè）
 
-尽量简单的阅读器
+Lightweight web reader, easy to use, clean interface, focused on reading
 
-## Features
+English | [中文](./README_CN.md)
 
-- 最强大的跨平台能力（浏览器）
+## ✨ Features
 
-- PWA
+- 🚀 **Cross Platform**: All you need is a browser
 
-- i18n
+- 🚀 **PWA**: Excellent offline experience
 
-- webDAV
+- 📁 **WebDAV**: Use your own reading library
 
-- 标签分类
+- 🌏 **I18n**: Multilingual support
 
 ![](./res/book_list.png)
-![](./res/book_recent_reads.png)
-![](./res/book_detail.png)
-![](./res/webdav_list.png)
 
-## RoadMap
+You can see more preview images [here](./PREVIEW.md), or visit the deployed site directly [yue.norah1to.com](https://yue.norah1to.com)
 
-肯定会做
+## 🧐 Why
 
-- [x] 字体调整（间距、大小等）
+I recently got my second iOS device in my life, and the reader on the AppStore can only be imported locally, or you have to pay extra.
 
-- [x] 优化体积，有点膨胀
+Okay, I'll write one myself
 
-看需求
+## 🎈 Usage Guide
 
-- [ ] 支持 PDF
+### Install
 
-- [ ] 支持漫画（压缩包格式）
+Environmental requirements `node >=14 <18`, `pnpm >=7`
 
-- [ ] 自定义阅读器配色
+```bash
+pnpm install
+```
 
-看心情
+### Dev
 
-- [ ] 更多的 Source（OneDrive 之类的）
+Open Development Services
 
-## Why
+```bash
+pnpm dev:web
+```
 
-最近入手了人生第二台 iOS 设备，AppStore 上的阅读器要么只能本地导入，要么得加钱
+Visit `http://localhost:5111`, if the default port is occupied, please refer to the console output
 
-得，我自己写一个
+### Bundle
 
-## Issue
+You can package the common version
 
-### 跨域限制
+```bash
+pnpm build:web
+```
 
-所有 WebApp 都绕不开的问题，大多数 webDAV 服务都没法用
+or versions with `PWA` support
 
-我个人用使用 [`alist`](https://github.com/alist-org/alist) 搭建私有服务解决
+```bash
+pnpm build:web-pwa
+```
 
-### 无法翻页
+The packaged products are in `dist/web` and `dist/web-pwa` respectively
 
-在以下操作后小概率无法翻页，`epub.js` 的锅
+## 📍 Road Map
 
-- 频繁缩放窗口
+List the functions that **MAYBE** achieve, the project only needs to meet my personal needs for the time being (nobody uses it)
 
-- 非常频繁的翻页（已做节流，基本不会有问题）
+- [ ] PDF support
 
-### 跳转页面误差
+- [ ] Comic support (zip format)
 
-跳转到指定页面会有 `+/-1` 页的误差，`epub.js` 的 `cfi` 实现问题
+- [ ] Customized reader color scheme
 
-### 渲染错位
+- [ ] More Sources (OneDrive, etc.)
 
-仅在安卓手机上出现，具体表现每次翻页后页面会偏移 `1~2px`，原因未知（我猜也是 `epub.js` 的问题）
+## 🚧 Known Issues
+
+If there is a solution, PR welcome!
+
+### Cross-domain issues
+
+All WebApps can not get around the problem, most webDAV services can not be used
+
+Personally, I solved the problem by using [`alist`](https://github.com/alist-org/alist) to build a private service
+
+### Unable to turn page
+
+There is a small chance that the page will not turn after the following operation, `epub.js`' problem
+
+- Frequent window zooming
+
+- Very frequent page turns (have done throttling, basically no problem)
+
+### Jump page deviation
+
+Jump to the specified page will have `+/-1` page deviation, `epub.js`'s `cfi` implementation problem
+
+### Rendering deviation
+
+Only on Android phones, the page will be shifted `1~2px` after each page turn, the reason is unknown (I guess it's also the problem of `epub.js`)
+
+## License
+
+[MIT](./LICENSE)

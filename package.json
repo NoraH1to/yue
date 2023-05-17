@@ -5,6 +5,9 @@
   "type": "commonjs",
   "license": "MIT",
   "author": "NoraH1to <norah1to@qq.com>",
+  "engines": {
+    "node": ">=14 <18"
+  },
   "main": "./src/main.tsx",
   "scripts": {
     "prepare": "git init && pnpm husky install && ts-patch install -g",

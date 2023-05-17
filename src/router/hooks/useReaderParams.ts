@@ -20,7 +20,7 @@ const useReaderParams = () => {
       },
       searchParams,
       setSearchParams,
-    ];
+    ] as const;
   }, [searchParams, hash]);
 };
 

@@ -20,6 +20,7 @@ export type ToolbarActionProps = {
   onToggleColorMode: (mode: TAppSetting['colorMode']) => void;
   onToggleFullscreen: (fullscreen: boolean) => void;
   onOpenSetting: () => void;
+  hideSetting: boolean;
 };
 
 const ToolbarAction: FC<ToolbarActionProps> = ({
@@ -27,6 +28,7 @@ const ToolbarAction: FC<ToolbarActionProps> = ({
   onToggleColorMode,
   onToggleFullscreen,
   onOpenSetting,
+  hideSetting,
 }) => {
   const [setting] = useSetting();
   const ColorIcon =
@@ -66,9 +68,11 @@ const ToolbarAction: FC<ToolbarActionProps> = ({
           <FullscreenIcon />
         </StyledMuiIconButton>
         <ToolbarRowSpace />
-        <StyledMuiIconButton onClick={onOpenSetting}>
-          <SettingsRounded />
-        </StyledMuiIconButton>
+        {!hideSetting && (
+          <StyledMuiIconButton onClick={onOpenSetting}>
+            <SettingsRounded />
+          </StyledMuiIconButton>
+        )}
       </ToolbarRow>
     </ToolbarColumn>
   );

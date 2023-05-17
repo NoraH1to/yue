@@ -60,6 +60,7 @@ export abstract class ABook<P = unknown>
   }
 
   // controllers
+  supportSetting = true;
   abstract ready: Promise<void>;
   abstract nextPage(): Promise<void>;
   abstract prevPage(): Promise<void>;

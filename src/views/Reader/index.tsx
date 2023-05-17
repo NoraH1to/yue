@@ -262,6 +262,7 @@ const Reader = () => {
           onOpenNav={handleShowToc}
           onToggleFullscreen={handleFullscreen}
           onOpenSetting={handleShowReaderSetting}
+          hideSetting={!book.supportSetting}
         />
       ),
     [book, setColorMode, handleShowToc],
@@ -294,7 +295,7 @@ const Reader = () => {
   // 阅读器字体设置等
   const ToolbarReaderSetting = useMemo(
     () =>
-      book && (
+      book && book.supportSetting && (
         <Collapse in={showWhichExtendedLayer === 'readerSetting'}>
           <ReaderSetting />
         </Collapse>

@@ -443,6 +443,10 @@ export const emptyFn = () => {
   /* empty */
 };
 
+export const emptyAsyncFn = async () => {
+  /* empty */
+};
+
 export type GetPath<
   T extends object,
   K extends keyof T = keyof T,

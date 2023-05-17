@@ -64,7 +64,7 @@ The packaged products are in `dist/web` and `dist/web-pwa` respectively
 
 List the functions that **MAYBE** achieve, the project only needs to meet my personal needs for the time being (nobody uses it)
 
-- [ ] PDF support
+- [x] PDF support
 
 - [ ] Comic support (zip format)
 

@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { IProcess, ReaderCompProps } from './Book';
 
 export interface IController<P = unknown> {
+  supportSetting: boolean;
   ready: Promise<void>;
   nextPage(): Promise<void>;
   prevPage(): Promise<void>;

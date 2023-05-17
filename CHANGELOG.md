@@ -1,4 +1,19 @@
 # Changelog
+## [1.2.0](///compare/v1.1.0...v1.2.0) (2023-05-17)
+
+
+### Features
+
+* **pdf:** support pdf 2c129df
+
+
+### Bug Fixes
+
+* **parser-epub:** font settings have no effect dd2fbfa
+* **reader:** fix the problem of locking the layout causing the inability to scroll fc26ad9
+* **recent-reads:** fix layout bugs bbfbf79
+* **type:** fix reader params type error 118b822
+
 ## [1.1.0](///compare/v0.0.0...v1.1.0) (2023-05-16)
 
 

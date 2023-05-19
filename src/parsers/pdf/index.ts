@@ -21,7 +21,6 @@ const makeThumb = async (page: PDFPageProxy) => {
 
   return new Promise<Blob | null>((resolve) => {
     canvas.toBlob((blob) => {
-      console.log(blob);
       resolve(blob);
     });
   });

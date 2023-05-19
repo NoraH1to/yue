@@ -108,11 +108,6 @@ export class EpubBook extends ABook<string> {
     useEffect(() => {
       (async () => {
         await this.ready;
-        try {
-          // this.epub.rendition.clear();
-        } catch {
-          /* empty */
-        }
         /**
          * epubjs 没有处理旧主题，样式无法完全覆盖上次的
          * 每次应用主题前先清理旧主题，方法较为 hack

@@ -123,24 +123,33 @@ export class EpubBook extends ABook<string> {
           sheetDom.remove();
         }
         // 应用主题
+        function makeCssRuleImportant(cssStr?: string) {
+          return cssStr ? `${cssStr} !important` : cssStr;
+        }
+        const color =
+          !readerTheme.color || colorMode === 'light'
+            ? undefined
+            : `${readerTheme.color}`;
+        const background = readerTheme.backgroundColor
+          ? `${readerTheme.backgroundColor}`
+          : undefined;
         this.epub.rendition.themes.default({
           body: {
-            background: readerTheme.backgroundColor
-              ? `${readerTheme.backgroundColor} !important`
-              : undefined,
+            background: makeCssRuleImportant(background),
+          },
+          'body, span': {
             'font-size': `${readerSetting.fontSize}px !important`,
           },
           '*': {
-            color:
-              !readerTheme.color || colorMode === 'light'
-                ? undefined
-                : `${readerTheme.color}`,
+            color,
           },
-          'p, div': {
+          'p, div, span': {
             'letter-spacing': `${readerSetting.letterGap}em !important`,
             'line-height': `${readerSetting.lineHeight} !important`,
             'margin-top': `${readerSetting.paragraphGap}px !important`,
             'margin-bottom': `${readerSetting.paragraphGap}px !important`,
+            color: makeCssRuleImportant(color),
+            background: makeCssRuleImportant(background),
           },
         });
       })();

@@ -60,6 +60,7 @@ export default defineConfig({
           'common-utils': ['spark-md5', 'hammerjs', 'i18next'],
           'data-source': ['dexie', 'webdav'],
           epubjs: ['epubjs'],
+          pdf: ['react-pdf'],
         },
       },
     },

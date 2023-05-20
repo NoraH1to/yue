@@ -1,4 +1,13 @@
-import { Box, CssBaseline, styled } from '@mui/material';
+import { LoadingProvide } from '@/hooks/useLoading';
+import { CloseRounded } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  CssBaseline,
+  IconButton,
+  Snackbar,
+  styled,
+} from '@mui/material';
 import {
   Experimental_CssVarsProvider as CssVarsProvider,
   experimental_extendTheme as extendTheme,
@@ -9,10 +18,34 @@ import { SnackbarProvider } from 'notistack';
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router-dom';
-
-import { LoadingProvide } from '@/hooks/useLoading';
+import { useRegisterSW } from 'virtual:pwa-register/react';
 import useSetting, { SettingProvide } from './hooks/useSetting';
 import themeMap from './themes';
+
+const Updater = () => {
+  const { t } = useTranslation();
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW();
+  return (
+    <Snackbar
+      open={needRefresh}
+      message={t('app can update')}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      action={
+        <>
+          <Button onClick={() => updateServiceWorker(true)}>
+            {t('refresh')}
+          </Button>
+          <IconButton onClick={() => setNeedRefresh(false)}>
+            <CloseRounded />
+          </IconButton>
+        </>
+      }
+    />
+  );
+};
 
 const AppContainer = styled(Box, { label: 'app-container' })(({ theme }) => ({
   display: 'flex',
@@ -81,6 +114,7 @@ const AppContent: FC = () => {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
           <AppContainer>
             <Outlet />
+            <Updater />
           </AppContainer>
         </SnackbarProvider>
       </ConfirmProvider>

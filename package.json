@@ -85,7 +85,8 @@
     "typescript-transform-paths": "^3.4.6",
     "vite": "^4.3.5",
     "vite-plugin-pwa": "^0.14.7",
-    "workbox-build": "^6.5.4"
+    "workbox-build": "^6.5.4",
+    "workbox-window": "^6.5.4"
   },
   "config": {
     "commitizen": {

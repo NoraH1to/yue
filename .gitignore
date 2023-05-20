@@ -23,3 +23,6 @@ dist-ssr
 
 # bundle analyze
 stats.html
+
+# vite-plugin-pwa dev files
+dev-dist

@@ -65,6 +65,7 @@ export default {
   'nothing here': 'nothing here',
   'no tag': 'no tag',
   'recent reads': 'recent reads',
+  'app can update': 'App update available, click on refresh button to update.',
   diffDate: {
     'any days ago': '{{days}} days ago',
     'any hours ago': '{{hours}} hours ago',
@@ -90,6 +91,7 @@ export default {
     'incorrect color value': 'Incorrect color value',
   },
   action: {
+    refresh: 'refresh',
     confirm: 'confirm',
     cancel: 'cancel',
     edit: 'edit',

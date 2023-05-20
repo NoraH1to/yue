@@ -8,19 +8,36 @@ import { VitePWA as pwa } from 'vite-plugin-pwa';
 export default defineConfig({
   plugins: [
     react(),
-    process.env.pwa
-      ? pwa({
-          workbox: {
-            globPatterns: ['**/*.{js,css,html,ico,jpg,png,svg,woff,woff2}'],
+    pwa({
+      devOptions: {
+        enabled: process.env.NODE_ENV === 'development' && !!process.env.pwa,
+      },
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,jpg,png,svg,woff,woff2}'],
+      },
+      registerType: 'prompt',
+      manifest: {
+        name: 'yuè - pure reader',
+        short_name: 'yuè',
+        description:
+          'Lightweight web reader, easy to use, clean interface, focused on reading',
+        theme_color: '#000000',
+        lang: 'zh-cn',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
           },
-          registerType: 'autoUpdate',
-          manifest: {
-            name: 'yue - pure reader',
-            short_name: 'yue',
-            lang: 'zh-cn',
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
           },
-        })
-      : undefined,
+        ],
+      },
+    }),
     process.env.analyze ? (visualizer() as unknown as PluginOption) : undefined,
   ],
   build: {

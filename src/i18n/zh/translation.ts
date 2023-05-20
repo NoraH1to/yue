@@ -65,6 +65,7 @@ export default {
   'nothing here': '空空如也',
   'no tag': '无标签',
   'recent reads': '最近阅读',
+  'app can update': '应用可以更新，点击刷新按钮以更新',
   diffDate: {
     'any days ago': '{{days}} 天前',
     'any hours ago': '{{hours}} 小时前',
@@ -90,6 +91,7 @@ export default {
     'incorrect url': 'URL 不合法',
   },
   action: {
+    refresh: '刷新',
     confirm: '确认',
     cancel: '取消',
     edit: '编辑',

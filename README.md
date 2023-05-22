@@ -16,7 +16,7 @@ English | [中文](./README_CN.md)
 
 ![](./res/book_list.png)
 
-You can see more preview images [here](./PREVIEW.md), or visit the deployed site directly [yue.norah1to.com](https://yue.norah1to.com)
+You can learn more by visiting the deployed site [yue.norah1to.com](https://yue.norah1to.com)
 
 ## 🧐 Why
 

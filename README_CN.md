@@ -16,7 +16,7 @@
 
 ![](./res/book_list.png)
 
-你可以在[这里](./PREVIEW.md)查看更多预览图，或者直接访问部署好的站点 [yue.norah1to.com](https://yue.norah1to.com)
+你可以通过访问部署好的站点来了解更多 [yue.norah1to.com](https://yue.norah1to.com)
 
 ## 🧐 为什么
 

@@ -1,3 +1,5 @@
+import { Theme } from '@mui/material';
+import { SxProps } from '@mui/system';
 import anysort from 'anysort-typed';
 import mime from 'mime';
 import { BaseSyntheticEvent, ReactEventHandler } from 'react';
@@ -446,6 +448,17 @@ export const emptyFn = () => {
 export const emptyAsyncFn = async () => {
   /* empty */
 };
+
+export const mergeSxProps = (...args: (SxProps<Theme> | undefined | null)[]) =>
+  args.reduce<SxProps<Theme>[]>((pre, cur) => {
+    if (!cur) return pre;
+    if (Array.isArray(cur)) {
+      return pre.concat(cur);
+    } else {
+      pre.push(cur);
+      return pre;
+    }
+  }, []) as SxProps<Theme>;
 
 export type GetPath<
   T extends object,

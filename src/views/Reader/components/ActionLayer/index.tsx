@@ -1,45 +1,68 @@
-import { preventDefault } from '@/helper';
-import { Stack, SwipeableDrawer, lighten } from '@mui/material';
-import { FC, PropsWithChildren, memo, useCallback, useMemo } from 'react';
+import { mergeEventListener, preventDefault } from '@/helper';
+import { Backdrop, Paper, Slide, Stack, lighten, styled } from '@mui/material';
+import { FC, ReactNode, memo, useCallback, useMemo } from 'react';
 
-export type ActionLayerProps = PropsWithChildren<{
+export type ActionLayerProps = {
   open: boolean;
   onClose: () => void;
-}>;
+  ContentBottom: ReactNode;
+  ContentTop: ReactNode;
+};
 
 const prevent = preventDefault();
 
-const ActionLayer: FC<ActionLayerProps> = ({ open, onClose, children }) => {
+const ContentWrapper = styled(Paper)(({ theme }) => ({
+  position: 'absolute',
+  maxWidth: '900px',
+  width: '100%',
+  margin: '0 auto',
+  borderRadius: theme.shape.borderRadius * 4,
+  backgroundColor: lighten(theme.palette.background.paper, 0.1),
+  overflow: 'hidden',
+  padding: theme.spacing(2),
+}));
+
+const ActionLayer: FC<ActionLayerProps> = ({
+  open,
+  onClose,
+  ContentBottom,
+  ContentTop,
+}) => {
+  const handleClickBackdrop = useCallback(
+    mergeEventListener(onClose, prevent),
+    [onClose, prevent],
+  );
   return (
-    <SwipeableDrawer
-      open={open}
-      disableSwipeToOpen={true}
-      onOpen={useCallback(() => {
-        /* 阻止滑动打开 */
-      }, [])}
-      onClose={onClose}
-      onClick={prevent}
-      anchor="bottom"
-      PaperProps={useMemo(
-        () => ({
-          sx: (theme) => ({
-            position: 'absolute',
-            bottom: 0,
-            maxWidth: '900px',
-            width: 1,
-            mx: 'auto',
-            borderRadius: theme.shape.borderRadius * 1,
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-            backgroundColor: lighten(theme.palette.background.paper, 0.1),
-            overflow: 'hidden',
-            padding: theme.spacing(2, 2, 4, 2),
-          }),
-        }),
-        [],
-      )}>
-      <Stack gap={1}>{children}</Stack>
-    </SwipeableDrawer>
+    <Backdrop open={open} onClick={handleClickBackdrop}>
+      <Slide in={open}>
+        <ContentWrapper
+          sx={useMemo(
+            () => ({
+              top: 0,
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+            }),
+            [],
+          )}
+          onClick={prevent}>
+          {ContentTop}
+        </ContentWrapper>
+      </Slide>
+      <Slide in={open} direction="up">
+        <ContentWrapper
+          sx={useMemo(
+            () => ({
+              bottom: 0,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            }),
+            [],
+          )}
+          onClick={prevent}>
+          <Stack gap={1}>{ContentBottom}</Stack>
+        </ContentWrapper>
+      </Slide>
+    </Backdrop>
   );
 };
 

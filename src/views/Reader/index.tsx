@@ -1,4 +1,5 @@
 import { MemoTocList, TocListProps } from '@/components/BookItem/TocList';
+import DetailToolbar from '@/components/DetailToolbar';
 import { cancelAble, delFalsy } from '@/helper';
 import { useBook } from '@/hooks/useBook';
 import useLoading from '@/hooks/useLoading';
@@ -34,6 +35,7 @@ const Reader = () => {
   const loading = globalLoading || loadingBookInfo;
   const [loaded, setLoaded] = useState(false);
   const nav = useNavigate();
+  const goBack = useCallback(() => nav(-1), [nav]);
   const [{ book }, { loadBook }] = useBook();
   const [currentNav, setCurrentNav] = useState<IToc>();
   const [currentPageInfo, setCurrentPageInfo] = useState<{
@@ -295,12 +297,37 @@ const Reader = () => {
   // 阅读器字体设置等
   const ToolbarReaderSetting = useMemo(
     () =>
-      book && book.supportSetting && (
+      book &&
+      book.supportSetting && (
         <Collapse in={showWhichExtendedLayer === 'readerSetting'}>
           <ReaderSetting />
         </Collapse>
       ),
     [book, showWhichExtendedLayer],
+  );
+  const ActionLayerContentBottom = useMemo(
+    () => (
+      <>
+        {ToolbarNav}
+        {ToolbarTocList}
+        {ToolbarReaderSetting}
+        {ToolbarAct}
+      </>
+    ),
+    [ToolbarNav, ToolbarTocList, ToolbarReaderSetting, ToolbarAct],
+  );
+  const ActionLayerContentTop = useMemo(
+    () => (
+      <DetailToolbar
+        sx={(theme) => ({
+          ml: -2,
+          width: `calc(100% + ${theme.spacing(4)})`,
+        })}
+        onBack={goBack}
+        title={book?.title}
+      />
+    ),
+    [book, goBack],
   );
 
   return (
@@ -342,13 +369,23 @@ const Reader = () => {
         currentPage={currentPageInfo.current}
         color={infoColor}
       />
-      {book && (
-        <ActionLayer open={openActionLayer} onClose={handleCloseActionLayer}>
-          {ToolbarNav}
-          {ToolbarTocList}
-          {ToolbarReaderSetting}
-          {ToolbarAct}
-        </ActionLayer>
+      {useMemo(
+        () =>
+          book && (
+            <ActionLayer
+              open={openActionLayer}
+              onClose={handleCloseActionLayer}
+              ContentBottom={ActionLayerContentBottom}
+              ContentTop={ActionLayerContentTop}
+            />
+          ),
+        [
+          book,
+          openActionLayer,
+          handleCloseActionLayer,
+          ActionLayerContentBottom,
+          ActionLayerContentTop,
+        ],
       )}
       <LoadingLayer open={loading} />
     </Stack>

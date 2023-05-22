@@ -10,6 +10,7 @@ import BookDetailTitle, {
 } from '@/components/BookDetail/Title';
 import { BookItemBaseCardCoverSkeleton } from '@/components/BookItem/BaseCard';
 import BookItemCover from '@/components/BookItem/Cover';
+import DetailToolbar from '@/components/DetailToolbar';
 import FixedRatioBookCover from '@/components/FixedRatioWrapper/FixedRatioBookCover';
 import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import useStatusLiveQuery from '@/hooks/useStatusLiveQuery';
@@ -78,55 +79,58 @@ const BookListRecentReads = () => {
     });
   };
   return (
-    <Stack overflow="auto" height={1} p={2} gap={1}>
-      {loading ? (
-        [undefined, undefined, undefined].map((_, i) => (
-          <ItemSkeleton key={i} />
-        ))
-      ) : books.length > 0 ? (
-        books.map((book) => (
-          <StyledMuiListItemButton
-            key={book.hash}
-            sx={{ p: 0, flexGrow: 0 }}
-            onClick={() => handleItemClick(book)}>
-            <ItemContainer>
-              <Card
-                variant="outlined"
-                sx={{
-                  ...coverSizeSx,
-                  isolation: 'isolate',
-                  flexShrink: 0,
-                }}>
-                <FixedRatioBookCover>
-                  <BookItemCover
-                    height={1}
-                    width={1}
-                    textCover={book.type}
-                    src={book.cover && window.URL.createObjectURL(book.cover)}
-                  />
-                </FixedRatioBookCover>
-              </Card>
-              <ItemInfoContainer>
-                <BookDetailTitle title={book.title} />
-                <BookDetailAuthor author={book.author} />
-                <BookDetailProgress percent={book.lastProcess.percent} />
-                {book.lastProcess.navInfo && (
-                  <BookDetailInfoItem>
-                    <BookDetailInfoItemText
-                      variant="body2"
-                      color="text.secondary">
-                      {book.lastProcess.navInfo.title}
-                    </BookDetailInfoItemText>
-                  </BookDetailInfoItem>
-                )}
-                <BookDetailLastReadTime ts={book.lastProcess.ts} />
-              </ItemInfoContainer>
-            </ItemContainer>
-          </StyledMuiListItemButton>
-        ))
-      ) : (
-        <StatusEmpty />
-      )}
+    <Stack height={1} pt={1}>
+      <DetailToolbar onBack={() => nav(-1)} title={t('recent reads')} />
+      <Stack overflow="auto" flexGrow={1} height={0} p={2} pt={1} gap={1}>
+        {loading ? (
+          [undefined, undefined, undefined].map((_, i) => (
+            <ItemSkeleton key={i} />
+          ))
+        ) : books.length > 0 ? (
+          books.map((book) => (
+            <StyledMuiListItemButton
+              key={book.hash}
+              sx={{ p: 0, flexGrow: 0 }}
+              onClick={() => handleItemClick(book)}>
+              <ItemContainer>
+                <Card
+                  variant="outlined"
+                  sx={{
+                    ...coverSizeSx,
+                    isolation: 'isolate',
+                    flexShrink: 0,
+                  }}>
+                  <FixedRatioBookCover>
+                    <BookItemCover
+                      height={1}
+                      width={1}
+                      textCover={book.type}
+                      src={book.cover && window.URL.createObjectURL(book.cover)}
+                    />
+                  </FixedRatioBookCover>
+                </Card>
+                <ItemInfoContainer>
+                  <BookDetailTitle title={book.title} />
+                  <BookDetailAuthor author={book.author} />
+                  <BookDetailProgress percent={book.lastProcess.percent} />
+                  {book.lastProcess.navInfo && (
+                    <BookDetailInfoItem>
+                      <BookDetailInfoItemText
+                        variant="body2"
+                        color="text.secondary">
+                        {book.lastProcess.navInfo.title}
+                      </BookDetailInfoItemText>
+                    </BookDetailInfoItem>
+                  )}
+                  <BookDetailLastReadTime ts={book.lastProcess.ts} />
+                </ItemInfoContainer>
+              </ItemContainer>
+            </StyledMuiListItemButton>
+          ))
+        ) : (
+          <StatusEmpty />
+        )}
+      </Stack>
     </Stack>
   );
 };

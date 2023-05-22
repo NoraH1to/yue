@@ -36,7 +36,7 @@ const Updater = () => {
       action={
         <>
           <Button onClick={() => updateServiceWorker(true)}>
-            {t('refresh')}
+            {t('action.refresh')}
           </Button>
           <IconButton onClick={() => setNeedRefresh(false)}>
             <CloseRounded />

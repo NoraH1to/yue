@@ -66,6 +66,9 @@ export default {
   'no tag': 'no tag',
   'recent reads': 'recent reads',
   'app can update': 'App update available, click on refresh button to update.',
+  other: 'other',
+  about: 'about',
+  repository: 'repository',
   diffDate: {
     'any days ago': '{{days}} days ago',
     'any hours ago': '{{hours}} hours ago',

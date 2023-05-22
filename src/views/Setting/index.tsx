@@ -1,5 +1,7 @@
 import DetailToolbar from '@/components/DetailToolbar';
+import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import useSetting from '@/hooks/useSetting';
+import { ROUTE_PATH } from '@/router';
 import {
   BrightnessMediumRounded,
   DarkModeRounded,
@@ -8,6 +10,7 @@ import {
 import {
   List,
   ListItem,
+  ListItemText,
   ListSubheader,
   Stack,
   ToggleButton,
@@ -15,6 +18,7 @@ import {
   styled,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import I18nSetting from './I18nSetting';
 import WebDAVSetting from './WebDAVSetting';
 
@@ -26,6 +30,7 @@ const StyledListSubheader = styled(ListSubheader)({
 const Setting = () => {
   const [setting, { setColorMode }] = useSetting();
   const { t } = useTranslation();
+  const nav = useNavigate();
   const DarkModeIconSx = { mr: 1 };
   return (
     <Stack pt={1} height={1}>
@@ -59,6 +64,13 @@ const Setting = () => {
         <WebDAVSetting />
         <StyledListSubheader>i18n</StyledListSubheader>
         <I18nSetting />
+        <StyledListSubheader>{t('other')}</StyledListSubheader>
+        <StyledMuiListItemButton>
+          <ListItemText
+            primary={t('about')}
+            onClick={() => nav(`/${ROUTE_PATH.ABOUT}`)}
+          />
+        </StyledMuiListItemButton>
       </List>
     </Stack>
   );

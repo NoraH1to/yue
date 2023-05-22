@@ -66,6 +66,9 @@ export default {
   'no tag': '无标签',
   'recent reads': '最近阅读',
   'app can update': '应用可以更新，点击刷新按钮以更新',
+  other: '其它',
+  about: '关于',
+  repository: '仓库',
   diffDate: {
     'any days ago': '{{days}} 天前',
     'any hours ago': '{{hours}} 小时前',

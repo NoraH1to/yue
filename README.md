@@ -90,6 +90,8 @@ There is a small chance that the page will not turn after the following operatio
 
 - Very frequent page turns (have done throttling, basically no problem)
 
+Details [here](https://github.com/NoraH1to/yue/issues/1)
+
 ### Jump page deviation
 
 Jump to the specified page will have `+/-1` page deviation, `epub.js`'s `cfi` implementation problem

@@ -90,6 +90,8 @@ pnpm build:web-pwa
 
 - 非常频繁的翻页（已做节流，基本不会有问题）
 
+详情在[这里](https://github.com/NoraH1to/yue/issues/1)
+
 ### 跳转页面误差
 
 跳转到指定页面会有 `+/-1` 页的误差，`epub.js` 的 `cfi` 实现问题

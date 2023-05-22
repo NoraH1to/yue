@@ -62,17 +62,17 @@ const Reader = () => {
 
   // 移动端 safari 添加到主屏幕后会触发过度滚动
   useEffect(() => {
-    BSL.disableBodyScroll(document.body);
-    return () => {
-      BSL.enableBodyScroll(document.body);
-    };
-  }, []);
-  useEffect(() => {
     openActionLayer && BSL.enableBodyScroll(document.body);
     return () => {
       openActionLayer && BSL.disableBodyScroll(document.body);
     };
   }, [openActionLayer]);
+  useEffect(() => {
+    BSL.disableBodyScroll(document.body);
+    return () => {
+      BSL.enableBodyScroll(document.body);
+    };
+  }, []);
 
   // 系统配置、主题相关
   const [setting, { setColorMode }] = useSetting();

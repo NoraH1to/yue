@@ -4,6 +4,7 @@ import useWebDAVClient from '@/hooks/useWebDAVClient';
 import {
   CheckCircleOutlineRounded,
   ErrorOutlineRounded,
+  StorageRounded,
 } from '@mui/icons-material';
 import {
   Button,
@@ -11,6 +12,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  ListItemIcon,
   ListItemText,
   Skeleton,
   Stack,
@@ -60,7 +62,12 @@ const WebDAVSetting = () => {
 
   return (
     <>
-      <StyledMuiListItemButton onClick={handleClickItem} disabled={loadingWebDAV}>
+      <StyledMuiListItemButton
+        onClick={handleClickItem}
+        disabled={loadingWebDAV}>
+        <ListItemIcon>
+          <StorageRounded />
+        </ListItemIcon>
         <ListItemText primary={webDAVTitle} secondary={webDAVSubtitle} />
         {webDAVIcon}
       </StyledMuiListItemButton>

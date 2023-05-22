@@ -1,5 +1,6 @@
 import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
-import { ListItemText, Menu, MenuItem } from '@mui/material';
+import { TranslateRounded } from '@mui/icons-material';
+import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +17,9 @@ const I18nSetting = () => {
     <>
       <StyledMuiListItemButton
         onClick={(e) => setMenuAnchorEl(e.currentTarget as HTMLDivElement)}>
+        <ListItemIcon>
+          <TranslateRounded />
+        </ListItemIcon>
         <ListItemText
           primary={langMap[i18n.resolvedLanguage]}
           secondary={i18n.resolvedLanguage}

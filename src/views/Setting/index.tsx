@@ -5,11 +5,13 @@ import { ROUTE_PATH } from '@/router';
 import {
   BrightnessMediumRounded,
   DarkModeRounded,
+  InfoRounded,
   LightModeOutlined,
 } from '@mui/icons-material';
 import {
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   ListSubheader,
   Stack,
@@ -66,6 +68,9 @@ const Setting = () => {
         <I18nSetting />
         <StyledListSubheader>{t('other')}</StyledListSubheader>
         <StyledMuiListItemButton>
+          <ListItemIcon>
+            <InfoRounded />
+          </ListItemIcon>
           <ListItemText
             primary={t('about')}
             onClick={() => nav(`/${ROUTE_PATH.ABOUT}`)}

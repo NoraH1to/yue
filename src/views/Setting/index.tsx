@@ -15,6 +15,7 @@ import {
   styled,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import I18nSetting from './I18nSetting';
 import WebDAVSetting from './WebDAVSetting';
 
 const StyledListSubheader = styled(ListSubheader)({
@@ -56,6 +57,8 @@ const Setting = () => {
         </ListItem>
         <StyledListSubheader>{t('webDAV')}</StyledListSubheader>
         <WebDAVSetting />
+        <StyledListSubheader>i18n</StyledListSubheader>
+        <I18nSetting />
       </List>
     </Stack>
   );

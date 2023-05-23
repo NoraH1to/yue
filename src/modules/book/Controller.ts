@@ -8,6 +8,7 @@ export interface IController<P = unknown> {
   prevPage(): Promise<void>;
   jumpTo(page: number | P): Promise<void>;
   getPages(): number;
+  getCurrentPage(): number;
   getCurrentSectionPages(): number;
   getCurrentSectionCurrentPage(): number;
   getCurrentProcess(): Promise<IProcess<P> | null>;

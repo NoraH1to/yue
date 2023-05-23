@@ -66,6 +66,7 @@ export abstract class ABook<P = unknown>
   abstract prevPage(): Promise<void>;
   abstract jumpTo(page: number | P): Promise<void>;
   abstract getPages(): number;
+  abstract getCurrentPage(): number;
   abstract getCurrentSectionPages(): number;
   abstract getCurrentSectionCurrentPage(): number;
   abstract getCurrentProcess(): Promise<IProcess<P> | null>;

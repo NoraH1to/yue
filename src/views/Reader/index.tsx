@@ -1,12 +1,10 @@
 import { MemoTocList, TocListProps } from '@/components/BookItem/TocList';
 import DetailToolbar from '@/components/DetailToolbar';
-import { cancelAble, delFalsy } from '@/helper';
+import { cancelAble } from '@/helper';
 import { useBook } from '@/hooks/useBook';
 import useLoading from '@/hooks/useLoading';
 import useSetting from '@/hooks/useSetting';
-import { IToc } from '@/modules/book/Toc';
 import fs from '@/modules/fs';
-import { TFsBook } from '@/modules/fs/Fs';
 import useReaderParams from '@/router/hooks/useReaderParams';
 import { Box, Collapse, Stack, alpha, useColorScheme } from '@mui/material';
 import * as BSL from 'body-scroll-lock';
@@ -29,20 +27,18 @@ import ReaderSetting from './components/ReaderSetting';
 const Reader = () => {
   // 各种初始状态
   const [params] = useReaderParams();
-  const [bookInfo, setBookInfo] = useState<undefined | null | TFsBook>(null);
   const { loading: globalLoading, addLoading } = useLoading();
-  const loadingBookInfo = bookInfo === null;
-  const loading = globalLoading || loadingBookInfo;
   const [loaded, setLoaded] = useState(false);
   const nav = useNavigate();
   const goBack = useCallback(() => nav(-1), [nav]);
-  const [{ book }, { loadBook }] = useBook();
-  const [currentNav, setCurrentNav] = useState<IToc>();
-  const [currentPageInfo, setCurrentPageInfo] = useState<{
-    total?: number;
-    current?: number;
-  }>({});
-  const [currentPercent, setCurrentPercent] = useState(0);
+  const [
+    { book, currentInfo },
+    {
+      loadBook,
+      controller: { jumpTo, next, prev },
+    },
+  ] = useBook();
+  const loading = globalLoading || !book;
   const [currentPage, setCurrentPage] = useState(0);
   const BookComponent = useMemo(
     () => (book ? memo(book.ReaderComponent) : undefined),
@@ -55,10 +51,11 @@ const Reader = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (!book || !currentNav) return;
+    const { process } = currentInfo;
+    if (!book || !process.navInfo) return;
     document.title = `${book.title} -
-    ${currentNav.title}`;
-  }, [book, currentNav]);
+    ${process.navInfo.title}`;
+  }, [book, currentInfo]);
 
   // 移动端 safari 添加到主屏幕后会触发过度滚动
   useEffect(() => {
@@ -96,26 +93,16 @@ const Reader = () => {
 
   // 加载图书数据
   useEffect(() => {
-    fs.getBookByHash(params.hash).then(setBookInfo);
+    fs.getBookByHash(params.hash).then((bookInfo) => {
+      if (bookInfo === null) return;
+      else if (!bookInfo) throw new Error('load book data fail');
+      loadBook(bookInfo);
+    });
   }, [params.hash]);
-  useEffect(() => {
-    if (bookInfo === null) return;
-    else if (!bookInfo) throw new Error('load book data fail');
-    loadBook(bookInfo);
-  }, [bookInfo]);
 
-  // 更新书本阅读进度并同步到地址栏
-  const updateProcess = useCallback(async () => {
-    if (!book) return null;
-    const process = await book?.getCurrentProcess();
-    if (!process) return process;
-    process &&
-      (await fs.updateBook({
-        hash: book.hash,
-        info: delFalsy({
-          lastProcess: { ...process, ts: Date.now() },
-        }),
-      }));
+  // 当前进度同步到地址栏
+  useEffect(() => {
+    const { process } = currentInfo;
     const prev = new URL(window.location.href).searchParams;
     process?.value &&
       prev.set(
@@ -127,57 +114,12 @@ const Reader = () => {
     let searchStr = '';
     prev.forEach((v, k) => (searchStr += `&${k}=${v}`));
     nav(`${window.location.pathname}?${searchStr}`, { replace: true });
-    return process;
-  }, [nav, book]);
-
-  // 代理翻页跳转操作，更新进度和当前章节信息
-  const updateCurrentInfo = useCallback(async () => {
-    if (!book) return;
-    const res = await updateProcess();
-    if (res) {
-      const { navInfo, percent } = res;
-      setCurrentPercent(percent);
-      openActionLayer && setCurrentPage(percent * book.getPages());
-      if (
-        navInfo &&
-        (!currentNav ||
-          currentNav.href !== navInfo.href ||
-          currentNav.title !== navInfo.title)
-      )
-        setCurrentNav(navInfo);
-    }
-
-    setCurrentPageInfo({
-      total: book?.getCurrentSectionPages(),
-      current: book?.getCurrentSectionCurrentPage(),
-    });
-  }, [
-    updateProcess,
-    currentNav,
-    setCurrentNav,
-    setCurrentPageInfo,
-    book,
-    setCurrentPage,
-    openActionLayer,
-  ]);
-  const nextAndUpdateProcess = useCallback(async () => {
-    if (!book) return;
-    await book.nextPage();
-    await updateCurrentInfo();
-  }, [book, updateCurrentInfo]);
-  const prevAndUpdateProcess = useCallback(async () => {
-    if (!book) return;
-    await book.prevPage();
-    await updateCurrentInfo();
-  }, [book, updateCurrentInfo]);
-  const jumpToAneUpdateProcess = useCallback(
-    async (page: unknown) => {
-      if (!book) return;
-      await book.jumpTo(page);
-      await updateCurrentInfo();
-    },
-    [book, updateCurrentInfo],
-  );
+  }, [nav, currentInfo]);
+  useEffect(() => {
+    const { process, totalPages } = currentInfo;
+    if (!process) return;
+    openActionLayer && setCurrentPage(totalPages.current);
+  }, [openActionLayer, currentInfo]);
 
   // 初次加载时根据路由参数跳转到对应位置
   useEffect(() => {
@@ -188,11 +130,10 @@ const Reader = () => {
       // 只有初次加载才跳转
       if (cancel) return;
       // 根据路由参数跳转到指定位置
-      if (params.value) await jumpToAneUpdateProcess(params.value);
-      else if (params.href) await jumpToAneUpdateProcess(params.href);
-      else if (book.lastProcess.value)
-        await jumpToAneUpdateProcess(book.lastProcess.value);
-      else await jumpToAneUpdateProcess(0);
+      if (params.value) await jumpTo(params.value);
+      else if (params.href) await jumpTo(params.href);
+      else if (book.lastProcess.value) await jumpTo(book.lastProcess.value);
+      else await jumpTo(0);
       if (cancel) return;
       setLoaded(true);
     };
@@ -211,34 +152,32 @@ const Reader = () => {
     setShowWhichExtendedLayer(false);
   }, [setOpenActionLayer, setShowWhichExtendedLayer]);
   const handleOpenActionLayer = useCallback(async () => {
-    if (!book) return;
     // 打开的时候更新进度条
-    setCurrentPage(currentPercent * book.getPages());
+    setCurrentPage(currentInfo.totalPages.current);
     setOpenActionLayer(true);
-  }, [setOpenActionLayer, book, currentPercent]);
+  }, [setOpenActionLayer, currentInfo.process.percent]);
   const handleFullscreen = useCallback((fullscreen: boolean) => {
     fullscreen ? screenfull.request() : screenfull.exit();
   }, []);
   // 导航条
   const ToolbarNav = useMemo(
-    () =>
-      book && (
-        <ToolbarNavigate
-          percent={currentPage}
-          maxPercent={book.getPages()}
-          onPercent={setCurrentPage}
-          onPercentCommit={jumpToAneUpdateProcess}
-          onNext={nextAndUpdateProcess}
-          onPrev={prevAndUpdateProcess}
-        />
-      ),
+    () => (
+      <ToolbarNavigate
+        percent={currentPage}
+        maxPercent={currentInfo.totalPages.total}
+        onPercent={setCurrentPage}
+        onPercentCommit={jumpTo}
+        onNext={next}
+        onPrev={prev}
+      />
+    ),
     [
-      book,
       currentPage,
       setCurrentPage,
-      jumpToAneUpdateProcess,
-      nextAndUpdateProcess,
-      prevAndUpdateProcess,
+      jumpTo,
+      next,
+      prev,
+      currentInfo.totalPages.total,
     ],
   );
   // 操作
@@ -272,9 +211,9 @@ const Reader = () => {
   // 目录
   const handleClickToc = useCallback<NonNullable<TocListProps['onClickToc']>>(
     (toc) => {
-      book && loaded && jumpToAneUpdateProcess(toc.href);
+      loaded && jumpTo(toc.href);
     },
-    [book, loaded, jumpToAneUpdateProcess],
+    [loaded, jumpTo],
   );
   const ToolbarTocList = useMemo(
     () =>
@@ -285,14 +224,14 @@ const Reader = () => {
           <Box>
             <MemoTocList
               tocList={book.toc}
-              current={currentNav}
+              current={currentInfo.process.navInfo}
               currentTitle={t('current location')!}
               onClickToc={handleClickToc}
             />
           </Box>
         </Collapse>
       ),
-    [book, showWhichExtendedLayer, currentNav, handleClickToc, t],
+    [book, showWhichExtendedLayer, currentInfo, handleClickToc, t],
   );
   // 阅读器字体设置等
   const ToolbarReaderSetting = useMemo(
@@ -332,14 +271,17 @@ const Reader = () => {
 
   return (
     <Stack width={1} height={1} bgcolor={readerTheme.backgroundColor}>
-      <InfoBarTop title={currentNav?.title} color={infoColor} />
+      <InfoBarTop
+        title={currentInfo.process.navInfo?.title}
+        color={infoColor}
+      />
       <GestureLayer
         width={1}
         height={0}
         flexGrow={1}
         onOpenAction={handleOpenActionLayer}
-        onPageNext={nextAndUpdateProcess}
-        onPagePrev={prevAndUpdateProcess}>
+        onPageNext={next}
+        onPagePrev={prev}>
         <Box
           sx={useMemo(
             () => ({
@@ -365,28 +307,16 @@ const Reader = () => {
         </Box>
       </GestureLayer>
       <InfoBarBottom
-        pages={currentPageInfo.total}
-        currentPage={currentPageInfo.current}
+        pages={currentInfo.sectionPages.total}
+        currentPage={currentInfo.sectionPages.current}
         color={infoColor}
       />
-      {useMemo(
-        () =>
-          book && (
-            <ActionLayer
-              open={openActionLayer}
-              onClose={handleCloseActionLayer}
-              ContentBottom={ActionLayerContentBottom}
-              ContentTop={ActionLayerContentTop}
-            />
-          ),
-        [
-          book,
-          openActionLayer,
-          handleCloseActionLayer,
-          ActionLayerContentBottom,
-          ActionLayerContentTop,
-        ],
-      )}
+      <ActionLayer
+        open={openActionLayer}
+        onClose={handleCloseActionLayer}
+        ContentBottom={ActionLayerContentBottom}
+        ContentTop={ActionLayerContentTop}
+      />
       <LoadingLayer open={loading} />
     </Stack>
   );

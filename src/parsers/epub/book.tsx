@@ -159,6 +159,12 @@ export class EpubBook extends ABook<string> {
     );
   };
 
+  getCurrentPage() {
+    return Math.round(
+      this.totalPages * (this.getLoc()?.start?.percentage || 0),
+    );
+  }
+
   getPages() {
     return this.totalPages;
   }

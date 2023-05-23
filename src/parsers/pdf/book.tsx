@@ -36,6 +36,9 @@ export class PdfBook extends ABook<number | string> {
   async jumpTo(page: number): Promise<void> {
     return;
   }
+  getCurrentPage() {
+    return this.currentPage;
+  }
   getPages(): number {
     return this.totalPage;
   }

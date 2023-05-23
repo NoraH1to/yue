@@ -1,4 +1,23 @@
 # Changelog
+## [1.3.0](///compare/v1.2.0...v1.3.0) (2023-05-23)
+
+
+### Features
+
+* **about:** add about page c0c8738
+* **i18n:** support manual language switching 03d1680
+* **pwa:** complete pwa support 997b0b5
+* **reader:** add top toolbar 993e1c9
+* **reader:** support hotkey operation d2a93ae
+* **recent-reads:** add toolbar b54ad6a
+
+
+### Bug Fixes
+
+* **parser-epub:** ensure that the night mode style is correct 38b1c96
+* **pwa-updater:** fix i18n 991567a
+* **reader:** scroll lock issue 6df2f93
+
 ## [1.2.0](///compare/v1.1.0...v1.2.0) (2023-05-17)
 
 

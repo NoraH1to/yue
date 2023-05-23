@@ -308,6 +308,7 @@ const Reader = () => {
       onKeyDown={handleKeyDown}
       onWheel={handleWheel}
       tabIndex={-1}
+      ref={(ref) => ref?.focus()}
       sx={useMemo(() => ({ '&:focus': { outline: 'none' } }), [])}>
       <InfoBarTop
         title={currentInfo.process.navInfo?.title}

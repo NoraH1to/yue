@@ -8,7 +8,16 @@ import fs from '@/modules/fs';
 import useReaderParams from '@/router/hooks/useReaderParams';
 import { Box, Collapse, Stack, alpha, useColorScheme } from '@mui/material';
 import * as BSL from 'body-scroll-lock';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import isHotkey from 'is-hotkey';
+import {
+  KeyboardEventHandler,
+  WheelEventHandler,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import screenfull from 'screenfull';
@@ -269,8 +278,37 @@ const Reader = () => {
     [book, goBack],
   );
 
+  // hotkey
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      const isNext = isHotkey(['right', 'down', 'pagedown']);
+      const isPrev = isHotkey(['left', 'up', 'pageup']);
+      const isToggleActionLayer = isHotkey(['space']);
+      if (isNext(e)) next();
+      else if (isPrev(e)) prev();
+      else if (isToggleActionLayer(e))
+        setOpenActionLayer((openActionLayer) => !openActionLayer);
+    },
+    [openActionLayer, next, prev],
+  );
+  const handleWheel: WheelEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      if (openActionLayer) return;
+      if (e.deltaY > 0) next();
+      else if (e.deltaY < 0) prev();
+    },
+    [openActionLayer, next, prev],
+  );
+
   return (
-    <Stack width={1} height={1} bgcolor={readerTheme.backgroundColor}>
+    <Stack
+      width={1}
+      height={1}
+      bgcolor={readerTheme.backgroundColor}
+      onKeyDown={handleKeyDown}
+      onWheel={handleWheel}
+      tabIndex={-1}
+      sx={useMemo(() => ({ '&:focus': { outline: 'none' } }), [])}>
       <InfoBarTop
         title={currentInfo.process.navInfo?.title}
         color={infoColor}

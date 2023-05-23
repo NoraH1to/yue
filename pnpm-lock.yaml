@@ -117,6 +117,9 @@ devDependencies:
   '@types/hammerjs':
     specifier: ^2.0.41
     version: 2.0.41
+  '@types/is-hotkey':
+    specifier: ^0.1.7
+    version: 0.1.7
   '@types/mime':
     specifier: ^3.0.1
     version: 3.0.1
@@ -2429,6 +2432,10 @@ packages:
       '@types/react': 18.2.6
       hoist-non-react-statics: 3.3.2
     dev: false
+
+  /@types/is-hotkey@0.1.7:
+    resolution: {integrity: sha512-yB5C7zcOM7idwYZZ1wKQ3pTfjA9BbvFqRWvKB46GFddxnJtHwi/b9y84ykQtxQPg5qhdpg4Q/kWU3EGoCTmLzQ==}
+    dev: true
 
   /@types/js-cookie@2.2.7:
     resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}

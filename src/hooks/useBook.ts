@@ -39,6 +39,13 @@ export const useBook = (options?: { book: IBookInfo }) => {
     };
   }, [bookInfo]);
 
+  useEffect(
+    () => () => {
+      book?.destroy();
+    },
+    [book],
+  );
+
   const destroy = useCallback(async () => {
     setBook(undefined);
     setBookInfo(undefined);

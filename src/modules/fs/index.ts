@@ -177,6 +177,7 @@ const fs: IFs = {
           filename,
           items: dirInfo.map((d) => {
             const lastmodTs = new Date(d.lastmod).getTime();
+            d.filename = d.filename.replaceAll('../', '');
             if (isFile(d)) return { ...d, id: d.etag, lastmodTs };
             else if (isDirectory(d)) return { ...d, id: d.filename, lastmodTs };
             else throw new Error(`Illegal webdav item type ${d.type}`);

@@ -8,7 +8,7 @@ import { VitePWA as pwa } from 'vite-plugin-pwa';
 export default defineConfig({
   plugins: [
     react(),
-    pwa({
+    process.env.pwa && pwa({
       devOptions: {
         enabled: process.env.NODE_ENV === 'development' && !!process.env.pwa,
       },

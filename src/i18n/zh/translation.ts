@@ -69,6 +69,7 @@ export default {
   other: '其它',
   about: '关于',
   repository: '仓库',
+  'remember setting': '记住设置',
   diffDate: {
     'any days ago': '{{days}} 天前',
     'any hours ago': '{{hours}} 小时前',

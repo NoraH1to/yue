@@ -1,20 +1,17 @@
-import { useTranslation } from 'react-i18next';
-import { Divider, ListItemText } from '@mui/material';
-
 import StyledMuiMenu from '@/components/Styled/MuiMenu';
+import { ISorter } from '@/modules/fs/Fs';
+import { Divider, ListItemText, MenuProps } from '@mui/material';
+import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import MenuSortItem from './MenuSortItem';
 
-import { ISorter } from '@/modules/fs/Fs';
-import { MenuProps } from '@mui/material';
-import { ReactNode } from 'react';
+export type MenuSortProps<T extends object> = MenuProps & {
+  sorter: ISorter<T>;
+  onSortChange?: (newSorter: ISorter<T>['sort']) => void;
+  append?: ReactNode;
+};
 
-const MenuSort = <T extends object>(
-  props: MenuProps & {
-    sorter: ISorter<T>;
-    onSortChange?: (newSorter: ISorter<T>['sort']) => void;
-    append?: ReactNode;
-  },
-) => {
+const MenuSort = <T extends object>(props: MenuSortProps<T>) => {
   const { t } = useTranslation();
   const { sorter, onSortChange, children, append, ...restProps } = props;
   return (

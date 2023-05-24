@@ -1,24 +1,33 @@
 import StyledMuiIconButton from '@/components/Styled/MuiIconButton';
+import StyledMuiMenuItem from '@/components/Styled/MuiMenuItem';
 import useSorter from '@/hooks/useSorter';
-import { SortRounded } from '@mui/icons-material';
-import { Divider, ListItemText } from '@mui/material';
+import type { ISorter } from '@/modules/fs/Fs';
+import {
+  CheckBoxOutlineBlankRounded,
+  CheckBoxRounded,
+  SortRounded,
+} from '@mui/icons-material';
+import { Divider, ListItemIcon, ListItemText } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
-import MenuSort from '../MenuSort';
+import { useTranslation } from 'react-i18next';
+import MenuSort, { MenuSortProps } from '../MenuSort';
 import MenuSortItem from '../MenuSort/MenuSortItem';
 
-import type { ISorter } from '@/modules/fs/Fs';
+type Node<T extends object> =
+  | ReactNode
+  | ((
+      sortKeys: Array<{ key: keyof T; title: string }>,
+      ...args: ReturnType<typeof useSorter<T>>
+    ) => ReactNode);
 
-export type ToolbarButtonSortProps<T extends object> = {
+export type ToolbarButtonSortProps<T extends object> = Partial<
+  MenuSortProps<T>
+> & {
   onSort: (sorter: ISorter<T>) => void;
   defaultSorter: ISorter<T>;
   sortKeys: Array<{ key: keyof T; title: string }>;
-  prepend?:
-    | ReactNode
-    | ((
-        sortKeys: Array<{ key: keyof T; title: string }>,
-        ...args: ReturnType<typeof useSorter<T>>
-      ) => ReactNode);
-  append?: ToolbarButtonSortProps<T>['prepend'];
+  prepend?: Node<T>;
+  append?: Node<T>;
 };
 
 const ToolbarButtonSort = <T extends object>({
@@ -27,13 +36,17 @@ const ToolbarButtonSort = <T extends object>({
   sortKeys,
   prepend,
   append,
+  ...props
 }: ToolbarButtonSortProps<T>) => {
+  const { t } = useTranslation();
   sortKeys = sortKeys || [];
   const useSorterRes = useSorter(
+    `bookmgmt-toolbar-sorter-${window.location.pathname}`,
     sortKeys.map((s) => s.key),
     defaultSorter,
   );
-  const [{ sorter }, { toggleSorter, setSorterKey }] = useSorterRes;
+  const [{ sorter, remember }, { toggleSorter, setSorterKey, setRemember }] =
+    useSorterRes;
   useEffect(() => {
     onSort(sorter);
   }, [sorter]);
@@ -45,6 +58,23 @@ const ToolbarButtonSort = <T extends object>({
   const handleClose = () => {
     setMenuSortAnchorEl(null);
   };
+  const handleClickRemember = () => {
+    setRemember((remember) => !remember);
+  };
+
+  const Remember = (
+    <StyledMuiMenuItem onClick={handleClickRemember}>
+      <ListItemIcon>
+        {remember ? (
+          <CheckBoxRounded color="primary" />
+        ) : (
+          <CheckBoxOutlineBlankRounded />
+        )}
+      </ListItemIcon>
+      <ListItemText primary={t('remember setting')} />
+    </StyledMuiMenuItem>
+  );
+
   return (
     <>
       <StyledMuiIconButton
@@ -52,11 +82,13 @@ const ToolbarButtonSort = <T extends object>({
         <SortRounded />
       </StyledMuiIconButton>
       <MenuSort
+        {...props}
         open={open}
         sorter={sorter}
         onClose={handleClose}
         anchorEl={menuSortAnchorEl}
-        onSortChange={(sort) => toggleSorter(sort)}>
+        onSortChange={(sort) => toggleSorter(sort)}
+        append={Remember}>
         {typeof prepend === 'function'
           ? prepend(sortKeys, ...useSorterRes)
           : prepend}
@@ -86,4 +118,4 @@ const ToolbarButtonSort = <T extends object>({
   );
 };
 
-export default memo(ToolbarButtonSort) as typeof ToolbarButtonSort;
+export default memo(ToolbarButtonSort) as unknown as typeof ToolbarButtonSort;

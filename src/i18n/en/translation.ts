@@ -69,6 +69,7 @@ export default {
   other: 'other',
   about: 'about',
   repository: 'repository',
+  'remember setting': 'remember',
   diffDate: {
     'any days ago': '{{days}} days ago',
     'any hours ago': '{{hours}} hours ago',

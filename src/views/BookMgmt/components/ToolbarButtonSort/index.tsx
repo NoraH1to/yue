@@ -12,6 +12,7 @@ import { ReactNode, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MenuSort, { MenuSortProps } from '../MenuSort';
 import MenuSortItem from '../MenuSort/MenuSortItem';
+import { useLocation } from 'react-router-dom';
 
 type Node<T extends object> =
   | ReactNode
@@ -40,8 +41,9 @@ const ToolbarButtonSort = <T extends object>({
 }: ToolbarButtonSortProps<T>) => {
   const { t } = useTranslation();
   sortKeys = sortKeys || [];
+  const location = useLocation();
   const useSorterRes = useSorter(
-    `bookmgmt-toolbar-sorter-${window.location.pathname}`,
+    `bookmgmt-toolbar-sorter-${location.pathname}`,
     sortKeys.map((s) => s.key),
     defaultSorter,
   );

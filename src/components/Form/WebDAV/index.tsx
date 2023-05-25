@@ -11,6 +11,7 @@ const WebDAV = () => {
   return (
     <>
       <MuiTextFiled name="url" label={t('webDAVInfo.url')} />
+      <MuiTextFiled name="dirBasePath" label={t('webDAVInfo.customDirBasePath')} />
       <MuiTextFiled name="username" label={t('webDAVInfo.username')} />
       <MuiTextFiled name="password" label={t('webDAVInfo.password')} />
     </>
@@ -32,6 +33,7 @@ export const YupSchema = {
         return false;
       }
     }),
+  dirBasePath: Yup.string().notRequired(),
   username: Yup.string().notRequired(),
   password: Yup.string().notRequired(),
 };

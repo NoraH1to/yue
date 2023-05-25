@@ -78,6 +78,7 @@ export default {
   },
   webDAVInfo: {
     url: '地址',
+    customDirBasePath: '自定义目录基础路径',
     username: '用户名',
     password: '密码',
   },

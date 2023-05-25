@@ -26,6 +26,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.0",
     "@mui/system": "^5.12.3",
+    "@norah1to/webdav": "^5.1.0",
     "ahooks": "^3.7.7",
     "anysort-typed": "^3.3.1",
     "body-scroll-lock": "4.0.0-beta.0",
@@ -52,7 +53,6 @@
     "screenfull": "^6.0.2",
     "spark-md5": "^3.0.2",
     "utility-types": "^3.10.0",
-    "webdav": "^5.0.0",
     "yup": "^1.0.2"
   },
   "devDependencies": {

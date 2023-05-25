@@ -1,6 +1,11 @@
 export type TSource = {
   type: 'webdav';
-  info: { url: string; username?: string; password?: string };
+  info: {
+    url: string;
+    dirBasePath?: string;
+    username?: string;
+    password?: string;
+  };
 };
 
 export type TAppSetting = {

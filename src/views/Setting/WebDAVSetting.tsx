@@ -76,6 +76,7 @@ const WebDAVSetting = () => {
         <Formik
           initialValues={{
             url: info?.url || '',
+            dirBasePath: info?.dirBasePath || '',
             username: info?.username || '',
             password: info?.password || '',
           }}

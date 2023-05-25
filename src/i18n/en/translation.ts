@@ -78,6 +78,7 @@ export default {
   },
   webDAVInfo: {
     url: 'url',
+    customDirBasePath: 'custom dir base path',
     username: 'username',
     password: 'password',
   },

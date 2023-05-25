@@ -22,7 +22,7 @@ import { useSnackbar } from 'notistack';
 import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { WebDAVClient } from 'webdav';
+import { WebDAVClient } from '@norah1to/webdav';
 
 export type FileCardProps = {
   client: WebDAVClient;

@@ -19,6 +19,9 @@ dependencies:
   '@mui/system':
     specifier: ^5.12.3
     version: 5.12.3(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.2.6)(react@18.2.0)
+  '@norah1to/webdav':
+    specifier: ^5.1.0
+    version: registry.npmjs.org/@norah1to/webdav@5.1.0
   ahooks:
     specifier: ^3.7.7
     version: 3.7.7(react@18.2.0)
@@ -97,9 +100,6 @@ dependencies:
   utility-types:
     specifier: ^3.10.0
     version: 3.10.0
-  webdav:
-    specifier: ^5.0.0
-    version: 5.0.0
   yup:
     specifier: ^1.0.2
     version: 1.0.2
@@ -7212,25 +7212,6 @@ packages:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}
     engines: {node: '>= 8'}
 
-  /webdav@5.0.0:
-    resolution: {integrity: sha512-6uSa4TN74r0WrZK7ILA3Y+rTGc5/evzOpXOmC5DDqaDmb5oBaG3C44FL44FzyaxdGFqsR/BkC8A50RthT5APXQ==}
-    engines: {node: '>=14'}
-    dependencies:
-      '@buttercup/fetch': 0.1.1
-      base-64: 1.0.0
-      byte-length: 1.0.2
-      fast-xml-parser: 3.21.1
-      he: 1.2.0
-      hot-patcher: 2.0.0
-      layerr: 0.1.2
-      md5: 2.3.0
-      minimatch: 5.1.6
-      nested-property: 4.0.0
-      path-posix: 1.0.0
-      url-join: 4.0.1
-      url-parse: 1.5.10
-    dev: false
-
   /webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
     dev: true
@@ -7538,4 +7519,25 @@ packages:
       tiny-case: 1.0.3
       toposort: 2.0.2
       type-fest: 2.19.0
+    dev: false
+
+  registry.npmjs.org/@norah1to/webdav@5.1.0:
+    resolution: {integrity: sha512-aU2UOgXXsm163hqAEoGAjdlD8u+yKKQ9DQKkcNUNl68UFwmM9cSNxaqed3LhZ51T2OamY9KGWxZ2CrjwMREKlA==, registry: https://registry.npmmirror.com/, tarball: https://registry.npmjs.org/@norah1to/webdav/-/webdav-5.1.0.tgz}
+    name: '@norah1to/webdav'
+    version: 5.1.0
+    engines: {node: '>=14'}
+    dependencies:
+      '@buttercup/fetch': 0.1.1
+      base-64: 1.0.0
+      byte-length: 1.0.2
+      fast-xml-parser: 3.21.1
+      he: 1.2.0
+      hot-patcher: 2.0.0
+      layerr: 0.1.2
+      md5: 2.3.0
+      minimatch: 5.1.6
+      nested-property: 4.0.0
+      path-posix: 1.0.0
+      url-join: 4.0.1
+      url-parse: 1.5.10
     dev: false

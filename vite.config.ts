@@ -58,7 +58,7 @@ export default defineConfig({
             'notistack',
           ],
           'common-utils': ['spark-md5', 'hammerjs', 'i18next'],
-          'data-source': ['dexie', 'webdav'],
+          'data-source': ['dexie', '@norah1to/webdav'],
           epubjs: ['epubjs'],
           pdf: ['react-pdf'],
         },

@@ -3,17 +3,22 @@ import {
   FileStat,
   ResponseDataDetailed,
   createClient as _createClient,
-} from 'webdav';
+} from '@norah1to/webdav';
 
 export const createClient = (
   url: string,
   config: {
     username: string;
     password: string;
+    dirBasePath: string;
   },
 ) => {
-  const { username, password } = config;
-  return _createClient(url, { username, password });
+  const { username, password, dirBasePath } = config;
+  return _createClient(url, {
+    username,
+    password,
+    directoryBasePath: dirBasePath,
+  });
 };
 
 type FileStatFile = Required<

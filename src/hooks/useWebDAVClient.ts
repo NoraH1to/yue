@@ -1,7 +1,7 @@
 import { delFalsy } from '@/helper';
 import { createClient } from '@/modules/fs/webDAV';
 import { useEffect, useMemo, useState } from 'react';
-import { FileStat, ResponseDataDetailed, WebDAVClient } from 'webdav';
+import { FileStat, ResponseDataDetailed, WebDAVClient } from '@norah1to/webdav';
 import useMinDelay from './useMinDelay';
 import useSetting from './useSetting';
 
@@ -35,6 +35,7 @@ const useWebDAVClient = () => {
       delFalsy({
         username: info.username || '',
         password: info.password || '',
+        dirBasePath: info.dirBasePath || '',
       }),
     );
     _client

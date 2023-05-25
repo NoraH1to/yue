@@ -48,7 +48,7 @@ const FileCard: FC<FileCardProps> = ({ client, file }) => {
   const loading = status === 'pending' || _loading;
   const inProgress = _loading;
   const hasLocal = !!(localBook && localBook.hash === file.id);
-  const ext = getExtByMime(file.mime) || getExtByFilename(file.basename) || '';
+  const ext = getExtByFilename(file.basename) || getExtByMime(file.mime) || '';
   const cover = useMemo(
     () => localBook?.cover && window.URL.createObjectURL(localBook.cover),
     [localBook?.cover],
@@ -64,7 +64,7 @@ const FileCard: FC<FileCardProps> = ({ client, file }) => {
           [(await client.getFileContents(file.filename)) as ArrayBuffer],
           file.basename,
           {
-            type: file.mime || getMimeByExt(ext) || 'application/octet-stream',
+            type: getMimeByExt(ext) || file.mime || 'application/octet-stream',
           },
         ),
         { hash: file.id },

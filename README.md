@@ -82,6 +82,14 @@ All WebApps can not get around the problem, most webDAV services can not be used
 
 Personally, I solved the problem by using [`alist`](https://github.com/alist-org/alist) to build a private service
 
+- **2023/05/25 Update**
+
+  Cross-domain issues have been solved by configuring `vercel.json` using a reverse proxy
+
+  e.g. `https://yue.norah1to.com/proxy/my.webdav.server/sub`
+
+  In this case, you need to configure the custom root path of the directory to be the correct root path, in the above example we need to configure it to `/sub`.
+
 ### Unable to turn page
 
 There is a small chance that the page will not turn after the following operation, `epub.js`' problem

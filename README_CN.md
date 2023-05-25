@@ -82,6 +82,14 @@ pnpm build:web-pwa
 
 我个人用使用 [`alist`](https://github.com/alist-org/alist) 搭建私有服务解决
 
+- **2023/05/25 更新**
+
+  跨域问题已经通过配置 `vercel.json` 使用反向代理解决了。
+
+  例子：`https://yue.norah1to.com/proxy/my.webdav.server/sub`
+
+  在这种情况下，你需要将目录的自定义根路径配置为正确的根路径，在上面的例子中，我们需要将其配置为 `/sub`
+
 ### 无法翻页
 
 在以下操作后小概率无法翻页，`epub.js` 的锅

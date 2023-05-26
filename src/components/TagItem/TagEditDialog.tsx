@@ -1,22 +1,20 @@
+import { ITag } from '@/modules/book/Tag';
+import fs from '@/modules/fs';
 import {
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogProps,
   DialogTitle,
   Stack,
 } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { t } from 'i18next';
 import { useSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-
-import fs from '@/modules/fs';
 import FormTag, { YupSchema } from '../Form/Tag';
-
-import { ITag } from '@/modules/book/Tag';
-import { DialogProps } from '@mui/material';
 
 const TagEditDialog = ({
   tag,
@@ -24,6 +22,7 @@ const TagEditDialog = ({
 }: DialogProps & {
   tag?: ITag;
 }) => {
+  const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   return (
     <Dialog {...props}>

@@ -1,30 +1,29 @@
+import { getRandomColor } from '@/helper';
+import { ITag } from '@/modules/book/Tag';
+import fs from '@/modules/fs';
 import {
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogProps,
   DialogTitle,
   Stack,
 } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import * as Yup from 'yup';
-
-import { getRandomColor } from '@/helper';
-import fs from '@/modules/fs';
-import { t } from 'i18next';
-import FormTag, { YupSchema } from '../Form/Tag';
-
-import { ITag } from '@/modules/book/Tag';
-import { DialogProps } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { Optional } from 'utility-types';
+import * as Yup from 'yup';
+import FormTag, { YupSchema } from '../Form/Tag';
 
 const TagAddDialog = ({
   initValue,
   ...props
 }: DialogProps & { initValue?: Partial<ITag> }) => {
+  const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   return (
     <Dialog {...props}>

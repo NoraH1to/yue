@@ -1,7 +1,7 @@
 import { AutoStoriesRounded, RestoreRounded } from '@mui/icons-material';
 import { Box, Fab, FabProps } from '@mui/material';
-import { t } from 'i18next';
 import { FC, forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export type DetailFabReadProps = { hasRead?: boolean } & Pick<
   FabProps,
@@ -10,6 +10,7 @@ export type DetailFabReadProps = { hasRead?: boolean } & Pick<
 
 const DetailFabRead: FC<DetailFabReadProps> = forwardRef(
   ({ hasRead, onClick, ...props }, ref) => {
+    const { t } = useTranslation();
     const Icon = hasRead ? RestoreRounded : AutoStoriesRounded;
     return (
       <Box

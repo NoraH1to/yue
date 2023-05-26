@@ -180,7 +180,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
             { key: 'title', title: t('bookInfo.title') },
             { key: 'author', title: t('bookInfo.author') },
           ],
-          [],
+          [t],
         )}
       />
     </ToolbarRow>

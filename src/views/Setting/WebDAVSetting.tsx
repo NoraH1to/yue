@@ -18,11 +18,12 @@ import {
   Stack,
 } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { t } from 'i18next';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
 const WebDAVSetting = () => {
+  const { t } = useTranslation();
   const [{ info, error, loading: loadingWebDAV }, { setInfo }] =
     useWebDAVClient();
   const [openDialog, setOpenDialog] = useState(false);
@@ -39,7 +40,7 @@ const WebDAVSetting = () => {
     if (!info) return t('unsetting');
     const url = new URL(info?.url);
     return `${url.host}${url.pathname}`;
-  }, [info, loadingWebDAV]);
+  }, [info, loadingWebDAV, t]);
 
   const webDAVSubtitle = useMemo(() => {
     if (loadingWebDAV)
@@ -52,7 +53,7 @@ const WebDAVSetting = () => {
         />
       );
     return error ? error : info ? t('connected') : t('unsetting');
-  }, [info, error, loadingWebDAV]);
+  }, [info, error, loadingWebDAV, t]);
 
   const webDAVIcon = loadingWebDAV ? undefined : error ? (
     <ErrorOutlineRounded color="error" />

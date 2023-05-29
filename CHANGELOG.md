@@ -1,4 +1,22 @@
 # Changelog
+## [1.4.0](///compare/v1.3.0...v1.4.0) (2023-05-29)
+
+
+### Features
+
+* **book-list:** support remember sorting settings 0a557fa
+* **vercel:** support reverse proxy [#2](undefined/undefined/undefined/issues/2) 3f1e878
+* **webdav:** support custom dir base path [#2](undefined/undefined/undefined/issues/2) 148ce24
+
+
+### Bug Fixes
+
+* **book-list:** sorting does not reset with page switch 3b7ab43
+* **i18n:** incorrect i18n import and memo deps 57b64cc
+* **reader:** forget to destroy the book causes the drag fail 9821a25
+* **reader:** no autofocus causes invalid hotkeys b3e4e65
+* **webdav:** when the webdav service mime type is incorrect, it does not resolve correctly 6613c6c
+
 ## [1.3.0](///compare/v1.2.0...v1.3.0) (2023-05-23)
 
 

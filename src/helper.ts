@@ -7,7 +7,13 @@ import Md5 from 'spark-md5';
 import i18n from './i18n';
 import { ABook } from './modules/book/Book';
 import fs from './modules/fs';
-import { TBookSorter, TDirItemSorter, TFsBook, TFsDir } from './modules/fs/Fs';
+import {
+  TBookSorter,
+  TDirItemSorter,
+  TFsBook,
+  TFsDir,
+  TSourceItemInfo,
+} from './modules/fs/Fs';
 import { getParser } from './parsers';
 
 export const Mime = mime;
@@ -100,20 +106,15 @@ export const getBasenameByFilename = (filename: string) => {
 export const importBook = async (
   target: File,
   cacheInfo?: Partial<ABook>,
+  sourceInfo?: TSourceItemInfo,
 ): Promise<{ res: boolean; msg?: string | null }> => {
   const hash = await md5FromBlob(target);
   const originBook = await fs.getBookByHash(hash);
-  if (originBook) {
-    if (cacheInfo?.hash && cacheInfo.hash !== hash) {
-      await fs.updateBook({ hash, info: { hash: cacheInfo.hash } });
-      return {
-        res: true,
-      };
-    } else
-      return {
-        res: false,
-        msg: i18n.t('ebook already exist'),
-      };
+  if (originBook && !sourceInfo) {
+    return {
+      res: false,
+      msg: i18n.t('ebook already exist'),
+    };
   }
   const type = getExtByMime(target.type) || getExtByFilename(target.name);
   if (!type) return { res: false, msg: i18n.t('unsupported format') };
@@ -127,10 +128,13 @@ export const importBook = async (
 
   const book = await new parser.Book(await parser.parse(target, cacheInfo));
 
-  await fs.addBook({
-    ...parser.getCacheableInfo(book),
-    type: book.type,
-  });
+  await fs.addBook(
+    {
+      ...parser.getCacheableInfo(book),
+      type: book.type,
+    },
+    sourceInfo,
+  );
 
   return {
     res: true,

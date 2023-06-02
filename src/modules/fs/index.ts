@@ -52,39 +52,58 @@ const dbBook2fsBookWithTag = async (
 };
 
 const fs: IFs = {
-  async addBook(book) {
-    const hash = await db.transaction('rw', db.books, async () => {
-      const addTs = Date.now();
-      const [targetBuffer, coverBuffer] = await DB.waitFor(
-        Promise.all([
-          book.target.arrayBuffer(),
-          (async () => (book.cover ? book.cover.arrayBuffer() : undefined))(),
-        ]),
-      );
-      const hash = await db.books.add({
-        ...book,
-        target: {
-          buffer: targetBuffer,
-          type: book.target.type,
-          name: book.target.name,
-        },
-        cover: coverBuffer
-          ? {
-              buffer: coverBuffer,
-              type: book.cover!.type,
-            }
-          : undefined,
-        hash: book.hash,
-        addTs,
-        lastmodTs: addTs,
-      });
-      return hash;
-    });
+  async addBook(book, sourceInfo) {
+    const hash = await db.transaction(
+      'rw',
+      db.books,
+      db.sourceIdAndBookHash,
+      async () => {
+        const addTs = Date.now();
+        const [targetBuffer, coverBuffer] = await DB.waitFor(
+          Promise.all([
+            book.target.arrayBuffer(),
+            (async () => (book.cover ? book.cover.arrayBuffer() : undefined))(),
+          ]),
+        );
+        const already = await db.books.get(book.hash);
+        const hash = already
+          ? already.hash
+          : await db.books.add({
+              ...book,
+              target: {
+                buffer: targetBuffer,
+                type: book.target.type,
+                name: book.target.name,
+              },
+              cover: coverBuffer
+                ? {
+                    buffer: coverBuffer,
+                    type: book.cover!.type,
+                  }
+                : undefined,
+              hash: book.hash,
+              addTs,
+              lastmodTs: addTs,
+            });
+        if (sourceInfo) {
+          try {
+            await db.sourceIdAndBookHash.add({
+              id: sourceInfo.sourceId,
+              etag: sourceInfo.etag,
+              bookHash: book.hash,
+            });
+          } catch {
+            // empty
+          }
+        }
+        return hash;
+      },
+    );
     return (await DB.waitFor(this.getBookByHash(hash as string)))!;
   },
 
   async getBooks() {
-    return db.transaction('r', db.books, db.bookAndTag, async () => {
+    return db.transaction('r!', db.books, db.bookAndTag, async () => {
       const books = await db.books.toArray();
       return Promise.all(
         books.map((book) => {
@@ -112,6 +131,17 @@ const fs: IFs = {
     });
   },
 
+  async getBookBySourceItemInfo(sourceInfo) {
+    return db.transaction('r', db.books, db.sourceIdAndBookHash, async () => {
+      const info = await db.sourceIdAndBookHash
+        .where({ id: sourceInfo.sourceId, etag: sourceInfo.etag })
+        .first();
+      if (!info) return info;
+      const book = await db.books.get(info.bookHash);
+      return book ? dbBook2FsBook(book) : book;
+    });
+  },
+
   async getBooksByTag(tagID) {
     return db.transaction('r', db.books, db.bookAndTag, async () => {
       const bookHashList = await DB.waitFor(getBookHashListByTagId(tagID));
@@ -128,13 +158,6 @@ const fs: IFs = {
     return db.transaction('rw', db.books, db.bookAndTag, async () => {
       const code = await db.books.update(hash, info);
       if (code === 0) throw new Error(`Update book fail, book ${hash} unexist`);
-      // 如果更新了 hash 值（从云端导入本地已有的图书），同时更新 tag 关联
-      if (info.hash) {
-        await db.bookAndTag
-          .where({ bookHash: hash })
-          .modify({ bookHash: info.hash });
-        hash = info.hash;
-      }
       return (await DB.waitFor(this.getBookByHash(hash)))!;
     });
   },

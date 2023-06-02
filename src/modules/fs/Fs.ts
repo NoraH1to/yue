@@ -61,13 +61,18 @@ export type TDirItemSorter = ISorter<
   Record<GetPath<Omit<TFsItemDir | TFsItemFile, 'type'>>, unknown>
 >;
 
+export type TSourceItemInfo = { sourceId: string; etag: string };
+
 export interface IFs {
   /**
    * 添加一本图书
-   * @param info.book 图书信息
-   * @param info.parentDirID 所在文件夹
+   * @param book 图书信息
+   * @param sourceInfo 关联的源信息
    */
-  addBook(book: Omit<TFsBook, 'addTs' | 'lastmodTs'>): Promise<TFsBook>;
+  addBook(
+    book: Omit<TFsBook, 'addTs' | 'lastmodTs'>,
+    sourceInfo?: TSourceItemInfo,
+  ): Promise<TFsBook>;
   /**
    * 获得全部图书
    */
@@ -83,6 +88,13 @@ export interface IFs {
    */
   getBookByHash(hash: string): Promise<TFsBook | undefined>;
   /**
+   * 查找本地是否有指定的源中书籍
+   * @param sourceInfo 源中的书本信息
+   */
+  getBookBySourceItemInfo(
+    sourceInfo: TSourceItemInfo,
+  ): Promise<TFsBook | undefined>;
+  /**
    * 获得某标签的所有图书
    * @param tagID 标签唯一键
    */
@@ -92,7 +104,10 @@ export interface IFs {
    * @param info.hash 图书哈希值
    * @param info.info 需要更新的内容
    */
-  updateBook(info: { hash: string; info: Partial<TFsBook> }): Promise<TFsBook>;
+  updateBook(info: {
+    hash: string;
+    info: Partial<Omit<TFsBook, 'hash'>>;
+  }): Promise<TFsBook>;
   /**
    * 给图书打标签
    * @param info.hash 图书哈希值

@@ -17,27 +17,29 @@ import { TFsItemFile } from '@/modules/fs/Fs';
 import { ROUTE_PATH } from '@/router';
 import { DownloadDoneRounded, FileDownloadRounded } from '@mui/icons-material';
 import { Backdrop, CircularProgress, Fade } from '@mui/material';
+import { WebDAVClient } from '@norah1to/webdav';
 import { useConfirm } from 'material-ui-confirm';
 import { useSnackbar } from 'notistack';
 import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { WebDAVClient } from '@norah1to/webdav';
 
 export type FileCardProps = {
   client: WebDAVClient;
+  sourceId: string;
   file: TFsItemFile;
 };
 
-const FileCard: FC<FileCardProps> = ({ client, file }) => {
+const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const confirm = useConfirm();
   const nav = useNavigate();
 
   const { data: localBook, status } = useStatusLiveQuery(
-    async () => fs.getBookByHash(file.id),
-    [file.id],
+    async () =>
+      fs.getBookBySourceItemInfo({ sourceId: sourceId, etag: file.id }),
+    [file.id, sourceId],
     null,
   );
 
@@ -47,7 +49,7 @@ const FileCard: FC<FileCardProps> = ({ client, file }) => {
 
   const loading = status === 'pending' || _loading;
   const inProgress = _loading;
-  const hasLocal = !!(localBook && localBook.hash === file.id);
+  const hasLocal = !!localBook;
   const ext = getExtByFilename(file.basename) || getExtByMime(file.mime) || '';
   const cover = useMemo(
     () => localBook?.cover && window.URL.createObjectURL(localBook.cover),
@@ -67,7 +69,8 @@ const FileCard: FC<FileCardProps> = ({ client, file }) => {
             type: getMimeByExt(ext) || file.mime || 'application/octet-stream',
           },
         ),
-        { hash: file.id },
+        undefined,
+        { sourceId, etag: file.id },
       );
       enqueueSnackbar({
         variant: res.res ? 'success' : res.msg ? 'warning' : 'error',
@@ -82,7 +85,7 @@ const FileCard: FC<FileCardProps> = ({ client, file }) => {
 
   const handleClick = useCallback(() => {
     if (hasLocal) {
-      nav(`/${ROUTE_PATH.DETAIL}/${file.id}`);
+      nav(`/${ROUTE_PATH.DETAIL}/${localBook.hash}`);
     } else {
       download();
     }

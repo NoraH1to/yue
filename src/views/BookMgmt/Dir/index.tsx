@@ -22,11 +22,11 @@ import DirCard from '../components/DirCard';
 import FileCard from '../components/FileCard';
 import MainLayout from '../components/MainLayout';
 import Search from '../components/Search';
+import StatusEmpty from '../components/StatusEmpty';
 import ToolbarButtonSort from '../components/ToolbarButtonSort';
 import ToolbarButtonToggleSidebar from '../components/ToolbarButtonToggleSidebar';
 import NeedWebDAVInfo from './NeedWebDAVInfo';
 import WebDavError from './WebDAVError';
-import StatusEmpty from '../components/StatusEmpty';
 
 const RouterBreadcrumbsLinkButton = styled(Button)({
   textTransform: 'none',
@@ -144,17 +144,21 @@ const DirContent: FC<DirContentProps> = ({ filename }) => {
       ))}
     </DirGridLayout>
   ) : dir ? (
-    dir.items.length ? <DirGridLayout>
-    {dir.items.map((item) => (
-      <VisibleWrapper key={item.id} hide={getItemHideStatus(item)}>
-        {item.type === 'directory' ? (
-          <DirCard dirItem={item} />
-        ) : (
-          <FileCard client={client!} file={item} />
-        )}
-      </VisibleWrapper>
-    ))}
-  </DirGridLayout> : <StatusEmpty />
+    dir.items.length ? (
+      <DirGridLayout>
+        {dir.items.map((item) => (
+          <VisibleWrapper key={item.id} hide={getItemHideStatus(item)}>
+            {item.type === 'directory' ? (
+              <DirCard dirItem={item} />
+            ) : (
+              <FileCard client={client!} file={item} sourceId={info.url} />
+            )}
+          </VisibleWrapper>
+        ))}
+      </DirGridLayout>
+    ) : (
+      <StatusEmpty />
+    )
   ) : (
     // TODO: 空状态，也是错误状态
     <Box>empty</Box>

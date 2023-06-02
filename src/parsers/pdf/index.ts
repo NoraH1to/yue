@@ -37,10 +37,11 @@ const parseToc = async (
   const outline =
     _outline ||
     (await pdf.getOutline())
-      .filter(Boolean)
+      ?.filter(Boolean)
       .filter((o) =>
         typeof o.dest === 'string' ? !!o.dest : !!o.dest?.[0] && !!o.title,
       );
+  if (!outline) return [];
   const dest = await Promise.all(
     outline.map((ol) => {
       return typeof ol.dest === 'string'

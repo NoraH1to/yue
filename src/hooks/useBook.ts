@@ -51,55 +51,60 @@ export const useBook = (options?: { book: IBookInfo }) => {
     setBookInfo(undefined);
   }, []);
 
-  const updateProcess = useCallback(async () => {
-    if (!book) return null;
-    const process = await book?.getCurrentProcess();
-    if (!process) return process;
-    process &&
-      (await fs.updateBook({
+  const updateProcess = useCallback(
+    async (curProcess?: ABook['lastProcess'] | null) => {
+      if (!book) return null;
+      const process = curProcess || (await book?.getCurrentProcess());
+      if (!process) return process;
+      const bookProcess = { ts: Date.now(), ...process };
+      await fs.updateBook({
         hash: book.hash,
         info: delFalsy({
-          lastProcess: { ...process, ts: Date.now() },
+          lastProcess: bookProcess,
         }),
-      }));
-    return process;
-  }, [book]);
+      });
+      return bookProcess;
+    },
+    [book],
+  );
 
-  const updateCurrentInfo = useCallback(async () => {
-    if (!book) return;
-    const process = await updateProcess();
-    setCurrentInfo((currentInfo) => {
-      const newProcess = process || currentInfo.process;
-      return {
-        ...currentInfo,
-        process: newProcess,
-        sectionPages: {
-          total: book.getCurrentSectionPages(),
-          current: book.getCurrentSectionCurrentPage(),
-        },
-        totalPages: {
-          total: book.getPages(),
-          current: book.getCurrentPage(),
-        },
-      };
-    });
-  }, [updateProcess, setCurrentInfo, book]);
+  const updateCurrentInfo = useCallback(
+    async (process?: ABook['lastProcess'] | null) => {
+      if (!book) return;
+      setCurrentInfo((currentInfo) => {
+        const newProcess = process || currentInfo.process;
+        return {
+          ...currentInfo,
+          process: newProcess,
+          sectionPages: {
+            total: book.getCurrentSectionPages(),
+            current: book.getCurrentSectionCurrentPage(),
+          },
+          totalPages: {
+            total: book.getPages(),
+            current: book.getCurrentPage(),
+          },
+        };
+      });
+    },
+    [updateProcess, setCurrentInfo, book],
+  );
 
   const nextAndUpdateProcess = useCallback(async () => {
     if (!book) return;
     await book.nextPage();
-    await updateCurrentInfo();
+    await updateCurrentInfo(await updateProcess());
   }, [book, updateCurrentInfo]);
   const prevAndUpdateProcess = useCallback(async () => {
     if (!book) return;
     await book.prevPage();
-    await updateCurrentInfo();
+    await updateCurrentInfo(await updateProcess());
   }, [book, updateCurrentInfo]);
   const jumpToAneUpdateProcess = useCallback(
     async (page: unknown) => {
       if (!book) return;
       await book.jumpTo(page);
-      await updateCurrentInfo();
+      await updateCurrentInfo(await updateProcess());
     },
     [book, updateCurrentInfo],
   );
@@ -113,6 +118,8 @@ export const useBook = (options?: { book: IBookInfo }) => {
         prev: prevAndUpdateProcess,
         jumpTo: jumpToAneUpdateProcess,
       },
+      updateProcess,
+      updateCurrentInfo,
     },
   ] as const;
 };

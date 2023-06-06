@@ -22,7 +22,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import I18nSetting from './I18nSetting';
-import WebDAVSetting from './WebDAVSetting';
+import WebDAVInfoSetting from './WebDAVInfoSetting';
+import WebDAVSyncDirSetting from './WebDAVSyncDirSetting';
+import WebDAVSyncProcessSetting from './WebDAVSyncProcessSetting';
 
 const StyledListSubheader = styled(ListSubheader)({
   background: 'transparent',
@@ -63,7 +65,9 @@ const Setting = () => {
           </ToggleButtonGroup>
         </ListItem>
         <StyledListSubheader>{t('webDAV')}</StyledListSubheader>
-        <WebDAVSetting />
+        <WebDAVInfoSetting />
+        <WebDAVSyncDirSetting />
+        <WebDAVSyncProcessSetting />
         <StyledListSubheader>i18n</StyledListSubheader>
         <I18nSetting />
         <StyledListSubheader>{t('other')}</StyledListSubheader>

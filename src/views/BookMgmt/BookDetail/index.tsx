@@ -4,6 +4,7 @@ import BookItemCover from '@/components/BookItem/Cover';
 import TocList, { TocListProps } from '@/components/BookItem/TocList';
 import DetailToolbar from '@/components/DetailToolbar';
 import FixedRatioBookCover from '@/components/FixedRatioWrapper/FixedRatioBookCover';
+import ToolbarRowSpace from '@/components/Toolbar/ToolbarRowSpace';
 import { delFalsy } from '@/helper';
 import useMinDelay from '@/hooks/useMinDelay';
 import useStatusLiveQuery from '@/hooks/useStatusLiveQuery';
@@ -16,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import DetailFabRead from './FabRead';
 import DetailInfo, { DetailInfoProps, DetailInfoSkeleton } from './Info';
+import SyncButton from './SyncButton';
 
 type BookDetailContentProps = {
   hash: string;
@@ -84,6 +86,14 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
       <DetailToolbar
         title={loading ? <BookDetailTitleSkeleton /> : book.title}
         onBack={handleBack}
+        append={
+          book && (
+            <>
+              <ToolbarRowSpace enableMargin />
+              <SyncButton book={book} />
+            </>
+          )
+        }
       />
       <Stack
         direction="row"

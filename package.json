@@ -29,6 +29,7 @@
     "@norah1to/webdav": "^5.1.0",
     "ahooks": "^3.7.7",
     "anysort-typed": "^3.3.1",
+    "arraybuffer-to-string": "^1.0.2",
     "body-scroll-lock": "4.0.0-beta.0",
     "browser-fs-access": "^0.33.1",
     "dexie": "^3.2.3",
@@ -52,6 +53,7 @@
     "react-router-dom": "^6.11.1",
     "screenfull": "^6.0.2",
     "spark-md5": "^3.0.2",
+    "url-join": "^5.0.0",
     "utility-types": "^3.10.0",
     "yup": "^1.0.2"
   },

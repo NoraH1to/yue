@@ -13,6 +13,8 @@ export type TAppSetting = {
   readerTheme: Record<'dark' | 'light', TReaderTheme>;
   readerSetting: TReaderSetting;
   source: Record<string, TSource | undefined>;
+  autoSyncProcess: boolean;
+  sourceDataDir: string;
 };
 
 export type TReaderTheme = {

@@ -30,6 +30,8 @@ const defaultSetting: TAppSetting = {
     verticalMargin: 20,
     horizontalMargin: 30,
   },
+  autoSyncProcess: false,
+  sourceDataDir: '/yue',
 };
 
 type SettingContextValue = [
@@ -38,6 +40,8 @@ type SettingContextValue = [
     setColorMode: (colorMode: TAppSetting['colorMode']) => void;
     setSource: (key: string, source?: TSource) => void;
     setReaderSetting: (readerSetting: TAppSetting['readerSetting']) => void;
+    setAutoSyncProcess: (sync?: boolean) => void;
+    setSourceDataDir: (dir: string) => void;
   },
 ];
 
@@ -47,6 +51,8 @@ const SettingContext = createContext<SettingContextValue>([
     setColorMode: emptyFn,
     setSource: emptyFn,
     setReaderSetting: emptyFn,
+    setAutoSyncProcess: emptyFn,
+    setSourceDataDir: emptyFn,
   },
 ]);
 
@@ -56,11 +62,7 @@ export const SettingProvide: FC<PropsWithChildren> = ({ children }) => {
   });
   // 兼容旧版数据结构
   const setting = useMemo(
-    () => ({
-      ..._setting!,
-      source: _setting?.source || defaultSetting.source,
-      readerSetting: _setting?.readerSetting || defaultSetting.readerSetting,
-    }),
+    () => Object.assign({}, defaultSetting, _setting),
     [_setting],
   );
 
@@ -89,9 +91,32 @@ export const SettingProvide: FC<PropsWithChildren> = ({ children }) => {
     [setSetting],
   );
 
+  const setAutoSyncProcess = (sync?: boolean) => {
+    setSetting((setting) => ({
+      ...setting!,
+      autoSyncProcess: sync === undefined ? !setting?.autoSyncProcess : sync,
+    }));
+  };
+
+  const setSourceDataDir = (dir: string) => {
+    setSetting((setting) => ({
+      ...setting!,
+      sourceDataDir: dir,
+    }));
+  };
+
   return (
     <SettingContext.Provider
-      value={[setting, { setColorMode, setSource, setReaderSetting }]}>
+      value={[
+        setting,
+        {
+          setColorMode,
+          setSource,
+          setReaderSetting,
+          setAutoSyncProcess,
+          setSourceDataDir,
+        },
+      ]}>
       {children}
     </SettingContext.Provider>
   );

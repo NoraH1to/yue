@@ -13,9 +13,15 @@ export const DetailToolbarTitleSkeleton = () => (
 export type DetailToolbarProps = {
   title?: string | ReactNode;
   onBack?: () => void;
+  append?: ReactNode;
 } & Pick<ToolbarProps, 'sx'>;
 
-const DetailToolbar: FC<DetailToolbarProps> = ({ title, onBack, sx }) => {
+const DetailToolbar: FC<DetailToolbarProps> = ({
+  title,
+  onBack,
+  sx,
+  append,
+}) => {
   const nav = useNavigate();
   const _onBack = () => nav(-1);
   return (
@@ -38,6 +44,7 @@ const DetailToolbar: FC<DetailToolbarProps> = ({ title, onBack, sx }) => {
           <BookDetailTitle title={title} />
         </Fade>
       </Box>
+      {append}
     </Toolbar>
   );
 };

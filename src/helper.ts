@@ -1,5 +1,6 @@
 import { Theme } from '@mui/material';
 import { SxProps } from '@mui/system';
+import { ResponseDataDetailed } from '@norah1to/webdav';
 import anysort from 'anysort-typed';
 import mime from 'mime';
 import { BaseSyntheticEvent, ReactEventHandler } from 'react';
@@ -464,6 +465,17 @@ export const mergeSxProps = (...args: (SxProps<Theme> | undefined | null)[]) =>
     }
   }, []) as SxProps<Theme>;
 
+export const isWebDAVDetail = <T>(
+  res: T | ResponseDataDetailed<T>,
+): res is ResponseDataDetailed<T> => {
+  return (
+    // @ts-ignore
+    typeof res?.status === 'number' && // @ts-ignore
+    typeof res?.statusText === 'string' && // @ts-ignore
+    res?.headers
+  );
+};
+
 export type GetPath<
   T extends object,
   K extends keyof T = keyof T,
@@ -486,3 +498,5 @@ export type UniformType<
         ? UniformType<O[K], T, false>
         : string;
     };
+
+export type PromiseValue<T> = T extends Promise<infer R> ? R : never;

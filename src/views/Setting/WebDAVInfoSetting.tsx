@@ -26,14 +26,13 @@ const WebDAVSetting = () => {
   const { t } = useTranslation();
   const [{ info, error, loading: loadingWebDAV }, { setInfo }] =
     useWebDAVClient();
-  const [openDialog, setOpenDialog] = useState(false);
-  const handleClickItem = () => setOpenDialog(true);
-  const handleCloseDialog = () => setOpenDialog(false);
-  const handleSubmitSetting = (i: typeof info) => {
+  const [openEditInfoDialog, setOpenEditInfoDialog] = useState(false);
+  const handleClickClientInfoItem = () => setOpenEditInfoDialog(true);
+  const handleCloseEditInfoDialog = () => setOpenEditInfoDialog(false);
+  const handleSubmitInfo = (i: typeof info) => {
     setInfo(i);
-    setOpenDialog(false);
+    handleCloseEditInfoDialog();
   };
-
   const webDAVTitle = useMemo(() => {
     if (loadingWebDAV)
       return <Skeleton variant="rounded" animation="wave" width="50%" />;
@@ -64,15 +63,17 @@ const WebDAVSetting = () => {
   return (
     <>
       <StyledMuiListItemButton
-        onClick={handleClickItem}
+        onClick={handleClickClientInfoItem}
         disabled={loadingWebDAV}>
         <ListItemIcon>
           <StorageRounded />
         </ListItemIcon>
         <ListItemText primary={webDAVTitle} secondary={webDAVSubtitle} />
-        {webDAVIcon}
+        <ListItemIcon sx={{ justifyContent: 'center' }}>
+          {webDAVIcon}
+        </ListItemIcon>
       </StyledMuiListItemButton>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog open={openEditInfoDialog} onClose={handleCloseEditInfoDialog}>
         <DialogTitle>{t('webDAV Configuration')}</DialogTitle>
         <Formik
           initialValues={{
@@ -84,8 +85,8 @@ const WebDAVSetting = () => {
           validationSchema={Yup.object(YupSchema)}
           // @ts-ignore
           onSubmit={(v: typeof info) => {
-            if (!v?.url) handleSubmitSetting(undefined);
-            else handleSubmitSetting(v);
+            if (!v?.url) handleSubmitInfo(undefined);
+            else handleSubmitInfo(v);
           }}>
           <Form>
             <DialogContent>

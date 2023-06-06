@@ -8,7 +8,7 @@ import { VitePWA as pwa } from 'vite-plugin-pwa';
 export default defineConfig({
   plugins: [
     react(),
-    process.env.pwa && pwa({
+    pwa({
       devOptions: {
         enabled: process.env.NODE_ENV === 'development' && !!process.env.pwa,
       },
@@ -57,7 +57,13 @@ export default defineConfig({
             'formik',
             'notistack',
           ],
-          'common-utils': ['spark-md5', 'hammerjs', 'i18next'],
+          'common-utils': [
+            'spark-md5',
+            'hammerjs',
+            'i18next',
+            'arraybuffer-to-string',
+            'url-join',
+          ],
           'data-source': ['dexie', '@norah1to/webdav'],
           epubjs: ['epubjs'],
           pdf: ['react-pdf'],

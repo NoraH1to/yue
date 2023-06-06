@@ -70,6 +70,14 @@ export default {
   about: '关于',
   repository: '仓库',
   'remember setting': '记住设置',
+  'sync book process': '自动同步阅读进度',
+  on: '开启',
+  off: '关闭',
+  'source sync dir': '同步数据的存放目录',
+  'find new process': '云端进度较新',
+  'update process or not': '是否同步到本地，不同步则会使用本地进度覆盖云端进度',
+  'use cloud process': '使用云端',
+  'use local process': '保留本地',
   diffDate: {
     'any days ago': '{{days}} 天前',
     'any hours ago': '{{hours}} 小时前',
@@ -111,6 +119,7 @@ export default {
     'bulk edit book tag': '批量编辑书籍标签',
     'start reading': '开始阅读',
     'continue reading': '继续阅读',
+    'sync process': '同步进度',
   },
   actionRes: {
     'import book success': '成功导入书籍',
@@ -119,6 +128,8 @@ export default {
     'edit tag fail': '编辑标签失败',
     'delete tag success': '成功删除标签',
     'delete book success': '成功删除书籍',
+    'sync fail': '同步失败',
+    'sync success': '同步成功',
   },
   bookEditTag: {
     'no tag by search': '无结果',

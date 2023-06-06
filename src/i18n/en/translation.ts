@@ -70,6 +70,15 @@ export default {
   about: 'about',
   repository: 'repository',
   'remember setting': 'remember',
+  'sync book process': 'auto-sync reading progress',
+  on: 'on',
+  off: 'off',
+  'source sync dir': 'path to synchronized data',
+  'find new process': 'cloud progress is newer',
+  'update process or not':
+    'whether to sync to local or not, if not, local progress will be used to overwrite the cloud progress',
+  'use cloud process': 'use cloud',
+  'use local process': 'use local',
   diffDate: {
     'any days ago': '{{days}} days ago',
     'any hours ago': '{{hours}} hours ago',
@@ -111,6 +120,7 @@ export default {
     'bulk edit book tag': 'batch editing book tags',
     'start reading': 'start reading',
     'continue reading': 'continue reading',
+    'sync process': 'synchronize progress',
   },
   actionRes: {
     'import book success': 'import book successfully',
@@ -119,6 +129,8 @@ export default {
     'edit tag fail': 'failed to edit tag',
     'delete tag success': 'delete tag successful',
     'delete book success': 'delete book successful',
+    'sync fail': 'sync failure',
+    'sync success': 'sync success',
   },
   bookEditTag: {
     'no tag by search': 'no results',

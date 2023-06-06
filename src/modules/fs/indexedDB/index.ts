@@ -53,34 +53,21 @@ export class DB extends Dexie {
             ),
           ),
         );
+        await DB.waitFor(
+          trans
+            .table('bookAndTag')
+            .toCollection()
+            .modify((item: TDbBookAndTag) => {
+              item.bookHash = map[item.bookHash].hash;
+              return item;
+            }),
+        );
         return trans
           .table('books')
           .toCollection()
           .modify((book: TDbBook) => {
             book.hash = map[book.hash].hash;
             return book;
-          });
-      });
-    this.version(3)
-      .stores({
-        books: 'hash,title,author,type,addTs,lastProcess.ts',
-        dirs: 'filename',
-        tags: 'id,&title,prev,next,addTs',
-        bookAndTag: '[bookHash+tagID],bookHash,tagID,addTs',
-        sourceIdAndBookHash: '[id+etag+bookHash],[id+etag],id,etag,bookHash',
-      })
-      .upgrade(async (trans) => {
-        const books: TDbBook[] = await trans.table('books').toArray();
-        const map: Record<string, TDbBook> = {};
-        books.forEach((book) => {
-          map[book.hash] = book;
-        });
-        return trans
-          .table('bookAndTag')
-          .toCollection()
-          .modify((item: TDbBookAndTag) => {
-            item.bookHash = map[item.bookHash].hash;
-            return item;
           });
       });
   }

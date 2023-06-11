@@ -1,4 +1,19 @@
 # Changelog
+## [1.5.0](///compare/v1.4.0...v1.5.0) (2023-06-11)
+
+
+### Features
+
+* **webdav:** support sync reading process 7a00c3a
+* **webdav:** webdav is now associated with a unique hash of the book 3bce6ae
+
+
+### Bug Fixes
+
+* **indexed-db:** fix database update logic b0a3992
+* **indexed-db:** update the association table of book and tag 7fabfcb
+* **parser-pdf:** parser error when has not toc 428d5f5
+
 ## [1.4.0](///compare/v1.3.0...v1.4.0) (2023-05-29)
 
 

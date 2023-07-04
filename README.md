@@ -66,7 +66,7 @@ List the functions that **MAYBE** achieve, the project only needs to meet my per
 
 - [x] PDF support
 
-- [ ] Comic support (zip format)
+- [x] Comic support (zip format)
 
 - [ ] Customized reader color scheme
 

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { PluginOption, defineConfig } from 'vite';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -39,6 +40,14 @@ export default defineConfig({
       },
     }),
     process.env.analyze ? (visualizer() as unknown as PluginOption) : undefined,
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/libarchive.js/src/webworker/wasm-gen/*.wasm',
+          dest: 'assets/wasm-gen',
+        },
+      ],
+    }),
   ],
   build: {
     outDir: path.resolve(
@@ -67,6 +76,7 @@ export default defineConfig({
           'data-source': ['dexie', '@norah1to/webdav'],
           epubjs: ['epubjs'],
           pdf: ['react-pdf'],
+          archive: ['libarchive.js']
         },
       },
     },

@@ -91,6 +91,7 @@
     "typescript-transform-paths": "^3.4.6",
     "vite": "^4.3.5",
     "vite-plugin-pwa": "^0.14.7",
+    "vite-plugin-static-copy": "^0.16.0",
     "workbox-build": "^6.5.4",
     "workbox-window": "^6.5.4"
   },

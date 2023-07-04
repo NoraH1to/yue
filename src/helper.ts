@@ -505,3 +505,5 @@ export type UniformType<
     };
 
 export type PromiseValue<T> = T extends Promise<infer R> ? R : never;
+
+export type Type2Interface<T> = Pick<T, keyof T>

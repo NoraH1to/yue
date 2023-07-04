@@ -107,7 +107,7 @@ export interface IFs {
   updateBook(info: {
     hash: string;
     info: Partial<Omit<TFsBook, 'hash'>>;
-  }): Promise<TFsBook>;
+  }): Promise<void>;
   /**
    * 给图书打标签
    * @param info.hash 图书哈希值

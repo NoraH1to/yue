@@ -1,6 +1,6 @@
+import { delFalsy } from '@/helper';
 import { EpubBook } from './book';
 import parse from './parse';
-import { delFalsy } from '@/helper';
 
 import { Parser } from '..';
 

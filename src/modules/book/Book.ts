@@ -1,3 +1,5 @@
+import { Type2Interface } from '@/helper';
+import { FilesObject } from 'libarchive.js/src/libarchive';
 import { FC, PropsWithRef } from 'react';
 import { TAppSetting, TReaderSetting, TReaderTheme } from '../setting';
 import { IController } from './Controller';
@@ -13,9 +15,8 @@ export interface IProcess<T = unknown> {
   navInfo?: IToc;
 }
 
-export interface IBookInfo<P = unknown> {
+interface IBookInfoBase<P = unknown> {
   hash: string;
-  target: File;
   title: string;
   toc: IToc[];
   author?: string;
@@ -25,18 +26,31 @@ export interface IBookInfo<P = unknown> {
   lastProcess: IProcess<P> & { ts: number };
   type: string;
 }
+export interface IBookInfoWithArchive<P = unknown> extends IBookInfoBase<P> {
+  target: { name: string; type: string };
+  archive: FilesObject;
+}
+export interface IBookInfoWithoutArchive<P = unknown> extends IBookInfoBase<P> {
+  target: File;
+  archive?: never;
+}
+export type IBookInfo<P = unknown> =
+  | IBookInfoWithoutArchive<P>
+  | IBookInfoWithArchive<P>;
 
 export type ReaderCompProps = PropsWithRef<{
   colorMode: keyof TAppSetting['readerTheme'];
   readerTheme: TReaderTheme;
   readerSetting: TReaderSetting;
 }>;
-
-export abstract class ABook<P = unknown>
-  implements IBookInfo<P>, IController<P>
+export abstract class ABook<
+  P = unknown,
+  I extends TBookConstructorInfo<P> = TBookConstructorInfo<P>,
+> implements Type2Interface<IBookInfo<P>>, IController<P>
 {
   hash: string;
-  readonly target: File;
+  readonly target: I['target'];
+  readonly archive?: I['archive'];
   title: string;
   author?: string;
   cover?: Blob;
@@ -47,7 +61,7 @@ export abstract class ABook<P = unknown>
   toc: IToc[];
   abstract type: string;
 
-  constructor(target: TBookConstructorInfo<P>) {
+  constructor(target: I) {
     this.target = target.target;
     this.title = target.title || target.target.name;
     this.author = target.author;
@@ -57,6 +71,7 @@ export abstract class ABook<P = unknown>
     this.toc = target.toc || [];
     this.lastProcess = target.lastProcess;
     this.hash = target.hash;
+    this.archive = target.archive;
   }
 
   // controllers

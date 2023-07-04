@@ -1,7 +1,8 @@
-import { delFalsy, md5FromBlob } from '@/helper';
+import { delFalsy, getBasenameByFilename } from '@/helper';
 import { IToc } from '@/modules/book/Toc';
 import { PDFPageProxy, pdfjs } from 'react-pdf';
 import { Parser } from '..';
+import { getHash } from '../helper';
 import { PdfBook } from './book';
 
 const makeThumb = async (page: PDFPageProxy) => {
@@ -68,18 +69,21 @@ const parseToc = async (
 const parser: Parser<typeof PdfBook> = {
   type: 'pdf',
   Book: PdfBook,
-  parse: async (target, cacheInfo) => {
-    const pdf = await (
-      await pdfjs.getDocument(await target.arrayBuffer())
-    ).promise;
+  parse: async (target, cacheInfo = {}) => {
+    const pdf =
+      target instanceof File
+        ? await (
+            await pdfjs.getDocument(await target.arrayBuffer())
+          ).promise
+        : undefined;
     return new PdfBook({
       ...cacheInfo,
       // @ts-ignore
-      cover: await makeThumb(await pdf.getPage(1)),
+      cover: cacheInfo?.cover || (await makeThumb(await pdf.getPage(1))),
       target,
-      title: cacheInfo?.title || target.name,
-      hash: cacheInfo?.hash || (await md5FromBlob(cacheInfo?.target || target)),
-      toc: await parseToc(pdf),
+      title: cacheInfo?.title || getBasenameByFilename(target.name),
+      hash: await getHash(cacheInfo, target),
+      toc: cacheInfo?.toc || (pdf && (await parseToc(pdf))) || [],
       lastProcess: cacheInfo?.lastProcess || { ts: 0, percent: 0 },
     });
   },
@@ -87,6 +91,7 @@ const parser: Parser<typeof PdfBook> = {
     return delFalsy({
       cover: book.cover,
       target: book.target,
+      archive: book.archive,
       type: book.type,
       hash: book.hash,
       title: book.title,

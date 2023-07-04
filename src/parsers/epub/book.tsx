@@ -20,6 +20,8 @@ export type TEpubBookInfo = TBookConstructorInfo<string> & {
  * // TODO: 频繁缩放窗口、翻页会导致无法翻页
  */
 export class EpubBook extends ABook<string> {
+  target: File;
+  archive?: undefined = undefined;
   epub: EpubInstance;
   cfiList: string[] = [];
   type = 'epub';
@@ -39,6 +41,7 @@ export class EpubBook extends ABook<string> {
 
   constructor(target: TEpubBookInfo) {
     super(target);
+    this.target = target.target as File;
     this.epub = target.epub;
     this.cfiList = target.cfiList;
     target.cfiList &&

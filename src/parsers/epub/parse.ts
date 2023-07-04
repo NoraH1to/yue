@@ -3,6 +3,7 @@ import { IToc } from '@/modules/book/Toc';
 import Epub, { NavItem } from 'epubjs';
 import { Parser } from '..';
 import { EpubBook, TEpubBookInfo } from './book';
+import { getHash } from '../helper';
 
 export const epubToc2CommonToc = (toc: NavItem[]): IToc[] => {
   return toc.map((t) => ({
@@ -13,7 +14,7 @@ export const epubToc2CommonToc = (toc: NavItem[]): IToc[] => {
 };
 
 const parser: Parser<typeof EpubBook>['parse'] = async (
-  target: File,
+  target,
   cacheInfo = {},
 ) => {
   const epub = Epub(await target.arrayBuffer());
@@ -47,7 +48,7 @@ const parser: Parser<typeof EpubBook>['parse'] = async (
     publisher: cacheInfo.publisher || meta.publisher,
     toc,
     cfiList: cacheInfo.cfiList || (await epub.locations.generate(150)),
-    hash: cacheInfo.hash || (await md5FromBlob(cacheInfo.target || target)),
+    hash: await getHash(cacheInfo, target),
     lastProcess: cacheInfo.lastProcess || { ts: 0, percent: 0 },
   };
   return new EpubBook(info);

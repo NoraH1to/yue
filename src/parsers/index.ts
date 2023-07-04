@@ -1,6 +1,6 @@
 import { ABook, IBookInfo } from '@/modules/book/Book';
 import { TParse } from '@/modules/parse/Parse';
-import { PromiseType, Required, RequiredKeys } from 'utility-types';
+import { Optional, PromiseType, Required, RequiredKeys } from 'utility-types';
 
 export type Parser<
   B extends new (...args: any) => ABook = new (...args: any) => ABook,
@@ -12,7 +12,7 @@ export type Parser<
   parse: P;
   getCacheableInfo: (
     book: InstanceType<B>,
-  ) => Required<Partial<I>, RequiredKeys<IBookInfo>>;
+  ) => Optional<Required<Partial<I>, RequiredKeys<IBookInfo>>, 'archive'>;
 };
 
 const parserMap = new Map<string, Parser>();

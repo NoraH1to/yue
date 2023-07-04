@@ -1,4 +1,4 @@
-import { sortDirItemsBySorter } from '@/helper';
+import { getMimeByExt, sortDirItemsBySorter } from '@/helper';
 import { FileStat } from '@norah1to/webdav';
 import {
   IFs,
@@ -9,7 +9,7 @@ import {
   TFsTag,
   TTagDistribution,
 } from './Fs';
-import db, { DB, TDbBook } from './indexedDB';
+import db, { DB, TDbBook, TDbBookContent } from './indexedDB';
 import { isDirectory, isFile } from './webDAV';
 
 /**
@@ -34,21 +34,45 @@ const getTagMapByBookHash = async (hash: string) => {
   return m;
 };
 
-const dbBook2FsBook = (book: TDbBook): TFsBook => ({
-  ...book,
-  target: new File([book.target.buffer], book.target.name, {
-    type: book.target.type,
-  }),
-  cover: book?.cover
-    ? new Blob([book.cover.buffer], { type: book.cover.type })
-    : undefined,
-});
+const dbBook2FsBook = async (book: TDbBook): Promise<TFsBook> => {
+  return db.transaction('r', db.bookContents, async () => {
+    const bookContent: TDbBookContent = (await db.bookContents.get(book.hash))!;
+    const cover = bookContent?.cover
+      ? new Blob([bookContent.cover.buffer], { type: bookContent.cover.type })
+      : undefined;
+    return bookContent.archive
+      ? {
+          ...book,
+          archive: bookContent.archive,
+          target: {
+            name: `${book.title}.${book.type}`,
+            type: getMimeByExt(book.type) || 'unknown',
+          },
+          cover,
+        }
+      : {
+          ...book,
+          target: new File(
+            [bookContent.target.buffer],
+            bookContent.target.name,
+            {
+              type: bookContent.target.type,
+            },
+          ),
+          cover,
+        };
+  });
+};
 
 const dbBook2fsBookWithTag = async (
   book: TDbBook,
 ): Promise<TFsBookWithTags> => {
   const m = await getTagMapByBookHash(book.hash);
-  return { ...dbBook2FsBook(book), tags: Object.keys(m), tagsMap: m };
+  return {
+    ...(await dbBook2FsBook(book)),
+    tags: Object.keys(m),
+    tagsMap: m,
+  };
 };
 
 const fs: IFs = {
@@ -57,34 +81,51 @@ const fs: IFs = {
       'rw',
       db.books,
       db.sourceIdAndBookHash,
+      db.bookContents,
       async () => {
         const addTs = Date.now();
         const [targetBuffer, coverBuffer] = await DB.waitFor(
           Promise.all([
-            book.target.arrayBuffer(),
+            book.target instanceof File ? book.target.arrayBuffer() : undefined,
             (async () => (book.cover ? book.cover.arrayBuffer() : undefined))(),
           ]),
         );
-        const already = await db.books.get(book.hash);
-        const hash = already
-          ? already.hash
-          : await db.books.add({
-              ...book,
-              target: {
-                buffer: targetBuffer,
-                type: book.target.type,
-                name: book.target.name,
-              },
-              cover: coverBuffer
-                ? {
-                    buffer: coverBuffer,
-                    type: book.cover!.type,
-                  }
-                : undefined,
-              hash: book.hash,
-              addTs,
-              lastmodTs: addTs,
-            });
+        const existBook = await db.books.get(book.hash);
+
+        const bookData = {
+          ...book,
+          hash: book.hash,
+          addTs,
+          lastmodTs: addTs,
+        };
+        // @ts-ignore split book content #3
+        delete bookData.target;
+        delete bookData.cover;
+        delete bookData.archive;
+
+        const bookContentData = {
+          hash: book.hash,
+          target: {
+            // @ts-ignore
+            buffer: targetBuffer,
+            type: book.target.type,
+            name: book.target.name,
+          },
+          cover: coverBuffer
+            ? {
+                buffer: coverBuffer,
+                type: book.cover!.type,
+              }
+            : undefined,
+          archive: book.archive!,
+        };
+
+        const hash = existBook
+          ? existBook.hash
+          : await Promise.all([
+              db.books.add(bookData),
+              db.bookContents.add(bookContentData),
+            ]);
         if (sourceInfo) {
           try {
             await db.sourceIdAndBookHash.add({
@@ -103,71 +144,107 @@ const fs: IFs = {
   },
 
   async getBooks() {
-    return db.transaction('r!', db.books, db.bookAndTag, async () => {
-      const books = await db.books.toArray();
-      return Promise.all(
-        books.map((book) => {
-          return dbBook2fsBookWithTag(book);
-        }),
-      );
-    });
+    return db.transaction(
+      'r!',
+      db.books,
+      db.bookAndTag,
+      db.bookContents,
+      async () => {
+        const books = await db.books.toArray();
+        return Promise.all(
+          books.map((book) => {
+            return dbBook2fsBookWithTag(book);
+          }),
+        );
+      },
+    );
   },
 
   async getRecentReadsBooks(limit) {
-    return db.transaction('r', db.books, db.bookAndTag, async () => {
-      const books = (await db.books.toCollection().sortBy('lastProcess.ts'))
-        .reverse()
-        .slice(0, limit)
-        .filter((book) => !!book.lastProcess.ts);
-      return Promise.all(books.map(dbBook2fsBookWithTag));
-    });
+    return db.transaction(
+      'r',
+      db.books,
+      db.bookAndTag,
+      db.bookContents,
+      async () => {
+        const books = (await db.books.toCollection().sortBy('lastProcess.ts'))
+          .reverse()
+          .slice(0, limit)
+          .filter((book) => !!book.lastProcess.ts);
+        return Promise.all(books.map(dbBook2fsBookWithTag));
+      },
+    );
   },
 
   async getBookByHash(hash) {
-    return db.transaction('r?', db.books, db.bookAndTag, async () => {
-      const book = await db.books.get(hash);
-      if (!book) return book;
-      return dbBook2FsBook(book);
-    });
+    return db.transaction(
+      'r',
+      db.books,
+      db.bookAndTag,
+      db.bookContents,
+      async () => {
+        const book = await db.books.get(hash);
+        if (!book) return book;
+        return dbBook2FsBook(book);
+      },
+    );
   },
 
   async getBookBySourceItemInfo(sourceInfo) {
-    return db.transaction('r', db.books, db.sourceIdAndBookHash, async () => {
-      const info = await db.sourceIdAndBookHash
-        .where({ id: sourceInfo.sourceId, etag: sourceInfo.etag })
-        .first();
-      if (!info) return info;
-      const book = await db.books.get(info.bookHash);
-      return book ? dbBook2FsBook(book) : book;
-    });
+    return db.transaction(
+      'r',
+      db.books,
+      db.sourceIdAndBookHash,
+      db.bookContents,
+      async () => {
+        const info = await db.sourceIdAndBookHash
+          .where({ id: sourceInfo.sourceId, etag: sourceInfo.etag })
+          .first();
+        if (!info) return info;
+        const book = await db.books.get(info.bookHash);
+        return book ? dbBook2FsBook(book) : book;
+      },
+    );
   },
 
   async getBooksByTag(tagID) {
-    return db.transaction('r', db.books, db.bookAndTag, async () => {
-      const bookHashList = await DB.waitFor(getBookHashListByTagId(tagID));
-      const books = await db.books.bulkGet(bookHashList);
-      return Promise.all(
-        books.map((book) => {
-          return dbBook2fsBookWithTag(book!);
-        }),
-      );
-    });
+    return db.transaction(
+      'r',
+      db.books,
+      db.bookAndTag,
+      db.bookContents,
+      async () => {
+        const bookHashList = await DB.waitFor(getBookHashListByTagId(tagID));
+        const books = await db.books.bulkGet(bookHashList);
+        return Promise.all(
+          books.map((book) => {
+            return dbBook2fsBookWithTag(book!);
+          }),
+        );
+      },
+    );
   },
 
   async updateBook({ hash, info }) {
-    return db.transaction('rw', db.books, db.bookAndTag, async () => {
+    return db.transaction('rw', db.books, async () => {
       const code = await db.books.update(hash, info);
       if (code === 0) throw new Error(`Update book fail, book ${hash} unexist`);
-      return (await DB.waitFor(this.getBookByHash(hash)))!;
     });
   },
 
   async deleteBook(hash) {
     hash = Array.isArray(hash) ? hash : [hash];
-    return db.transaction('rw', db.books, db.bookAndTag, async () => {
-      await db.bookAndTag.where('bookHash').anyOf(hash).delete();
-      await db.books.bulkDelete(hash as string[]);
-    });
+    return db.transaction(
+      'rw',
+      db.books,
+      db.bookAndTag,
+      db.bookContents,
+      async () => {
+        await db.bookAndTag.where('bookHash').anyOf(hash).delete();
+        await db.books.bulkDelete(hash as string[]);
+        await db.bookContents.bulkDelete(hash as string[]);
+      },
+    );
   },
 
   async addBookTag({ hash, tagID }) {

@@ -15,7 +15,7 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,jpg,png,svg,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,jpg,png,svg,woff,woff2,wasm}'],
       },
       registerType: 'prompt',
       manifest: {

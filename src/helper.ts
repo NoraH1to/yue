@@ -476,6 +476,11 @@ export const isWebDAVDetail = <T>(
   );
 };
 
+export const isImageFileName = (fileName: string) => {
+  const imageExtensions = /\.(jpg|jpeg|png)$/i;
+  return imageExtensions.test(fileName);
+};
+
 export type GetPath<
   T extends object,
   K extends keyof T = keyof T,

@@ -1,4 +1,17 @@
 # Changelog
+## [1.6.0](///compare/v1.5.0...v1.6.0) (2023-07-04)
+
+
+### Features
+
+* **comic:** support comic [#3](undefined/undefined/undefined/issues/3) cbf5574
+
+
+### Bug Fixes
+
+* **parser-comic:** wasm import problem 29afae1
+* **pwa:** wasm files are not cached correctly 7c7eb48
+
 ## [1.5.0](///compare/v1.4.0...v1.5.0) (2023-06-11)
 
 

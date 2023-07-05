@@ -1,79 +1,157 @@
-import { getMimeByExt, sortDirItemsBySorter } from '@/helper';
+import { sortDirItemsBySorter } from '@/helper';
 import { FileStat } from '@norah1to/webdav';
 import {
   IFs,
   ISorter,
   TFsBook,
   TFsBookWithTags,
+  TFsBookWithoutContent,
+  TFsBookWithoutContentWithTags,
   TFsDir,
   TFsTag,
+  TSourceItemInfo,
   TTagDistribution,
 } from './Fs';
-import db, { DB, TDbBook, TDbBookContent } from './indexedDB';
+import db, { DB } from './indexedDB';
+import {
+  dbBook2FsBook,
+  dbBook2fsBookWithTag,
+  getBookHashListByTagId,
+} from './indexedDB/helper';
 import { isDirectory, isFile } from './webDAV';
 
-/**
- * @transactionDB `bookAndTag`
- */
-const getBookHashListByTagId = async (tagID: string) => {
-  return (await db.bookAndTag.where({ tagID }).distinct().toArray()).map(
-    (v) => v.bookHash,
+async function _getBooks(withoutContent?: false): Promise<TFsBookWithTags[]>;
+async function _getBooks(
+  withoutContent: true,
+): Promise<TFsBookWithoutContentWithTags[]>;
+async function _getBooks(
+  withoutContent?: boolean,
+): Promise<TFsBookWithoutContentWithTags[] | TFsBookWithTags[]> {
+  return db.transaction(
+    'r!',
+    db.books,
+    db.bookAndTag,
+    db.bookContents,
+    db.bookCovers,
+    async () => {
+      const books = await db.books.toArray();
+      return Promise.all(
+        books.map((book) => {
+          // @ts-ignore
+          return dbBook2fsBookWithTag(book, withoutContent);
+        }),
+      );
+    },
   );
-};
+}
 
-const getTagMapByBookHash = async (hash: string) => {
-  const tabList = await db.bookAndTag
-    .where('bookHash')
-    .equals(hash)
-    .primaryKeys();
-  const m: Record<string, boolean> = {};
-  for (const tab of tabList) {
-    // @ts-ignore
-    m[tab[1]] = true;
-  }
-  return m;
-};
+async function _getRecentReadsBooks(
+  limit: number,
+  withoutContent?: false,
+): Promise<TFsBookWithTags[]>;
+async function _getRecentReadsBooks(
+  limit: number,
+  withoutContent: true,
+): Promise<TFsBookWithoutContentWithTags[]>;
+async function _getRecentReadsBooks(limit: number, withoutContent?: boolean) {
+  return db.transaction(
+    'r',
+    db.books,
+    db.bookAndTag,
+    db.bookContents,
+    db.bookCovers,
+    async () => {
+      const books = (await db.books.toCollection().sortBy('lastProcess.ts'))
+        .reverse()
+        .slice(0, limit)
+        .filter((book) => !!book.lastProcess.ts);
+      return Promise.all(
+        // @ts-ignore
+        books.map((book) => dbBook2fsBookWithTag(book, withoutContent)),
+      );
+    },
+  );
+}
 
-const dbBook2FsBook = async (book: TDbBook): Promise<TFsBook> => {
-  return db.transaction('r', db.bookContents, async () => {
-    const bookContent: TDbBookContent = (await db.bookContents.get(book.hash))!;
-    const cover = bookContent?.cover
-      ? new Blob([bookContent.cover.buffer], { type: bookContent.cover.type })
-      : undefined;
-    return bookContent.archive
-      ? {
-          ...book,
-          archive: bookContent.archive,
-          target: {
-            name: `${book.title}.${book.type}`,
-            type: getMimeByExt(book.type) || 'unknown',
-          },
-          cover,
-        }
-      : {
-          ...book,
-          target: new File(
-            [bookContent.target.buffer],
-            bookContent.target.name,
-            {
-              type: bookContent.target.type,
-            },
-          ),
-          cover,
-        };
-  });
-};
+async function _getBookByHash(
+  hash: string,
+  withoutContent?: false,
+): Promise<TFsBook>;
+async function _getBookByHash(
+  hash: string,
+  withoutContent: true,
+): Promise<TFsBookWithoutContent>;
+async function _getBookByHash(hash: string, withoutContent?: boolean) {
+  return db.transaction(
+    'r',
+    db.books,
+    db.bookAndTag,
+    db.bookContents,
+    db.bookCovers,
+    async () => {
+      const book = await db.books.get(hash);
+      if (!book) return book;
+      return dbBook2FsBook(book, withoutContent);
+    },
+  );
+}
 
-const dbBook2fsBookWithTag = async (
-  book: TDbBook,
-): Promise<TFsBookWithTags> => {
-  const m = await getTagMapByBookHash(book.hash);
-  return {
-    ...(await dbBook2FsBook(book)),
-    tags: Object.keys(m),
-    tagsMap: m,
-  };
-};
+async function _getBookBySourceItemInfo(
+  sourceInfo: TSourceItemInfo,
+  withoutContent?: false,
+): Promise<TFsBook>;
+async function _getBookBySourceItemInfo(
+  sourceInfo: TSourceItemInfo,
+  withoutContent: true,
+): Promise<TFsBookWithoutContent>;
+async function _getBookBySourceItemInfo(
+  sourceInfo: TSourceItemInfo,
+  withoutContent?: boolean,
+) {
+  return db.transaction(
+    'r',
+    db.books,
+    db.sourceIdAndBookHash,
+    db.bookContents,
+    db.bookCovers,
+    async () => {
+      const info = await db.sourceIdAndBookHash
+        .where({ id: sourceInfo.sourceId, etag: sourceInfo.etag })
+        .first();
+      if (!info) return info;
+      const book = await db.books.get(info.bookHash);
+      return book ? dbBook2FsBook(book, withoutContent) : book;
+    },
+  );
+}
+
+async function _getBooksByTag(
+  tagID: string,
+  withoutContent?: false,
+): Promise<TFsBookWithTags[]>;
+async function _getBooksByTag(
+  tagID: string,
+  withoutContent: true,
+): Promise<TFsBookWithoutContentWithTags[]>;
+async function _getBooksByTag(tagID: string, withoutContent?: boolean) {
+  return db.transaction(
+    'r',
+    db.books,
+    db.bookAndTag,
+    db.bookContents,
+    db.bookCovers,
+    async () => {
+      const bookHashList = await DB.waitFor(getBookHashListByTagId(tagID));
+      const books = await db.books.bulkGet(bookHashList);
+      return Promise.all(
+        books.map((book) => {
+          // @ts-ignore
+          return dbBook2fsBookWithTag(book!, withoutContent);
+        }),
+      );
+    },
+  );
+}
 
 const fs: IFs = {
   async addBook(book, sourceInfo) {
@@ -82,6 +160,7 @@ const fs: IFs = {
       db.books,
       db.sourceIdAndBookHash,
       db.bookContents,
+      db.bookCovers,
       async () => {
         const addTs = Date.now();
         const [targetBuffer, coverBuffer] = await DB.waitFor(
@@ -111,13 +190,16 @@ const fs: IFs = {
             type: book.target.type,
             name: book.target.name,
           },
+          archive: book.archive!,
+        };
+        const bookCoverData = {
+          hash: book.hash,
           cover: coverBuffer
             ? {
                 buffer: coverBuffer,
                 type: book.cover!.type,
               }
             : undefined,
-          archive: book.archive!,
         };
 
         const hash = existBook
@@ -125,6 +207,7 @@ const fs: IFs = {
           : await Promise.all([
               db.books.add(bookData),
               db.bookContents.add(bookContentData),
+              db.bookCovers.add(bookCoverData),
             ]);
         if (sourceInfo) {
           try {
@@ -144,85 +227,38 @@ const fs: IFs = {
   },
 
   async getBooks() {
-    return db.transaction(
-      'r!',
-      db.books,
-      db.bookAndTag,
-      db.bookContents,
-      async () => {
-        const books = await db.books.toArray();
-        return Promise.all(
-          books.map((book) => {
-            return dbBook2fsBookWithTag(book);
-          }),
-        );
-      },
-    );
+    return _getBooks(false);
+  },
+  async getBooksWithoutContent() {
+    return _getBooks(true);
   },
 
   async getRecentReadsBooks(limit) {
-    return db.transaction(
-      'r',
-      db.books,
-      db.bookAndTag,
-      db.bookContents,
-      async () => {
-        const books = (await db.books.toCollection().sortBy('lastProcess.ts'))
-          .reverse()
-          .slice(0, limit)
-          .filter((book) => !!book.lastProcess.ts);
-        return Promise.all(books.map(dbBook2fsBookWithTag));
-      },
-    );
+    return _getRecentReadsBooks(limit, false);
+  },
+  async getRecentReadsBooksWithoutContent(limit) {
+    return _getRecentReadsBooks(limit, true);
   },
 
   async getBookByHash(hash) {
-    return db.transaction(
-      'r',
-      db.books,
-      db.bookAndTag,
-      db.bookContents,
-      async () => {
-        const book = await db.books.get(hash);
-        if (!book) return book;
-        return dbBook2FsBook(book);
-      },
-    );
+    return _getBookByHash(hash, false);
+  },
+  async getBookByHashWithoutContent(hash) {
+    return _getBookByHash(hash, true);
   },
 
   async getBookBySourceItemInfo(sourceInfo) {
-    return db.transaction(
-      'r',
-      db.books,
-      db.sourceIdAndBookHash,
-      db.bookContents,
-      async () => {
-        const info = await db.sourceIdAndBookHash
-          .where({ id: sourceInfo.sourceId, etag: sourceInfo.etag })
-          .first();
-        if (!info) return info;
-        const book = await db.books.get(info.bookHash);
-        return book ? dbBook2FsBook(book) : book;
-      },
-    );
+    return _getBookBySourceItemInfo(sourceInfo, false);
+  },
+  async getBookBySourceItemInfoWithoutContent(sourceInfo) {
+    return _getBookBySourceItemInfo(sourceInfo, true);
   },
 
   async getBooksByTag(tagID) {
-    return db.transaction(
-      'r',
-      db.books,
-      db.bookAndTag,
-      db.bookContents,
-      async () => {
-        const bookHashList = await DB.waitFor(getBookHashListByTagId(tagID));
-        const books = await db.books.bulkGet(bookHashList);
-        return Promise.all(
-          books.map((book) => {
-            return dbBook2fsBookWithTag(book!);
-          }),
-        );
-      },
-    );
+    return _getBooksByTag(tagID, false);
+  },
+  async getBooksByTagWithoutContent(tagID) {
+    return _getBooksByTag(tagID, true);
   },
 
   async updateBook({ hash, info }) {
@@ -239,31 +275,38 @@ const fs: IFs = {
       db.books,
       db.bookAndTag,
       db.bookContents,
+      db.bookCovers,
       async () => {
         await db.bookAndTag.where('bookHash').anyOf(hash).delete();
         await db.books.bulkDelete(hash as string[]);
         await db.bookContents.bulkDelete(hash as string[]);
+        await db.bookCovers.bulkDelete(hash as string[]);
       },
     );
   },
 
   async addBookTag({ hash, tagID }) {
-    return db.transaction('rw', db.books, db.bookAndTag, async () => {
+    return db.transaction('rw', db.bookAndTag, async () => {
       const addTs = Date.now();
-      await db.bookAndTag.add({
-        bookHash: hash,
-        tagID,
-        addTs,
-        lastmodTs: addTs,
-      });
-      return (await DB.waitFor(this.getBookByHash(hash)))!;
+      try {
+        await db.bookAndTag.add({
+          bookHash: hash,
+          tagID,
+          addTs,
+          lastmodTs: addTs,
+        });
+        return true;
+      } catch {
+        return false;
+      }
     });
   },
 
   async deleteBookTag({ hash, tagID }) {
-    return db.transaction('rw', db.books, db.bookAndTag, async () => {
-      await db.bookAndTag.where({ bookHash: hash, tagID }).delete();
-      return (await DB.waitFor(this.getBookByHash(hash)))!;
+    return db.transaction('rw', db.bookAndTag, async () => {
+      return (
+        (await db.bookAndTag.where({ bookHash: hash, tagID }).delete()) !== 0
+      );
     });
   },
 

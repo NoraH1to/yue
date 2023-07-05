@@ -9,11 +9,16 @@ export type TFsBase = { addTs: number } & Pick<
 >;
 
 export type TFsBook = IBookInfo & TFsBase;
+export type TFsBookWithoutContent = Omit<TFsBook, 'target' | 'archive'>;
 
 export type TFsBookWithTags = TFsBook & {
   tags: string[];
   tagsMap: Record<string, boolean>;
 };
+export type TFsBookWithoutContentWithTags = Omit<
+  TFsBookWithTags,
+  'target' | 'archive'
+>;
 
 export interface TFsItemFile {
   id: string;
@@ -77,16 +82,23 @@ export interface IFs {
    * 获得全部图书
    */
   getBooks(): Promise<TFsBookWithTags[]>;
+  getBooksWithoutContent(): Promise<TFsBookWithoutContentWithTags[]>;
   /**
    * 获得最近阅读的图书
    * @param limit 最大数量
    */
   getRecentReadsBooks(limit: number): Promise<TFsBookWithTags[]>;
+  getRecentReadsBooksWithoutContent(
+    limit: number,
+  ): Promise<TFsBookWithoutContentWithTags[]>;
   /**
    * 根据哈希值获得一本图书信息
    * @param hash 图书哈希值
    */
   getBookByHash(hash: string): Promise<TFsBook | undefined>;
+  getBookByHashWithoutContent(
+    hash: string,
+  ): Promise<TFsBookWithoutContent | undefined>;
   /**
    * 查找本地是否有指定的源中书籍
    * @param sourceInfo 源中的书本信息
@@ -94,11 +106,17 @@ export interface IFs {
   getBookBySourceItemInfo(
     sourceInfo: TSourceItemInfo,
   ): Promise<TFsBook | undefined>;
+  getBookBySourceItemInfoWithoutContent(
+    sourceInfo: TSourceItemInfo,
+  ): Promise<TFsBookWithoutContent | undefined>;
   /**
    * 获得某标签的所有图书
    * @param tagID 标签唯一键
    */
   getBooksByTag(tagID: string): Promise<TFsBookWithTags[]>;
+  getBooksByTagWithoutContent(
+    tagID: string,
+  ): Promise<TFsBookWithoutContentWithTags[]>;
   /**
    * 更新一本图书的信息
    * @param info.hash 图书哈希值
@@ -113,13 +131,13 @@ export interface IFs {
    * @param info.hash 图书哈希值
    * @param info.tagID 标签唯一键
    */
-  addBookTag(info: { hash: string; tagID: string }): Promise<TFsBook>;
+  addBookTag(info: { hash: string; tagID: string }): Promise<boolean>;
   /**
    * 去除图书标签
    * @param info.hash 图书哈希值
    * @param info.tagID 标签唯一键
    */
-  deleteBookTag(info: { hash: string; tagID: string }): Promise<TFsBook>;
+  deleteBookTag(info: { hash: string; tagID: string }): Promise<boolean>;
   /**
    * 删除图书
    * @param hash 图书哈希值，可以是列表

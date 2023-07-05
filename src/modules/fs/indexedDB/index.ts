@@ -1,39 +1,21 @@
 import { md5FromBlob } from '@/helper';
 import { Dexie, Table } from 'dexie';
-import { FilesObject } from 'libarchive.js/src/libarchive';
-import { Overwrite } from 'utility-types';
-import { TFsBase, TFsBook, TFsDir, TFsTag } from '../Fs';
+import {
+  TDbBook,
+  TDbBookAndTag,
+  TDbBookContent,
+  TDbBookContentV1,
+  TDbBookCover,
+  TDbBookWithContent,
+  TDbDir,
+  TDbTags,
+} from './types';
+export * from './types';
 
-export type TDbBookWithContent = Overwrite<
-  TFsBook,
-  {
-    cover?: { buffer: ArrayBuffer; type: string };
-    target: { buffer: ArrayBuffer; type: string; name: string };
-  }
->;
-export type TDbBook = Omit<TFsBook, 'target' | 'cover' | 'archive'>;
-interface TDbBookContentBase {
-  hash: string;
-  cover?: { buffer: ArrayBuffer; type: string };
-}
-interface TDbBookContentWithArchive extends TDbBookContentBase {
-  target: { type: string; name: string };
-  archive: FilesObject;
-}
-interface TDbBookContentWithoutArchive extends TDbBookContentBase {
-  target: { buffer: ArrayBuffer; type: string; name: string };
-  archive?: never;
-}
-export type TDbBookContent =
-  | TDbBookContentWithArchive
-  | TDbBookContentWithoutArchive;
-export type TDbDir = TFsDir;
-export type TDbTags = TFsTag & { prev: string | 'none'; next: string | 'none' };
-
-type TDbBookAndTag = { bookHash: string; tagID: string } & TFsBase;
 export class DB extends Dexie {
   books!: Table<TDbBook>;
   bookContents!: Table<TDbBookContent>;
+  bookCovers!: Table<TDbBookCover>;
   dirs!: Table<TDbDir>;
   tags!: Table<TDbTags>;
   bookAndTag!: Table<TDbBookAndTag>;
@@ -100,7 +82,7 @@ export class DB extends Dexie {
         bookContents: 'hash',
       })
       .upgrade(async (trans) => {
-        const map: Record<string, TDbBookContent> = {};
+        const map: Record<string, TDbBookContentV1> = {};
         await DB.waitFor(
           trans
             .table('books')
@@ -122,6 +104,30 @@ export class DB extends Dexie {
             }),
         );
         return trans.table('bookContents').bulkAdd(Object.values(map));
+      });
+    this.version(4)
+      .stores({
+        books: 'hash,title,author,type,addTs,lastProcess.ts',
+        dirs: 'filename',
+        tags: 'id,&title,prev,next,addTs',
+        bookAndTag: '[bookHash+tagID],bookHash,tagID,addTs',
+        sourceIdAndBookHash: '[id+etag+bookHash],[id+etag],id,etag,bookHash',
+        bookContents: 'hash',
+        bookCovers: 'hash',
+      })
+      .upgrade(async (trans) => {
+        const coverList: TDbBookCover[] = [];
+        await DB.waitFor(
+          trans
+            .table('bookContents')
+            .toCollection()
+            .modify((item: TDbBookContentV1) => {
+              coverList.push({ hash: item.hash, cover: item.cover });
+              delete item.cover;
+              return item;
+            }),
+        );
+        return trans.table('bookCovers').bulkAdd(coverList);
       });
   }
 }

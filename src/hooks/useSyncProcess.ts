@@ -1,4 +1,4 @@
-import { IBookInfo } from '@/modules/book/Book';
+import { IBookInfoWithoutContent } from '@/modules/book/Book';
 import fs from '@/modules/fs';
 import { useState } from 'react';
 import urlJoin from 'url-join';
@@ -13,10 +13,10 @@ const useSyncProcess = () => {
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<Error>();
 
-  const getPathname = (book: IBookInfo) =>
+  const getPathname = (book: IBookInfoWithoutContent) =>
     urlJoin(syncProcessDir, `${book.hash}.json`);
 
-  const check = async (book: IBookInfo) => {
+  const check = async (book: IBookInfoWithoutContent) => {
     if (!client) return;
     const pathname = getPathname(book);
     await loadingPromise;
@@ -24,7 +24,9 @@ const useSyncProcess = () => {
     let cloudData;
     try {
       const content = await client.getFileContents(pathname);
-      cloudData = JSON.parse(ab2str(content)) as IBookInfo['lastProcess'];
+      cloudData = JSON.parse(
+        ab2str(content),
+      ) as IBookInfoWithoutContent['lastProcess'];
     } catch (e) {
       // ignore
     }
@@ -34,8 +36,8 @@ const useSyncProcess = () => {
   };
 
   const updateLocal = async (
-    book: IBookInfo,
-    process: IBookInfo['lastProcess'],
+    book: IBookInfoWithoutContent,
+    process: IBookInfoWithoutContent['lastProcess'],
   ) => {
     await loadingPromise;
     await fs.updateBook({
@@ -47,8 +49,8 @@ const useSyncProcess = () => {
   };
 
   const updateCloud = async (
-    book: IBookInfo,
-    process: IBookInfo['lastProcess'],
+    book: IBookInfoWithoutContent,
+    process: IBookInfoWithoutContent['lastProcess'],
   ) => {
     if (!client) return;
     const pathname = getPathname(book);
@@ -58,7 +60,7 @@ const useSyncProcess = () => {
     });
   };
 
-  const sync = async (book: IBookInfo) => {
+  const sync = async (book: IBookInfoWithoutContent) => {
     await loadingPromise;
     setSyncing(true);
     try {

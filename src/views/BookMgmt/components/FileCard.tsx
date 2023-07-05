@@ -38,7 +38,10 @@ const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
 
   const { data: localBook, status } = useStatusLiveQuery(
     async () =>
-      fs.getBookBySourceItemInfo({ sourceId: sourceId, etag: file.id }),
+      fs.getBookBySourceItemInfoWithoutContent({
+        sourceId: sourceId,
+        etag: file.id,
+      }),
     [file.id, sourceId],
     null,
   );

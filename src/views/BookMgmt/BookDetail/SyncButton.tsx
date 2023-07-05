@@ -1,6 +1,6 @@
 import useSetting from '@/hooks/useSetting';
 import useSyncProcess from '@/hooks/useSyncProcess';
-import { IBookInfo } from '@/modules/book/Book';
+import { IBookInfoWithoutContent } from '@/modules/book/Book';
 import { SyncRounded } from '@mui/icons-material';
 import { IconButton, Tooltip, keyframes } from '@mui/material';
 import { useUpdateEffect } from 'ahooks';
@@ -13,7 +13,7 @@ const rotate = keyframes({
   to: { transform: 'rotate(360deg)' },
 });
 
-const SyncButton = ({ book }: { book: IBookInfo }) => {
+const SyncButton = ({ book }: { book: IBookInfoWithoutContent }) => {
   const { t } = useTranslation();
   const [{ syncing, error }, { sync }] = useSyncProcess();
   const [{ autoSyncProcess }] = useSetting();

@@ -5,7 +5,7 @@ import BookMain from '../BookMain';
 
 const BookListAll = () => {
   const { t } = useTranslation();
-  const bookGetter = useCallback(() => fs.getBooks(), []);
+  const bookGetter = useCallback(() => fs.getBooksWithoutContent(), []);
   useEffect(() => {
     document.title = t('all book');
   }, []);

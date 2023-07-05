@@ -14,8 +14,8 @@ import DetailToolbar from '@/components/DetailToolbar';
 import FixedRatioBookCover from '@/components/FixedRatioWrapper/FixedRatioBookCover';
 import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import useStatusLiveQuery from '@/hooks/useStatusLiveQuery';
-import { IBookInfo } from '@/modules/book/Book';
 import fs from '@/modules/fs';
+import { TFsBookWithoutContent } from '@/modules/fs/Fs';
 import { gotoReader } from '@/router/routerHelper';
 import { Box, Card, Stack } from '@mui/material';
 import { StackProps } from '@mui/system';
@@ -60,7 +60,7 @@ const BookListRecentReads = () => {
   const nav = useNavigate();
   const { t } = useTranslation();
   const { data: books, status } = useStatusLiveQuery(
-    () => fs.getRecentReadsBooks(10),
+    () => fs.getRecentReadsBooksWithoutContent(10),
     [],
     null,
   );
@@ -69,7 +69,7 @@ const BookListRecentReads = () => {
     document.title = t('recent reads');
   }, [t]);
 
-  const handleItemClick = (book: IBookInfo) => {
+  const handleItemClick = (book: TFsBookWithoutContent) => {
     gotoReader(nav, {
       hash: book.hash,
       value:

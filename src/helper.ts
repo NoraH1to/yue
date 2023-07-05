@@ -11,7 +11,7 @@ import fs from './modules/fs';
 import {
   TBookSorter,
   TDirItemSorter,
-  TFsBook,
+  TFsBookWithoutContent,
   TFsDir,
   TSourceItemInfo,
 } from './modules/fs/Fs';
@@ -275,7 +275,7 @@ export const sortDirItemsBySorter = (
     `${sorter.key}${sorter.sort === 'desc' ? '-reverse()' : ''}`,
   ]);
 
-export const sortBooksBySorter = <T extends TFsBook>(
+export const sortBooksBySorter = <T extends TFsBookWithoutContent>(
   books: T[],
   sorter: TBookSorter,
 ) =>
@@ -506,4 +506,4 @@ export type UniformType<
 
 export type PromiseValue<T> = T extends Promise<infer R> ? R : never;
 
-export type Type2Interface<T> = Pick<T, keyof T>
+export type Type2Interface<T> = Pick<T, keyof T>;

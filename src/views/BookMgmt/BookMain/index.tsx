@@ -9,7 +9,10 @@ import useLoading from '@/hooks/useLoading';
 import useMinDelayData from '@/hooks/useMinDelayData';
 import useStatusLiveQuery from '@/hooks/useStatusLiveQuery';
 import fs from '@/modules/fs';
-import { TFsBook, TFsBookWithTags } from '@/modules/fs/Fs';
+import {
+  TFsBookWithoutContent,
+  TFsBookWithoutContentWithTags,
+} from '@/modules/fs/Fs';
 import { defaultBookSorter } from '@/modules/fs/constant';
 import { ROUTE_PATH } from '@/router';
 import { Box, Grow } from '@mui/material';
@@ -21,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import MainLayout from '../components/MainLayout';
 import Search from '../components/Search';
+import StatusEmpty from '../components/StatusEmpty';
 import ToolbarButtonFilter, {
   IFilter,
   ToolbarButtonFilterProps,
@@ -28,9 +32,10 @@ import ToolbarButtonFilter, {
 import ToolbarButtonSort from '../components/ToolbarButtonSort';
 import ToolbarButtonToggleSidebar from '../components/ToolbarButtonToggleSidebar';
 import ToolbarBottom from './ToolbarBottom';
-import StatusEmpty from '../components/StatusEmpty';
 
-export type BookMainProps = { bookGetter: () => Promise<TFsBookWithTags[]> };
+export type BookMainProps = {
+  bookGetter: () => Promise<TFsBookWithoutContentWithTags[]>;
+};
 
 const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
   const { t } = useTranslation();
@@ -83,11 +88,11 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
   }, [originBooks]);
 
   const [editTagStatus, setEditTagStatus] = useState<{
-    book?: TFsBook;
+    book?: TFsBookWithoutContent;
     open: boolean;
   }>({ open: false });
 
-  const getBookHideStatus = (book: TFsBookWithTags) => {
+  const getBookHideStatus = (book: TFsBookWithoutContentWithTags) => {
     return !!(
       (book &&
         debounceSearchInput &&
@@ -98,7 +103,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
           : Object.keys(filter.tag).some((tag) => !book.tagsMap[tag])))
     );
   };
-  const handleSelectBook = useCallback((book: TFsBook) => {
+  const handleSelectBook = useCallback((book: TFsBookWithoutContent) => {
     setSelectedMap((selectedMap) => {
       if (selectedMap[book.hash]) {
         delete selectedMap[book.hash];
@@ -108,7 +113,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
       }
     });
   }, []);
-  const handleClickBook = useCallback((book: TFsBook) => {
+  const handleClickBook = useCallback((book: TFsBookWithoutContent) => {
     if (selectModeRef.current) {
       handleSelectBook(book);
     } else {
@@ -124,7 +129,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
     [],
   );
   const handleOpenEditTagDialog = useCallback(
-    (book: TFsBook) => setEditTagStatus({ book, open: true }),
+    (book: TFsBookWithoutContent) => setEditTagStatus({ book, open: true }),
     [],
   );
 

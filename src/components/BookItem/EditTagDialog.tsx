@@ -1,6 +1,6 @@
 import { ITag } from '@/modules/book/Tag';
 import fs from '@/modules/fs';
-import { TFsBook } from '@/modules/fs/Fs';
+import { TFsBookWithoutContent } from '@/modules/fs/Fs';
 import {
   Autocomplete,
   Box,
@@ -25,7 +25,7 @@ import Dot from '../Dot';
 import TagAddDialog from '../TagItem/TagAddDialog';
 
 export type BookItemEditTagDialogProps = {
-  book?: TFsBook;
+  book?: TFsBookWithoutContent;
 } & DialogProps;
 
 const BookItemEditTagDialog: FC<BookItemEditTagDialogProps> = ({

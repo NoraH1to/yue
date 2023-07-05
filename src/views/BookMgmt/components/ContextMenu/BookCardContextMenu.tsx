@@ -2,7 +2,7 @@ import BookItemContextMenu, {
   BookItemContextMenuProps,
 } from '@/components/BookItem/ContextMenu';
 import fs from '@/modules/fs';
-import { TFsBook } from '@/modules/fs/Fs';
+import { TFsBookWithoutContent } from '@/modules/fs/Fs';
 import { useConfirm } from 'material-ui-confirm';
 import { useSnackbar } from 'notistack';
 import { FC, memo } from 'react';
@@ -12,8 +12,8 @@ export type BookCardContextMenuProps = Omit<
   BookItemContextMenuProps,
   'onMultiSelect'
 > & {
-  book: TFsBook;
-  onMultiSelect?: (book: TFsBook) => void;
+  book: TFsBookWithoutContent;
+  onMultiSelect?: (book: TFsBookWithoutContent) => void;
 };
 
 const BookCardContextMenu: FC<BookCardContextMenuProps> = ({

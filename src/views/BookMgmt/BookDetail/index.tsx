@@ -26,7 +26,7 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
   const nav = useNavigate();
   const { t } = useTranslation();
   const { data: book, status: bookLoadingStatus } = useStatusLiveQuery(
-    () => fs.getBookByHash(hash),
+    () => fs.getBookByHashWithoutContent(hash),
     [hash],
     null,
   );

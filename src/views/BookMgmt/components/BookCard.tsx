@@ -3,16 +3,16 @@ import { MemoBookItemSelectedBackdrop } from '@/components/BookItem/SelectedBack
 import ContextMenuTrigger, {
   ContextMenuTriggerProps,
 } from '@/components/ContextMenu/Trigger';
-import { TFsBook } from '@/modules/fs/Fs';
+import { TFsBookWithoutContent } from '@/modules/fs/Fs';
 import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { MemoBookCardContextMenu } from '../components/ContextMenu/BookCardContextMenu';
 
 type BookCardProps = {
-  book: TFsBook;
+  book: TFsBookWithoutContent;
   selected: boolean;
-  onSelect?: (book: TFsBook) => void;
-  onClick?: (book: TFsBook) => void;
-  onEditTag?: (book: TFsBook) => void;
+  onSelect?: (book: TFsBookWithoutContent) => void;
+  onClick?: (book: TFsBookWithoutContent) => void;
+  onEditTag?: (book: TFsBookWithoutContent) => void;
 };
 
 const BookCard: FC<BookCardProps> = ({

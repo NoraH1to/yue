@@ -6,7 +6,10 @@ import BookMain from '../BookMain';
 
 const BookListTag = () => {
   const { id } = useParams();
-  const bookGetter = useCallback(() => fs.getBooksByTag(id!), [id]);
+  const bookGetter = useCallback(
+    () => fs.getBooksByTagWithoutContent(id!),
+    [id],
+  );
   const tag = useLiveQuery(() => (id ? fs.getTagById(id) : undefined), [id]);
   useEffect(() => {
     document.title = tag?.title || '';

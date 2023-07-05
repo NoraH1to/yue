@@ -37,6 +37,7 @@ export interface IBookInfoWithoutArchive<P = unknown> extends IBookInfoBase<P> {
 export type IBookInfo<P = unknown> =
   | IBookInfoWithoutArchive<P>
   | IBookInfoWithArchive<P>;
+export type IBookInfoWithoutContent<P = unknown> = IBookInfoBase<P>;
 
 export type ReaderCompProps = PropsWithRef<{
   colorMode: keyof TAppSetting['readerTheme'];

@@ -1,4 +1,6 @@
-import BookDetailAuthor, { BookDetailAuthorSkeleton } from '@/components/BookDetail/Author';
+import BookDetailAuthor, {
+  BookDetailAuthorSkeleton,
+} from '@/components/BookDetail/Author';
 import BookDetailInfoItemText from '@/components/BookDetail/InfoItemText';
 import BookDetailLastReadTime from '@/components/BookDetail/LastReadTime';
 import BookDetailProgress from '@/components/BookDetail/Progress';
@@ -6,7 +8,7 @@ import BookDetailTags, {
   BookDetailTagsSkeleton,
 } from '@/components/BookDetail/Tags';
 import { ITag } from '@/modules/book/Tag';
-import { TFsBook } from '@/modules/fs/Fs';
+import { TFsBookWithoutContent } from '@/modules/fs/Fs';
 import { Skeleton, Stack, StackProps } from '@mui/material';
 import { FC } from 'react';
 
@@ -26,7 +28,7 @@ export const DetailInfoSkeleton: FC<StackProps> = (props) => (
 
 export type DetailInfoProps = {
   tags: ITag[];
-  book: TFsBook;
+  book: TFsBookWithoutContent;
   onClickTag?: (tag: ITag) => void;
 } & StackProps;
 

@@ -110,7 +110,7 @@ export const importBook = async (
   sourceInfo?: TSourceItemInfo,
 ): Promise<{ res: boolean; msg?: string | null }> => {
   const hash = await md5FromBlob(target);
-  const originBook = await fs.getBookByHash(hash);
+  const originBook = await fs.getBookByHashWithoutContent(hash);
   if (originBook && !sourceInfo) {
     return {
       res: false,

@@ -77,7 +77,7 @@ export interface IFs {
   addBook(
     book: Omit<TFsBook, 'addTs' | 'lastmodTs'>,
     sourceInfo?: TSourceItemInfo,
-  ): Promise<TFsBook>;
+  ): Promise<TFsBookWithoutContent>;
   /**
    * 获得全部图书
    */

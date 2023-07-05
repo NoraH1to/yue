@@ -223,7 +223,9 @@ const fs: IFs = {
         return hash;
       },
     );
-    return (await DB.waitFor(this.getBookByHash(hash as string)))!;
+    return (await DB.waitFor(
+      this.getBookByHashWithoutContent(hash as string),
+    ))!;
   },
 
   async getBooks() {

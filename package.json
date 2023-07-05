@@ -17,6 +17,7 @@
     "dev:web-pwa": "cross-env pwa=true pnpm dev:web",
     "build:web": "vite build",
     "build:web-pwa": "cross-env pwa=true pnpm build:web",
+    "build:web-pwa:analyze": "cross-env analyze=true pnpm build:web-pwa",
     "release": "standard-version"
   },
   "dependencies": {

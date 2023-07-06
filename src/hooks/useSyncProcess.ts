@@ -9,7 +9,8 @@ import ab2str from 'arraybuffer-to-string';
 window.global = window; // fix ab2str's bug
 
 const useSyncProcess = () => {
-  const [{ client, loadingPromise, syncProcessDir }] = useWebDAVClient();
+  const [{ client, loadingPromise, syncProcessDir, error: clientError }] =
+    useWebDAVClient();
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<Error>();
 
@@ -76,7 +77,7 @@ const useSyncProcess = () => {
   };
 
   return [
-    { syncing, error },
+    { syncing, error: error || clientError },
     { sync, check, updateCloud, updateLocal },
   ] as const;
 };

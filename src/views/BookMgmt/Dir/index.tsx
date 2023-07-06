@@ -147,7 +147,7 @@ const DirContent: FC<DirContentProps> = ({ filename }) => {
     dir.items.length ? (
       <DirGridLayout>
         {dir.items.map((item) => (
-          <VisibleWrapper key={item.id} hide={getItemHideStatus(item)}>
+          <VisibleWrapper key={`${item.basename}-${item.id}`} hide={getItemHideStatus(item)}>
             {item.type === 'directory' ? (
               <DirCard dirItem={item} />
             ) : (

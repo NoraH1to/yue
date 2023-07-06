@@ -18,6 +18,7 @@ const StyledMuiTypography = styled(Styled)(({ lineClampCount }) => [
     WebkitBoxOrient: 'vertical',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
+    wordBreak: 'break-all',
   },
 ]);
 

@@ -12,7 +12,7 @@ let _sourceDataDir: any;
 
 const useWebDAVClient = () => {
   const [{ source, sourceDataDir }, { setSource }] = useSetting();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<Error>();
   const [testIng, setTestIng] = useState(false);
   const [loadingPromiser, setLoadingPromiser] = useState(new Promiser<void>());
   const info = useMemo(() => {
@@ -78,8 +78,7 @@ const useWebDAVClient = () => {
         }
       } catch (e) {
         if (cancel) return;
-        // @ts-ignore
-        setError(e.statusText || (e as Error).message);
+        setError(e as Error);
       } finally {
         setTestIng(false);
         loadingPromiser.resolve();

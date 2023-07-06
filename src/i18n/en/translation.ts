@@ -121,6 +121,7 @@ export default {
     'start reading': 'start reading',
     'continue reading': 'continue reading',
     'sync process': 'synchronize progress',
+    'check': 'check',
   },
   actionRes: {
     'import book success': 'import book successfully',

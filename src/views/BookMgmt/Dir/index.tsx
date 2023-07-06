@@ -136,7 +136,7 @@ const DirContent: FC<DirContentProps> = ({ filename }) => {
   const Content = !info ? (
     <NeedWebDAVInfo />
   ) : error ? (
-    <WebDavError title={error} />
+    <WebDavError title={error.message} />
   ) : loading ? (
     <DirGridLayout>
       {[undefined, undefined, undefined].map((_, i) => (

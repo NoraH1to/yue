@@ -25,10 +25,12 @@ const SyncButton = ({ book }: { book: IBookInfoWithoutContent }) => {
   useUpdateEffect(() => {
     if (!syncing) {
       error
-        ? enqueueSnackbar(t('actionRes.sync fail'), { variant: 'warning' })
+        ? enqueueSnackbar(`${t('actionRes.sync fail')} ${error.message}`, {
+            variant: 'warning',
+          })
         : enqueueSnackbar(t('actionRes.sync success'), { variant: 'success' });
     }
-  }, [syncing, error]);
+  }, [syncing, error, t, enqueueSnackbar]);
 
   return (
     <IconButton disabled={syncing} onClick={() => sync(book)}>

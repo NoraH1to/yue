@@ -5,10 +5,9 @@ import ToolbarRow from '@/components/Toolbar/ToolbarRow';
 import ToolbarRowSpace from '@/components/Toolbar/ToolbarRowSpace';
 import VisibleWrapper from '@/components/VisibleWrapper';
 import { sortBooksBySorter } from '@/helper';
-import useLoading from '@/hooks/useLoading';
+import useMgmtBook from '@/hooks/useMgmtBook';
 import useMinDelayData from '@/hooks/useMinDelayData';
 import useStatusLiveQuery from '@/hooks/useStatusLiveQuery';
-import fs from '@/modules/fs';
 import {
   TFsBookWithoutContent,
   TFsBookWithoutContentWithTags,
@@ -17,7 +16,6 @@ import { defaultBookSorter } from '@/modules/fs/constant';
 import { ROUTE_PATH } from '@/router';
 import { Box, Grow } from '@mui/material';
 import { useDebounce } from 'ahooks';
-import { useConfirm } from 'material-ui-confirm';
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -39,9 +37,8 @@ export type BookMainProps = {
 
 const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
   const { t } = useTranslation();
-  const confirm = useConfirm();
   const nav = useNavigate();
-  const { addLoading } = useLoading();
+  const [, { deleteBook }] = useMgmtBook();
   const [sorter, setSorter] = useState(defaultBookSorter);
   const [filter, setFilter] = useState<null | IFilter>(null);
   const { data: originBooks, status } = useStatusLiveQuery(
@@ -145,16 +142,10 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
     filterBook.forEach((book) => (map[book.hash] = true));
     setSelectedMap(map);
   }, [books, selectedCount, handleExitSelectedMode, getBookHideStatus]);
-  const handleBatchDelete = useCallback(() => {
-    confirm().then(() => {
-      addLoading(
-        (async () => {
-          await fs.deleteBook(selectedBookHashList);
-          handleExitSelectedMode();
-        })(),
-      );
-    });
-  }, [confirm, addLoading, selectedBookHashList, handleExitSelectedMode]);
+  const handleBatchDelete = useCallback(async () => {
+    await deleteBook(selectedBookHashList);
+    handleExitSelectedMode();
+  }, [deleteBook, selectedBookHashList, handleExitSelectedMode]);
 
   const handleFilter = useCallback<
     NonNullable<ToolbarButtonFilterProps['onFilter']>

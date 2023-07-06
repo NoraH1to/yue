@@ -1,12 +1,9 @@
 import BookItemContextMenu, {
   BookItemContextMenuProps,
 } from '@/components/BookItem/ContextMenu';
-import fs from '@/modules/fs';
+import useMgmtBook from '@/hooks/useMgmtBook';
 import { TFsBookWithoutContent } from '@/modules/fs/Fs';
-import { useConfirm } from 'material-ui-confirm';
-import { useSnackbar } from 'notistack';
 import { FC, memo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 export type BookCardContextMenuProps = Omit<
   BookItemContextMenuProps,
@@ -23,9 +20,7 @@ const BookCardContextMenu: FC<BookCardContextMenuProps> = ({
   onMultiSelect,
   ...props
 }) => {
-  const { t } = useTranslation();
-  const confirm = useConfirm();
-  const { enqueueSnackbar } = useSnackbar();
+  const [, { deleteBook }] = useMgmtBook();
 
   return (
     <>
@@ -33,14 +28,7 @@ const BookCardContextMenu: FC<BookCardContextMenuProps> = ({
         {...props}
         onDelete={() => {
           onDelete?.();
-          confirm()
-            .then(() => book && fs.deleteBook(book.hash))
-            .then(() =>
-              enqueueSnackbar({
-                variant: 'success',
-                message: t('actionRes.delete book success'),
-              }),
-            );
+          book && deleteBook(book.hash);
         }}
         onEditTag={() => {
           onEditTag?.();

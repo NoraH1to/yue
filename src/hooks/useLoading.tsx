@@ -7,9 +7,7 @@ const LoadingContext = createContext({
   addLoading: <T extends Promise<any>>(promiseLike: T): T => promiseLike,
 });
 
-export const LoadingProvide: FC<PropsWithChildren<unknown>> = ({
-  children,
-}) => {
+export const useScopedLoading = () => {
   const stack = useRef(0);
   const [loading, setLoading] = useState(!!stack.current);
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
@@ -21,7 +19,13 @@ export const LoadingProvide: FC<PropsWithChildren<unknown>> = ({
     });
     return promiseLike;
   };
+  return [{ loading }, { addLoading }] as const;
+};
 
+export const LoadingProvide: FC<PropsWithChildren<unknown>> = ({
+  children,
+}) => {
+  const [{ loading }, { addLoading }] = useScopedLoading();
   return (
     <LoadingContext.Provider value={{ loading, addLoading }}>
       {children}

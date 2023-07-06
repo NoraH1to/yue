@@ -1,7 +1,7 @@
 import StyledMuiAutoTooltipTypography from '@/components/Styled/MuiAutoTooltipTypography';
 import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import StyledMuiSwipeableDrawer from '@/components/Styled/MuiSwipeableDrawer';
-import useImportBook from '@/hooks/useImportBook';
+import useMgmtBook from '@/hooks/useMgmtBook';
 import { ROUTE_PATH } from '@/router';
 import {
   FolderOpenRounded,
@@ -21,10 +21,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useSnackbar } from 'notistack';
 import { CSSProperties, FC, ReactNode, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { To, useLocation, useNavigate } from 'react-router-dom';
+import { To, useLocation } from 'react-router-dom';
 import Footer from './Footer';
 import TagList from './TagList';
 import RouterLink from './components/RouterLink';
@@ -52,11 +51,9 @@ const SideBar: FC<{
   onOpen: () => void;
 }> = ({ open, onClose, onOpen }) => {
   const { t } = useTranslation();
-  const nav = useNavigate();
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
 
-  const [_, { importBook }] = useImportBook();
+  const [_, { importBook }] = useMgmtBook();
 
   const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -107,20 +104,7 @@ const SideBar: FC<{
           size="large"
           onClick={async () => {
             closeIfXs();
-            const res = await importBook();
-            if (!res) return;
-            if (res.res) {
-              nav(ROUTE_PATH.ROOT);
-              enqueueSnackbar({
-                variant: 'success',
-                message: t('actionRes.import book success'),
-              });
-            }
-            if (!res.res)
-              enqueueSnackbar({
-                variant: res.msg ? 'warning' : 'error',
-                message: res.msg || t('actionRes.import book fail'),
-              });
+            await importBook();
           }}>
           {t('import ebook')}
         </Button>

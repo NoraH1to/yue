@@ -2,6 +2,7 @@ import { Theme } from '@mui/material';
 import { SxProps } from '@mui/system';
 import { ResponseDataDetailed } from '@norah1to/webdav';
 import anysort from 'anysort-typed';
+import { fileOpen } from 'browser-fs-access';
 import mime from 'mime';
 import { BaseSyntheticEvent, ReactEventHandler } from 'react';
 import Md5 from 'spark-md5';
@@ -105,31 +106,37 @@ export const getBasenameByFilename = (filename: string) => {
 };
 
 export const importBook = async (
-  target: File,
+  target?: File | Promise<File>,
   cacheInfo?: Partial<ABook>,
   sourceInfo?: TSourceItemInfo,
-): Promise<{ res: boolean; msg?: string | null }> => {
+) => {
+  target =
+    target instanceof Promise
+      ? await target
+      : target || (await fileOpen({ multiple: false }));
+  if (!target) return;
   const hash = await md5FromBlob(target);
   const originBook = await fs.getBookByHashWithoutContent(hash);
   if (originBook && !sourceInfo) {
     return {
-      res: false,
+      res: 'exist',
       msg: i18n.t('ebook already exist'),
-    };
+      info: originBook,
+    } as const;
   }
   const type = getExtByMime(target.type) || getExtByFilename(target.name);
-  if (!type) return { res: false, msg: i18n.t('unsupported format') };
+  if (!type) return { res: false, msg: i18n.t('unsupported format') } as const;
 
   const parser = getParser(type);
   if (!parser)
     return {
       res: false,
-      msg: i18n.t('unsupported format'),
-    };
+      msg: `${i18n.t('unsupported format')} "${type}"`,
+    } as const;
 
   const book = await new parser.Book(await parser.parse(target, cacheInfo));
 
-  await fs.addBook(
+  const info = await fs.addBook(
     {
       ...parser.getCacheableInfo(book),
       type: book.type,
@@ -138,8 +145,9 @@ export const importBook = async (
   );
 
   return {
-    res: true,
-  };
+    res: 'success',
+    info,
+  } as const;
 };
 
 export const getRandomColor = <T = 'hex' | 'rgb'>(type = 'hex') => {

@@ -202,13 +202,13 @@ const fs: IFs = {
             : undefined,
         };
 
-        const hash = existBook
-          ? existBook.hash
-          : await Promise.all([
-              db.books.add(bookData),
-              db.bookContents.add(bookContentData),
-              db.bookCovers.add(bookCoverData),
-            ]);
+        const hash = existBook ? existBook.hash : book.hash;
+        if (!existBook)
+          await Promise.all([
+            db.books.add(bookData),
+            db.bookContents.add(bookContentData),
+            db.bookCovers.add(bookCoverData),
+          ]);
         if (sourceInfo) {
           try {
             await db.sourceIdAndBookHash.add({
@@ -329,7 +329,7 @@ const fs: IFs = {
           }),
         });
       } catch (e) {
-        console.warn(e);
+        console.error(e);
       }
       const dir = await db.dirs.get(filename);
       if (!dir) return dir;

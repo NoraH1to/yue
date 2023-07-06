@@ -1,5 +1,6 @@
 import StatusWrapper from '@/components/StatusWrapper';
-import { Fade, Typography } from '@mui/material';
+import StatusTypography from '@/components/StatusWrapper/StatusTypography';
+import { Fade } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 const StatusEmpty = () => {
@@ -7,9 +8,7 @@ const StatusEmpty = () => {
   return (
     <Fade in>
       <StatusWrapper>
-        <Typography variant="h5" color="text.secondary">
-          {t('nothing here')}
-        </Typography>
+        <StatusTypography>{t('nothing here')}</StatusTypography>
       </StatusWrapper>
     </Fade>
   );

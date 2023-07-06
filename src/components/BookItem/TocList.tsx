@@ -8,7 +8,10 @@ import {
   ListProps,
 } from '@mui/material';
 import { FC, Fragment, memo, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ContextMenuTrigger from '../ContextMenu/Trigger';
+import StatusWrapper from '../StatusWrapper';
+import StatusTypography from '../StatusWrapper/StatusTypography';
 import StyledMuiListItemButton from '../Styled/MuiListItemButton';
 
 export type TocListProps = {
@@ -37,6 +40,7 @@ const TocList: FC<TocListProps> = (props) => {
     deep = 0,
     ...restProps
   } = props;
+  const { t } = useTranslation();
   const [collapseMap, setCollapseMap] = useState<Record<string, boolean>>({});
   const handleToggleCollapse = (toc: IToc, open?: boolean) => {
     setCollapseMap((collapseMap) => ({
@@ -49,7 +53,11 @@ const TocList: FC<TocListProps> = (props) => {
     if (!currentRef.current) return;
     currentRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [tocList, current]);
-  return (
+  return deep === 0 && !tocList.length ? (
+    <StatusWrapper>
+      <StatusTypography>{t('empty toc')}</StatusTypography>
+    </StatusWrapper>
+  ) : (
     <List {...restProps}>
       {tocList.map((toc) => {
         const Icon = collapseMap[toc.href]
@@ -68,7 +76,7 @@ const TocList: FC<TocListProps> = (props) => {
               disabled={!toc.children?.length}>
               {({ triggerProps, longPressTimer }) => (
                 <StyledMuiListItemButton
-                  ref={selected && !isChildrenSelected ?  currentRef : undefined}
+                  ref={selected && !isChildrenSelected ? currentRef : undefined}
                   sx={{ pl: 2 + 2 * deep }}
                   {...triggerProps}
                   selected={selected}

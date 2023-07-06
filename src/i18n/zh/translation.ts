@@ -63,6 +63,7 @@ export default {
   'webDAV Configuration': 'webDAV 配置',
   'webDAV error msg': 'webDAV 错误，请确保你的网络环境和服务状态',
   'nothing here': '空空如也',
+  'empty toc': '目录为空',
   'no tag': '无标签',
   'recent reads': '最近阅读',
   'app can update': '应用可以更新，点击刷新按钮以更新',

@@ -63,6 +63,7 @@ export default {
   'webDAV error msg':
     'webDAV error, please ensure your network environment and service status',
   'nothing here': 'nothing here',
+  'empty toc': 'TOC is empty',
   'no tag': 'no tag',
   'recent reads': 'recent reads',
   'app can update': 'App update available, click on refresh button to update.',

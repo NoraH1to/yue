@@ -320,15 +320,18 @@ const Reader = () => {
       book && (
         <Collapse
           in={showWhichExtendedLayer === 'toc'}
-          sx={{ maxHeight: '50vh', overflow: 'auto' }}>
-          <Box>
+          sx={{
+            maxHeight: '50vh',
+            overflow: book.toc.length ? 'auto' : 'hidden',
+          }}>
+          <Stack minHeight="120px">
             <MemoTocList
               tocList={book.toc}
               current={currentInfo.process.navInfo}
               currentTitle={t('current location')!}
               onClickToc={handleClickToc}
             />
-          </Box>
+          </Stack>
         </Collapse>
       ),
     [book, showWhichExtendedLayer, currentInfo, handleClickToc, t],

@@ -185,8 +185,7 @@ const fs: IFs = {
         const bookContentData = {
           hash: book.hash,
           target: {
-            // @ts-ignore
-            buffer: targetBuffer,
+            buffer: book.archive ? undefined : targetBuffer,
             type: book.target.type,
             name: book.target.name,
           },

@@ -1,4 +1,23 @@
 # Changelog
+## [1.7.0](///compare/v1.6.1...v1.7.0) (2023-07-12)
+
+
+### Features
+
+* **import-book:** add button to jump to book for import notification 8be4d7c
+
+
+### Bug Fixes
+
+* **component-styled-typography:** no correct line break 0189b7e
+* **component-toc-list:** correct display the empty state 0ef5ca9
+* **dir:** books in download should not allow clicking ccc69d7
+* **dir:** key duplication causes list rendering errors adc5348
+* **setting-webdav:** page crash on connection error b3c5150
+* **setting-webdav:** service address text overflow b8e9e1d
+* **setting-webdav:** webdav connection status not detected correctly e48c46a
+* **sync:** sync results not displayed correctly b759a74
+
 ### [1.6.1](///compare/v1.6.0...v1.6.1) (2023-07-05)
 
 ## [1.6.0](///compare/v1.5.0...v1.6.0) (2023-07-04)

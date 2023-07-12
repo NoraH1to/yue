@@ -33,13 +33,10 @@ const useWebDAVClient = () => {
     info && _createClient(info),
   );
 
-  const ensureDir = useCallback(
-    async (path: string) => {
-      if (!client) return;
-      if (!(await client.exists(path))) await client.createDirectory(path);
-    },
-    [client],
-  );
+  const ensureDir = useCallback(async (path: string, client: WebDAVClient) => {
+    if (!client) return;
+    if (!(await client.exists(path))) await client.createDirectory(path);
+  }, []);
 
   const _setInfo = (i: typeof info) => {
     if (!i) {
@@ -64,15 +61,16 @@ const useWebDAVClient = () => {
       try {
         const awaitStack = [];
         const isEqual =
-          _info &&
-          shallowEqual(info, _info) &&
-          _sourceDataDir === sourceDataDir;
+          _info && shallowEqual(info, _info) && _sourceDataDir === syncRootDir;
         if (!isEqual) {
           awaitStack.push(_client.exists('/'));
-          awaitStack.push(ensureDir(syncRootDir));
-          awaitStack.push(ensureDir(syncProcessDir));
+          awaitStack.push(
+            ensureDir(syncRootDir, _client).then(() =>
+              ensureDir(syncProcessDir, _client),
+            ),
+          );
           _info = { ...info };
-          _sourceDataDir = sourceDataDir;
+          _sourceDataDir = syncRootDir;
         }
         await Promise.all(awaitStack);
         if (cancel) return;
@@ -89,7 +87,7 @@ const useWebDAVClient = () => {
     return () => {
       cancel = true;
     };
-  }, [info]);
+  }, [info, syncRootDir, syncProcessDir]);
 
   return [
     {

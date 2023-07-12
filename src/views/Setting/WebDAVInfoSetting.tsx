@@ -68,7 +68,13 @@ const WebDAVSetting = () => {
         <ListItemIcon>
           <StorageRounded />
         </ListItemIcon>
-        <ListItemText primary={webDAVTitle} secondary={webDAVSubtitle} />
+        <ListItemText
+          primaryTypographyProps={{
+            sx: { overflow: 'hidden', textOverflow: 'ellipsis' },
+          }}
+          primary={webDAVTitle}
+          secondary={webDAVSubtitle}
+        />
         <ListItemIcon sx={{ justifyContent: 'center' }}>
           {webDAVIcon}
         </ListItemIcon>

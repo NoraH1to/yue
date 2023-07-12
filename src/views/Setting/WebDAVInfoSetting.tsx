@@ -51,7 +51,7 @@ const WebDAVSetting = () => {
           sx={{ mt: 1 }}
         />
       );
-    return error ? error : info ? t('connected') : t('unsetting');
+    return error ? error.message : info ? t('connected') : t('unsetting');
   }, [info, error, loadingWebDAV, t]);
 
   const webDAVIcon = loadingWebDAV ? undefined : error ? (

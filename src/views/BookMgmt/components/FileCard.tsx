@@ -104,13 +104,14 @@ const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
   );
 
   return (
-    <ContextMenuTrigger onOpen={handleOpenContextmenu}>
+    <ContextMenuTrigger disabled={inProgress} onOpen={handleOpenContextmenu}>
       {({ triggerProps }) => (
         <MemoDirItemFileBaseCard
           cover={cover}
           ext={ext}
           title={getBasenameByFilename(file.basename)}
           onClick={handleClick}
+          disabled={inProgress}
           {...triggerProps}
           coverChildren={
             <Fade in={!loading}>

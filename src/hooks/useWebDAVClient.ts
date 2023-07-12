@@ -62,20 +62,22 @@ const useWebDAVClient = () => {
     setTestIng(true);
     (async () => {
       try {
-        await _client.exists('/');
-        if (cancel) return;
-        setError(undefined);
-        setClient(_client);
-        if (
-          !_info ||
-          (_info && !shallowEqual(info, _info)) ||
-          _sourceDataDir !== sourceDataDir
-        ) {
-          await ensureDir(syncRootDir);
-          await ensureDir(syncProcessDir);
+        const awaitStack = [];
+        const isEqual =
+          _info &&
+          shallowEqual(info, _info) &&
+          _sourceDataDir === sourceDataDir;
+        if (!isEqual) {
+          awaitStack.push(_client.exists('/'));
+          awaitStack.push(ensureDir(syncRootDir));
+          awaitStack.push(ensureDir(syncProcessDir));
           _info = { ...info };
           _sourceDataDir = sourceDataDir;
         }
+        await Promise.all(awaitStack);
+        if (cancel) return;
+        setError(undefined);
+        setClient(_client);
       } catch (e) {
         if (cancel) return;
         setError(e as Error);

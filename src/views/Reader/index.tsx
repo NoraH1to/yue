@@ -157,6 +157,7 @@ const Reader = () => {
             description: t('update process or not'),
             confirmationText: t('use cloud process'),
             cancellationText: t('use local process'),
+            allowClose: false,
           });
           if (signal?.aborted) return;
           updateProcess(checkRes);
@@ -207,34 +208,28 @@ const Reader = () => {
 
       if (autoSyncProcess) {
         // 检查是否同步云端记录
-        const checkRes = await checkProcessAndReqSync(book, abortCtl.signal);
-        // 同步了则不再跳转路由信息中的位置
-        if (checkRes === 'sync') return setLoaded(true);
-        else if (abortCtl.signal.aborted) return;
+        checkProcessAndReqSync(book).then(async (checkRes) => {
+          // 如果没有同步，表示使用本地的进度，将本地进度更新到云端
+          if (checkRes !== 'sync' && autoSyncProcess) {
+            try {
+              await updateCloud(
+                book,
+                (await fs.getBookByHash(book.hash))!.lastProcess,
+              );
+            } catch {
+              // 不处理错误
+            }
+          }
+        });
       }
 
-      const jumpAndUpdateCloud = async (v: unknown) => {
-        await jumpTo(v);
-        // 将本地进度上传到云端
-        if (!autoSyncProcess) return;
-        try {
-          await updateCloud(
-            book,
-            (await fs.getBookByHash(book.hash))!.lastProcess,
-          );
-        } catch {
-          // 不处理错误
-        }
-      };
       /**
        * 根据路由参数跳转到指定位置
-       * 走到这里说明需要将本地进度更新到云端
        */
-      if (params.value) await jumpAndUpdateCloud(params.value);
-      else if (params.href) await jumpAndUpdateCloud(params.href);
-      else if (book.lastProcess.value)
-        await jumpAndUpdateCloud(book.lastProcess.value);
-      else await jumpAndUpdateCloud(0);
+      if (params.value) await jumpTo(params.value);
+      else if (params.href) await jumpTo(params.href);
+      else if (book.lastProcess.value) await jumpTo(book.lastProcess.value);
+      else await jumpTo(0);
       if (abortCtl.signal.aborted) return;
       setLoaded(true);
     };

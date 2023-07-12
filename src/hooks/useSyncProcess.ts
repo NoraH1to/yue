@@ -62,8 +62,8 @@ const useSyncProcess = () => {
   };
 
   const sync = async (book: IBookInfoWithoutContent) => {
-    await loadingPromise;
     setSyncing(true);
+    await loadingPromise;
     try {
       const checkRes = await check(book);
       if (checkRes === 'updateCloud') updateCloud(book, book.lastProcess);

@@ -1,4 +1,6 @@
-import App from '@/App';
+import StatusUnCatchError from '@/components/Status/StatusUnCatchError';
+import StatusUnExistPage from '@/components/Status/StatusUnExistPage';
+import AppView from '@/views';
 import About from '@/views/About';
 import BookMgmt from '@/views/BookMgmt';
 import BookDetail from '@/views/BookMgmt/BookDetail';
@@ -26,16 +28,19 @@ export enum ROUTE_PATH {
 const router = createBrowserRouter([
   {
     path: ROUTE_PATH.ROOT,
-    element: <App />,
+    element: <AppView />,
+    errorElement: <StatusUnCatchError />,
     children: [
       {
+        path: ROUTE_PATH.ROOT,
         element: <BookMgmt />,
+        errorElement: <StatusUnCatchError />,
         children: [
           { index: true, element: <BookListAll /> },
           { path: `${ROUTE_PATH.RECENT}`, element: <BookListRecentReads /> },
           {
             path: `${ROUTE_PATH.TAG}`,
-            element: <Navigate to={ROUTE_PATH.ROOT} replace />,
+            element: <StatusUnExistPage />,
           },
           {
             path: `${ROUTE_PATH.TAG}/:id`,
@@ -43,7 +48,7 @@ const router = createBrowserRouter([
           },
           {
             path: `${ROUTE_PATH.DETAIL}`,
-            element: <Navigate to={ROUTE_PATH.ROOT} replace />,
+            element: <StatusUnExistPage />,
           },
           {
             path: `${ROUTE_PATH.DETAIL}/:hash`,
@@ -72,7 +77,12 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: `${ROUTE_PATH.READER}/:hash`, element: <Reader /> },
+      { path: `${ROUTE_PATH.READER}`, element: <StatusUnExistPage /> },
+      {
+        path: `${ROUTE_PATH.READER}/:hash`,
+        element: <Reader />,
+        errorElement: <StatusUnCatchError />,
+      },
     ],
   },
 ]);

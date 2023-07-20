@@ -1,6 +1,7 @@
 import StatusWrapper from '@/components/StatusWrapper';
+import StatusTypography from '@/components/StatusWrapper/StatusTypography';
 import { ROUTE_PATH } from '@/router';
-import { Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -14,12 +15,12 @@ const WebDavError: FC<WebDavErrorProps> = ({ title }) => {
   const nav = useNavigate();
   return (
     <StatusWrapper>
-      <Typography variant="h5" color="text.secondary">
+      <StatusTypography variant="h5" color="text.secondary">
         {t('webDAV error msg')}
-      </Typography>
-      <Typography variant="subtitle1" color="text.secondary">
+      </StatusTypography>
+      <StatusTypography variant="subtitle1" color="text.secondary">
         {title}
-      </Typography>
+      </StatusTypography>
       <Button variant="outlined" onClick={() => nav(`/${ROUTE_PATH.SETTING}`)}>
         {t('goto setting')}
       </Button>

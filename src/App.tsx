@@ -17,9 +17,10 @@ import { ConfirmProvider } from 'material-ui-confirm';
 import { SnackbarProvider } from 'notistack';
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import useSetting, { SettingProvide } from './hooks/useSetting';
+import router from './router';
 import themeMap from './themes';
 
 const Updater = () => {
@@ -113,7 +114,7 @@ const AppContent: FC = () => {
           autoHideDuration={2000}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
           <AppContainer>
-            <Outlet />
+            <RouterProvider router={router} />
             <Updater />
           </AppContainer>
         </SnackbarProvider>

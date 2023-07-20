@@ -66,6 +66,7 @@ const Reader = () => {
     'toc' | 'readerSetting' | undefined | false
   >();
   const { t } = useTranslation();
+  const [fallbackError, setFallbackError] = useState<Error>();
 
   useEffect(() => {
     const { process } = currentInfo;
@@ -108,13 +109,19 @@ const Reader = () => {
     [readerTheme],
   );
 
+  useEffect(() => {
+    if (fallbackError) throw fallbackError;
+  }, [fallbackError]);
+
   // 加载图书数据
   useEffect(() => {
-    fs.getBookByHash(params.hash).then((bookInfo) => {
-      if (bookInfo === null) return;
-      else if (!bookInfo) throw new Error('load book data fail');
-      loadBook(bookInfo);
-    });
+    fs.getBookByHash(params.hash)
+      .then((bookInfo) => {
+        if (bookInfo === null) return;
+        else if (!bookInfo) throw new Error(t('unexist book')!);
+        loadBook(bookInfo);
+      })
+      .catch(setFallbackError);
   }, [params.hash]);
 
   // 当前进度同步到地址栏

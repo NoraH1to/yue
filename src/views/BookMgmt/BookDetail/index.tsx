@@ -4,6 +4,7 @@ import BookItemCover from '@/components/BookItem/Cover';
 import TocList, { TocListProps } from '@/components/BookItem/TocList';
 import DetailToolbar from '@/components/DetailToolbar';
 import FixedRatioBookCover from '@/components/FixedRatioWrapper/FixedRatioBookCover';
+import StatusUnExistPage from '@/components/Status/StatusUnExistPage';
 import ToolbarRowSpace from '@/components/Toolbar/ToolbarRowSpace';
 import { delFalsy } from '@/helper';
 import useMinDelay from '@/hooks/useMinDelay';
@@ -35,8 +36,6 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
     [hash],
     null,
   );
-  if (!book && bookLoadingStatus === 'resolved')
-    throw new Error('unexist book');
 
   const { isDelayed } = useMinDelay([hash], 250);
   const loading =
@@ -80,6 +79,8 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
       href: toc.href,
     });
   };
+
+  if (!book && bookLoadingStatus === 'resolved') return <StatusUnExistPage />;
 
   return (
     <Stack height={1} gap={{ xs: 1, md: 2 }} pt={1}>

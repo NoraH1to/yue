@@ -14,7 +14,6 @@ import {
   useColorScheme,
 } from '@mui/material/styles';
 import { ConfirmProvider } from 'material-ui-confirm';
-import { SnackbarProvider } from 'notistack';
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RouterProvider } from 'react-router-dom';
@@ -109,15 +108,10 @@ const AppContent: FC = () => {
           confirmationText: t('action.confirm'),
           cancellationText: t('action.cancel'),
         }}>
-        <SnackbarProvider
-          maxSnack={4}
-          autoHideDuration={2000}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-          <AppContainer>
-            <RouterProvider router={router} />
-            <Updater />
-          </AppContainer>
-        </SnackbarProvider>
+        <AppContainer>
+          <RouterProvider router={router} />
+          <Updater />
+        </AppContainer>
       </ConfirmProvider>
     </LoadingProvide>
   );

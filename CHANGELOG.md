@@ -1,4 +1,17 @@
 # Changelog
+## [1.8.0](///compare/v1.7.0...v1.8.0) (2023-08-05)
+
+
+### Features
+
+* **error-fallback:** friendly error pages 6e324cc
+
+
+### Bug Fixes
+
+* **component-book-cover:** gpu acceleration does not take effect 8ee553d
+* **import-book:** snackbar context error 09214af
+
 ## [1.7.0](///compare/v1.6.1...v1.7.0) (2023-07-12)
 
 

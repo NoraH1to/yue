@@ -48,7 +48,7 @@ const BookItemCover: FC<BookItemCoverProps> = forwardRef(
               onLoad={handleImgLoaded}
               sx={{
                 height: 1,
-                transform: 'translateZ(0px)', // GPU 加速消除锯齿，偶尔会失效，跟浏览器实现有关
+                transform: 'translateZ(1px)', // GPU 加速消除锯齿，偶尔会失效，跟浏览器实现有关
               }}
             />
           </Fade>

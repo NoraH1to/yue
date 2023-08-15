@@ -86,6 +86,7 @@ export default defineConfig({
           epubjs: ['epubjs'],
           pdf: ['react-pdf'],
           archive: ['libarchive.js'],
+          txt: ['to-array-buffer', 'detect-file-encoding-and-language']
         },
       },
     },

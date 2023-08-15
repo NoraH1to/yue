@@ -6,7 +6,7 @@ English | [中文](./README_CN.md)
 
 ## ✨ Features
 
-- 📖 **Multi-format**: `epub`, `pdf`, comic(`cbz`, `cbr`, `rar`, `zip`, `7z`)
+- 📖 **Multi-format**: `epub`, `pdf`, comic(`cbz`, `cbr`, `rar`, `zip`, `7z`), `txt`
 
 - 🚀 **Cross Platform**: All you need is a browser
 

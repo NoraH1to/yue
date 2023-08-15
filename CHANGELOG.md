@@ -1,4 +1,11 @@
 # Changelog
+## [1.9.0](https://github.com/NoraH1to/yue/compare/v1.8.0...v1.9.0) (2023-08-15)
+
+
+### Features
+
+* **txt:** support `.txt` files ([024f20c](https://github.com/NoraH1to/yue/commit/024f20c8d91b91a67bdc16057b5a9a38e9875f80)), closes [#5](https://github.com/NoraH1to/yue/issues/5)
+
 ## [1.8.0](///compare/v1.7.0...v1.8.0) (2023-08-05)
 
 

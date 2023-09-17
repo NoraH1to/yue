@@ -1,6 +1,6 @@
 import { Promiser, delFalsy, shallowEqual } from '@/helper';
 import { createClient } from '@/modules/fs/webDAV';
-import { WebDAVClient } from '@norah1to/webdav';
+import { WebDAVClient } from 'webdav';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import urlJoin from 'url-join';
 import useSetting from './useSetting';

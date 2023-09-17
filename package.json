@@ -27,7 +27,6 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.0",
     "@mui/system": "^5.12.3",
-    "@norah1to/webdav": "^5.1.0",
     "ahooks": "^3.7.7",
     "anysort-typed": "^3.3.1",
     "arraybuffer-to-string": "^1.0.2",
@@ -60,6 +59,7 @@
     "to-array-buffer": "^3.2.0",
     "url-join": "^5.0.0",
     "utility-types": "^3.10.0",
+    "webdav": "^5.3.0",
     "yup": "^1.0.2"
   },
   "devDependencies": {

@@ -17,7 +17,7 @@ import { TFsItemFile } from '@/modules/fs/Fs';
 import { ROUTE_PATH } from '@/router';
 import { DownloadDoneRounded, FileDownloadRounded } from '@mui/icons-material';
 import { Backdrop, CircularProgress, Fade } from '@mui/material';
-import { WebDAVClient } from '@norah1to/webdav';
+import { WebDAVClient } from 'webdav';
 import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

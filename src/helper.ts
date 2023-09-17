@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material';
 import { SxProps } from '@mui/system';
-import { ResponseDataDetailed } from '@norah1to/webdav';
+import { ResponseDataDetailed } from 'webdav';
 import anysort from 'anysort-typed';
 import { fileOpen } from 'browser-fs-access';
 import mime from 'mime';

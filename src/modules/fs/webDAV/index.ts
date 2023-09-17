@@ -3,7 +3,7 @@ import {
   FileStat,
   ResponseDataDetailed,
   createClient as _createClient,
-} from '@norah1to/webdav';
+} from 'webdav';
 
 export const createClient = (
   url: string,

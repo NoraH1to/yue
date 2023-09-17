@@ -1,5 +1,5 @@
 import { sortDirItemsBySorter } from '@/helper';
-import { FileStat } from '@norah1to/webdav';
+import { FileStat } from 'webdav';
 import {
   IFs,
   ISorter,

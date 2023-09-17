@@ -1,7 +1,7 @@
 import { GetPath } from '@/helper';
 import { IBookInfo } from '@/modules/book/Book';
 import { ITag } from '@/modules/book/Tag';
-import { WebDAVClient } from '@norah1to/webdav';
+import { WebDAVClient } from 'webdav';
 
 export type TFsBase = { addTs: number } & Pick<
   TFsItemFile | TFsItemDir,

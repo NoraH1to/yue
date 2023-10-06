@@ -17,7 +17,7 @@ export const createClient = (
   return _createClient(url, {
     username,
     password,
-    directoryBasePath: dirBasePath,
+    remoteBasePath: dirBasePath,
   });
 };
 

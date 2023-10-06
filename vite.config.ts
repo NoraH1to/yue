@@ -82,7 +82,7 @@ export default defineConfig({
             'mime',
             'yup',
           ],
-          'data-source': ['dexie', '@norah1to/webdav'],
+          'data-source': ['dexie', 'webdav'],
           epubjs: ['epubjs'],
           pdf: ['react-pdf'],
           archive: ['libarchive.js'],

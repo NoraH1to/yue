@@ -41,6 +41,7 @@ const readerSetting: UniformType<TReaderSetting> = {
 };
 
 export default {
+  'unknown': 'unknown',
   'import ebook': 'import',
   'all book': 'all book',
   all: 'all',

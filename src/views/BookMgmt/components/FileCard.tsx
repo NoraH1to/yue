@@ -1,6 +1,4 @@
-import ContextMenuTrigger, {
-  ContextMenuTriggerProps,
-} from '@/components/ContextMenu/Trigger';
+import ContextMenuTrigger, { ContextMenuTriggerProps } from '@/components/ContextMenu/Trigger';
 import { MemoDirItemFileBaseCard } from '@/components/DirItem/FileBaseCard';
 import FileContextMenu from '@/components/DirItem/FileContextMenu';
 import {
@@ -20,6 +18,7 @@ import { Backdrop, CircularProgress, Fade } from '@mui/material';
 import { WebDAVClient } from 'webdav';
 import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useScopedLoading } from '@/hooks/useLoading';
 
 export type FileCardProps = {
   client: WebDAVClient;
@@ -29,6 +28,7 @@ export type FileCardProps = {
 
 const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
   const nav = useNavigate();
+  const [{ loading: importBookIng }, { addLoading }] = useScopedLoading();
 
   const { data: localBook, status } = useStatusLiveQuery(
     async () =>
@@ -42,7 +42,7 @@ const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
 
   const [openMenu, setOpenMenu] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [{ loading: importBookIng }, { importBook, deleteBook }] = useMgmtBook({
+  const [_, { importBook, deleteBook }] = useMgmtBook({
     scopedLoading: true,
   });
 
@@ -57,31 +57,35 @@ const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
 
   const DownloadIcon = hasLocal ? DownloadDoneRounded : FileDownloadRounded;
 
-  const download = async () => {
-    return importBook(
-      new Promise<File>((rs, rj) => {
-        client
-          .getFileContents(file.filename)
-          .then((content) =>
-            rs(
-              new File([content as ArrayBuffer], file.basename, {
-                type:
-                  getMimeByExt(ext) || file.mime || 'application/octet-stream',
-              }),
-            ),
-          )
-          .catch(rj);
-      }),
+  const download = async () =>
+    importBook(
+      {
+        target: new Promise<File>((rs, rj) => {
+          client
+            .getFileContents(file.filename)
+            .then((content) =>
+              rs(
+                new File([content as ArrayBuffer], file.basename, {
+                  type: getMimeByExt(ext) || file.mime || 'application/octet-stream',
+                }),
+              ),
+            )
+            .catch(rj);
+        }),
+        info: {
+          title: getBasenameByFilename(file.filename),
+          type: getExtByFilename(file.filename) || getExtByMime(file.mime),
+        },
+      },
       undefined,
       { sourceId, etag: file.id },
     );
-  };
 
   const handleClick = useCallback(() => {
     if (hasLocal) {
       nav(`/${ROUTE_PATH.DETAIL}/${localBook.hash}`);
     } else {
-      download();
+      addLoading(download());
     }
   }, [hasLocal]);
 
@@ -93,9 +97,7 @@ const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
     localBook && deleteBook(localBook.hash);
   };
 
-  const handleOpenContextmenu = useCallback<
-    NonNullable<ContextMenuTriggerProps['onOpen']>
-  >(
+  const handleOpenContextmenu = useCallback<NonNullable<ContextMenuTriggerProps['onOpen']>>(
     (position) => {
       setOpenMenu(true);
       setPosition(position);
@@ -146,6 +148,4 @@ const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
   );
 };
 
-export default memo(FileCard, ({ file: pf }, { file: nf }) =>
-  shallowEqual(pf, nf),
-);
+export default memo(FileCard, ({ file: pf }, { file: nf }) => shallowEqual(pf, nf));

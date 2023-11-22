@@ -41,6 +41,7 @@ const readerSetting: UniformType<TReaderSetting> = {
 };
 
 export default {
+  'unknown': '未知',
   'import ebook': '导入',
   'all book': '全部电子书',
   all: '全部',

@@ -39,7 +39,7 @@ import ReaderSetting from './components/ReaderSetting';
 const Reader = () => {
   // 各种初始状态
   const [params] = useReaderParams();
-  const { loading: globalLoading, addLoading } = useLoading();
+  const [{ loading: globalLoading }, { addLoading }] = useLoading();
   const [{ autoSyncProcess }] = useSetting();
   const [loaded, setLoaded] = useState(false);
   const nav = useNavigate();
@@ -57,10 +57,7 @@ const Reader = () => {
   const [{ syncing }, { check, updateCloud, updateLocal }] = useSyncProcess();
   const loading = globalLoading || !book;
   const [currentPage, setCurrentPage] = useState(0);
-  const BookComponent = useMemo(
-    () => (book ? memo(book.ReaderComponent) : undefined),
-    [book],
-  );
+  const BookComponent = useMemo(() => (book ? memo(book.ReaderComponent) : undefined), [book]);
   const [openActionLayer, setOpenActionLayer] = useState(false);
   const [showWhichExtendedLayer, setShowWhichExtendedLayer] = useState<
     'toc' | 'readerSetting' | undefined | false
@@ -93,16 +90,10 @@ const Reader = () => {
   const [setting, { setColorMode }] = useSetting();
   const { systemMode } = useColorScheme();
   const realMode = useMemo(
-    () =>
-      setting.colorMode === 'system'
-        ? systemMode || 'light'
-        : setting.colorMode,
+    () => (setting.colorMode === 'system' ? systemMode || 'light' : setting.colorMode),
     [setting, systemMode],
   );
-  const readerTheme = useMemo(
-    () => setting.readerTheme[realMode],
-    [setting, realMode],
-  );
+  const readerTheme = useMemo(() => setting.readerTheme[realMode], [setting, realMode]);
   const readerSetting = useMemo(() => setting.readerSetting, [setting]);
   const infoColor = useMemo(
     () => readerTheme.color && alpha(readerTheme.color, 0.8),
@@ -131,9 +122,7 @@ const Reader = () => {
     process?.value &&
       prev.set(
         'value',
-        typeof process.value === 'string'
-          ? process.value
-          : JSON.stringify(process.value),
+        typeof process.value === 'string' ? process.value : JSON.stringify(process.value),
       );
     let searchStr = '';
     prev.forEach((v, k) => (searchStr += `&${k}=${v}`));
@@ -199,8 +188,7 @@ const Reader = () => {
       const dbBookData = await fs.getBookByHash(book.hash);
       if (!dbBookData) return;
       const checkRes = await check(dbBookData);
-      if (checkRes === 'updateCloud')
-        updateCloud(dbBookData, dbBookData.lastProcess);
+      if (checkRes === 'updateCloud') updateCloud(dbBookData, dbBookData.lastProcess);
     },
   });
 
@@ -219,10 +207,7 @@ const Reader = () => {
           // 如果没有同步，表示使用本地的进度，将本地进度更新到云端
           if (checkRes !== 'sync' && autoSyncProcess) {
             try {
-              await updateCloud(
-                book,
-                (await fs.getBookByHash(book.hash))!.lastProcess,
-              );
+              await updateCloud(book, (await fs.getBookByHash(book.hash))!.lastProcess);
             } catch {
               // 不处理错误
             }
@@ -273,14 +258,7 @@ const Reader = () => {
         onPrev={prev}
       />
     ),
-    [
-      currentPage,
-      setCurrentPage,
-      jumpTo,
-      next,
-      prev,
-      currentInfo.totalPages.total,
-    ],
+    [currentPage, setCurrentPage, jumpTo, next, prev, currentInfo.totalPages.total],
   );
   // 操作
   const handleShowToc = useCallback(
@@ -382,8 +360,7 @@ const Reader = () => {
       const isToggleActionLayer = isHotkey(['space']);
       if (isNext(e)) next();
       else if (isPrev(e)) prev();
-      else if (isToggleActionLayer(e))
-        setOpenActionLayer((openActionLayer) => !openActionLayer);
+      else if (isToggleActionLayer(e)) setOpenActionLayer((openActionLayer) => !openActionLayer);
     },
     [openActionLayer, next, prev],
   );
@@ -406,10 +383,7 @@ const Reader = () => {
       tabIndex={-1}
       ref={(ref) => ref?.focus()}
       sx={useMemo(() => ({ '&:focus': { outline: 'none' } }), [])}>
-      <InfoBarTop
-        title={currentInfo.process.navInfo?.title}
-        color={infoColor}
-      />
+      <InfoBarTop title={currentInfo.process.navInfo?.title} color={infoColor} />
       <GestureLayer
         width={1}
         height={0}

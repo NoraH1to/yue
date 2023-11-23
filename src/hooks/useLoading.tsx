@@ -1,41 +1,15 @@
-import { createContext, useContext, useRef, useState } from 'react';
-
-import { FC, PropsWithChildren } from 'react';
-
-const LoadingContext = createContext({
-  loading: false,
-  addLoading: <T extends Promise<any>>(promiseLike: T): T => promiseLike,
-});
+import { createLoadingStore, useGlobalLoadingStore } from '@/store/globalLoading';
+import { useRef } from 'react';
 
 export const useScopedLoading = () => {
-  const stack = useRef(0);
-  const [loading, setLoading] = useState(!!stack.current);
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-  const addLoading = <T extends Promise<any>>(promiseLike: T): T => {
-    stack.current++;
-    if (!loading && !!stack) setLoading(true);
-    promiseLike.finally(() => {
-      !--stack.current && setLoading(false);
-    });
-    return promiseLike;
-  };
-  return [{ loading }, { addLoading }] as const;
+  const useLoadingStoreRef = useRef(createLoadingStore());
+  const loadingStore = useLoadingStoreRef.current();
+  return loadingStore;
 };
 
-export const LoadingProvide: FC<PropsWithChildren<unknown>> = ({
-  children,
-}) => {
-  const [{ loading }, { addLoading }] = useScopedLoading();
-  return (
-    <LoadingContext.Provider value={{ loading, addLoading }}>
-      {children}
-    </LoadingContext.Provider>
-  );
-};
-
-const useLoading = () => {
-  const { loading, addLoading } = useContext(LoadingContext);
-  return { loading, addLoading };
+export const useLoading = () => {
+  const { loading, addLoading, cancelLoading, isSomethingLoading } = useGlobalLoadingStore();
+  return [{ loading }, { addLoading, cancelLoading, isSomethingLoading }] as const;
 };
 
 export default useLoading;

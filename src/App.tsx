@@ -1,13 +1,5 @@
-import { LoadingProvide } from '@/hooks/useLoading';
 import { CloseRounded } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  CssBaseline,
-  IconButton,
-  Snackbar,
-  styled,
-} from '@mui/material';
+import { Box, Button, CssBaseline, IconButton, Snackbar, styled } from '@mui/material';
 import {
   Experimental_CssVarsProvider as CssVarsProvider,
   experimental_extendTheme as extendTheme,
@@ -35,9 +27,7 @@ const Updater = () => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       action={
         <>
-          <Button onClick={() => updateServiceWorker(true)}>
-            {t('action.refresh')}
-          </Button>
+          <Button onClick={() => updateServiceWorker(true)}>{t('action.refresh')}</Button>
           <IconButton onClick={() => setNeedRefresh(false)}>
             <CloseRounded />
           </IconButton>
@@ -101,19 +91,17 @@ const AppContent: FC = () => {
     setMode(setting.colorMode);
   }, [setting.colorMode]);
   return (
-    <LoadingProvide>
-      <ConfirmProvider
-        defaultOptions={{
-          title: t('are you sure?'),
-          confirmationText: t('action.confirm'),
-          cancellationText: t('action.cancel'),
-        }}>
-        <AppContainer>
-          <RouterProvider router={router} />
-          <Updater />
-        </AppContainer>
-      </ConfirmProvider>
-    </LoadingProvide>
+    <ConfirmProvider
+      defaultOptions={{
+        title: t('are you sure?'),
+        confirmationText: t('action.confirm'),
+        cancellationText: t('action.cancel'),
+      }}>
+      <AppContainer>
+        <RouterProvider router={router} />
+        <Updater />
+      </AppContainer>
+    </ConfirmProvider>
   );
 };
 

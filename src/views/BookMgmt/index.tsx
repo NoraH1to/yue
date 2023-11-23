@@ -1,12 +1,5 @@
 import useLoading from '@/hooks/useLoading';
-import {
-  Backdrop,
-  Box,
-  CircularProgress,
-  styled,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Backdrop, Box, CircularProgress, styled, useMediaQuery, useTheme } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import SideBar from './Sidebar';
@@ -43,7 +36,7 @@ const MainWrapper = styled(Box, { label: 'main-wrapper' })(({ theme }) => ({
 }));
 
 const BookMgmt = () => {
-  const { loading } = useLoading();
+  const [{ loading }] = useLoading();
   const theme = useTheme();
   const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
   const [openSidebar, setOpenSidebar] = useState(matchUpSm ? true : false);
@@ -70,9 +63,7 @@ const BookMgmt = () => {
           <Outlet />
         </MainWrapper>
       </MainContainer>
-      <Backdrop
-        open={loading}
-        sx={(theme) => ({ zIndex: theme.zIndex.drawer + 1 })}>
+      <Backdrop open={!!loading} sx={(theme) => ({ zIndex: theme.zIndex.drawer + 1 })}>
         <CircularProgress />
       </Backdrop>
     </BookMgmtProvider>

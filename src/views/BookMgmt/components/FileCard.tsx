@@ -28,7 +28,7 @@ export type FileCardProps = {
 
 const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
   const nav = useNavigate();
-  const [{ loading: importBookIng }, { addLoading }] = useScopedLoading();
+  const { loading: importBookIng, addLoading } = useScopedLoading();
 
   const { data: localBook, status } = useStatusLiveQuery(
     async () =>

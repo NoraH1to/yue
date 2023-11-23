@@ -3,11 +3,7 @@ import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import StyledMuiSwipeableDrawer from '@/components/Styled/MuiSwipeableDrawer';
 import useMgmtBook from '@/hooks/useMgmtBook';
 import { ROUTE_PATH } from '@/router';
-import {
-  FolderOpenRounded,
-  HistoryRounded,
-  MenuBookRounded,
-} from '@mui/icons-material';
+import { FolderOpenRounded, HistoryRounded, MenuBookRounded } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -27,23 +23,22 @@ import { To, useLocation } from 'react-router-dom';
 import Footer from './Footer';
 import TagList from './TagList';
 import RouterLink from './components/RouterLink';
+import useLoading from '@/hooks/useLoading';
 
-const SideBarContainer = styled(Box, { label: 'side-bar-container' })(
-  ({ theme }) => ({
-    transition: 'width .1s',
-    [theme.breakpoints.up('xs')]: {
-      width: 0,
-      opacity: 0,
-    },
-    [theme.breakpoints.up('sm')]: {
-      width: '180px',
-      opacity: 1,
-    },
-    [theme.breakpoints.up('md')]: {
-      width: '250px',
-    },
-  }),
-);
+const SideBarContainer = styled(Box, { label: 'side-bar-container' })(({ theme }) => ({
+  transition: 'width .1s',
+  [theme.breakpoints.up('xs')]: {
+    width: 0,
+    opacity: 0,
+  },
+  [theme.breakpoints.up('sm')]: {
+    width: '180px',
+    opacity: 1,
+  },
+  [theme.breakpoints.up('md')]: {
+    width: '250px',
+  },
+}));
 
 const SideBar: FC<{
   open: boolean;
@@ -52,6 +47,7 @@ const SideBar: FC<{
 }> = ({ open, onClose, onOpen }) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const [{ loading }, { addLoading }] = useLoading();
 
   const [_, { importBook }] = useMgmtBook();
 
@@ -92,9 +88,7 @@ const SideBar: FC<{
   );
 
   const Content = (
-    <List
-      component="aside"
-      sx={{ height: 1, display: 'flex', flexDirection: 'column' }}>
+    <List component="aside" sx={{ height: 1, display: 'flex', flexDirection: 'column' }}>
       {/* 导入 */}
       <ListItem sx={{ pb: 2 }}>
         <Button
@@ -104,16 +98,14 @@ const SideBar: FC<{
           size="large"
           onClick={async () => {
             closeIfXs();
-            await importBook();
+            await addLoading(importBook());
           }}>
           {t('import ebook')}
         </Button>
       </ListItem>
 
       {/* 全部图书 */}
-      <Grow {...animaProps}>
-        {CommonLink(ROUTE_PATH.ROOT, t('all'), <MenuBookRounded />)}
-      </Grow>
+      <Grow {...animaProps}>{CommonLink(ROUTE_PATH.ROOT, t('all'), <MenuBookRounded />)}</Grow>
 
       {/* 最近阅读 */}
       <Grow {...animaProps}>

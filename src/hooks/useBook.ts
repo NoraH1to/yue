@@ -6,9 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useLoading from './useLoading';
 
 export const useBook = (options?: { book: IBookInfo }) => {
-  const [bookInfo, setBookInfo] = useState<IBookInfo | undefined>(
-    options?.book,
-  );
+  const [bookInfo, setBookInfo] = useState<IBookInfo | undefined>(options?.book);
   const [book, setBook] = useState<ABook | undefined>();
   const [currentInfo, setCurrentInfo] = useState<{
     process: IProcess;
@@ -19,7 +17,7 @@ export const useBook = (options?: { book: IBookInfo }) => {
     sectionPages: { total: 0, current: 0 },
     totalPages: { total: 0, current: 0 },
   });
-  const { loading, addLoading } = useLoading();
+  const [{ loading }, { addLoading }] = useLoading();
 
   useEffect(() => {
     let needCancel = false;

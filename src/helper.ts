@@ -1,22 +1,11 @@
 import { Theme } from '@mui/material';
 import { SxProps } from '@mui/system';
-import { ResponseDataDetailed } from 'webdav';
 import anysort from 'anysort-typed';
-import { fileOpen } from 'browser-fs-access';
 import mime from 'mime';
 import { BaseSyntheticEvent, ReactEventHandler } from 'react';
 import Md5 from 'spark-md5';
-import i18n from './i18n';
-import { ABook } from './modules/book/Book';
-import fs from './modules/fs';
-import {
-  TBookSorter,
-  TDirItemSorter,
-  TFsBookWithoutContent,
-  TFsDir,
-  TSourceItemInfo,
-} from './modules/fs/Fs';
-import { getParser } from './parsers';
+import { ResponseDataDetailed } from 'webdav';
+import { TBookSorter, TDirItemSorter, TFsBookWithoutContent, TFsDir } from './modules/fs/Fs';
 
 export const Mime = mime;
 
@@ -34,8 +23,7 @@ export function delFalsy<T extends Record<string, any>>(
   target: T,
   options?: { includeEmptyString?: boolean; includeZeroNumber?: boolean },
 ): T {
-  const { includeEmptyString = true, includeZeroNumber = false } =
-    options || {};
+  const { includeEmptyString = true, includeZeroNumber = false } = options || {};
   const o = { ...target };
   Object.keys(o).forEach((k) => {
     if (
@@ -87,12 +75,12 @@ export async function md5FromBlob(blob: Blob): Promise<string> {
 
 export const getExtByFilename = (filename: string) => {
   const res = filename.split('.');
-  if (res.length < 2) return null;
+  if (res.length < 2) return '';
   return res[res.length - 1];
 };
 
 export const getExtByMime = (mime: string) => {
-  return Mime.getExtension(mime);
+  return Mime.getExtension(mime) || '';
 };
 
 export const getMimeByExt = (ext: string) => {
@@ -105,62 +93,10 @@ export const getBasenameByFilename = (filename: string) => {
   return res.join('.');
 };
 
-export const importBook = async (
-  target?: File | Promise<File>,
-  cacheInfo?: Partial<ABook>,
-  sourceInfo?: TSourceItemInfo,
-) => {
-  target =
-    target instanceof Promise
-      ? await target
-      : target || (await fileOpen({ multiple: false }));
-  if (!target) return;
-  const hash = await md5FromBlob(target);
-  const originBook = await fs.getBookByHashWithoutContent(hash);
-  if (originBook && !sourceInfo) {
-    return {
-      res: 'exist',
-      msg: i18n.t('ebook already exist'),
-      info: originBook,
-    } as const;
-  }
-  const type = getExtByMime(target.type) || getExtByFilename(target.name);
-  if (!type) return { res: false, msg: i18n.t('unsupported format') } as const;
-
-  const parser = getParser(type);
-  if (!parser)
-    return {
-      res: false,
-      msg: `${i18n.t('unsupported format')} "${type}"`,
-    } as const;
-
-  const book = await new parser.Book(await parser.parse(target, cacheInfo));
-
-  const info = await fs.addBook(
-    {
-      ...parser.getCacheableInfo(book),
-      type: book.type,
-    },
-    sourceInfo,
-  );
-
-  return {
-    res: 'success',
-    info,
-  } as const;
-};
-
 export const getRandomColor = <T = 'hex' | 'rgb'>(type = 'hex') => {
-  const rgb = [
-    Math.random() * 255,
-    Math.random() * 255,
-    Math.random() * 255,
-  ] as const;
+  const rgb = [Math.random() * 255, Math.random() * 255, Math.random() * 255] as const;
   if (type === 'rgb') return rgb;
-  else
-    return `#${rgb
-      .map((v) => Math.round(v).toString(16).padStart(2, '0'))
-      .join('')}`;
+  else return `#${rgb.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')}`;
 };
 
 /**
@@ -205,11 +141,7 @@ export const isValidColor = (color?: string) => {
  * @param fromIndex 需要移动项所在下标
  * @param toIndex 移动目的下标
  */
-export const moveArrayItem = <T extends unknown[]>(
-  arr: T,
-  fromIndex: number,
-  toIndex: number,
-) => {
+export const moveArrayItem = <T extends unknown[]>(arr: T, fromIndex: number, toIndex: number) => {
   // 如果数组为空或者下标越界，则直接返回原数组
   if (
     !Array.isArray(arr) ||
@@ -233,10 +165,7 @@ export const moveArrayItem = <T extends unknown[]>(
  * @param parent 父元素
  * @param child 子元素
  */
-export const isDescendant = (
-  parent: HTMLElement,
-  child: HTMLElement | null,
-) => {
+export const isDescendant = (parent: HTMLElement, child: HTMLElement | null) => {
   let node = child?.parentNode;
 
   while (node) {
@@ -273,10 +202,7 @@ export const shallowEqual = <T extends Record<any, any>>(obj1: T, obj2: T) => {
   return true;
 };
 
-export const sortDirItemsBySorter = (
-  items: TFsDir['items'],
-  sorter: TDirItemSorter,
-) =>
+export const sortDirItemsBySorter = (items: TFsDir['items'], sorter: TDirItemSorter) =>
   // @ts-ignore
   anysort(items, [
     'type-is(directory)',
@@ -288,9 +214,7 @@ export const sortBooksBySorter = <T extends TFsBookWithoutContent>(
   sorter: TBookSorter,
 ) =>
   // @ts-ignore
-  anysort(books, [
-    `${sorter.key}${sorter.sort === 'desc' ? '-reverse()' : ''}`,
-  ]) as T[];
+  anysort(books, [`${sorter.key}${sorter.sort === 'desc' ? '-reverse()' : ''}`]) as T[];
 
 export const diffDates = (
   date1: Date,
@@ -305,10 +229,10 @@ export const diffDates = (
   return { days, hours, minutes, seconds };
 };
 
-export class Promiser<T> {
+export class Promiser<T = unknown, E = unknown> {
   promise: Promise<T>;
   resolve!: (value: T) => unknown;
-  reject!: (reason: any) => unknown;
+  reject!: (reason: E) => unknown;
   status: 'pending' | 'resolved' | 'rejected' = 'pending';
   constructor() {
     this.promise = new Promise<T>((resolve, reject) => {
@@ -370,10 +294,7 @@ export const throttle = <F extends (...args: any[]) => any, R = ReturnType<F>>(
   };
 };
 
-export const formatTime = (
-  template: string,
-  date: Date = new Date(),
-): string => {
+export const formatTime = (template: string, date: Date = new Date()): string => {
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
@@ -401,10 +322,7 @@ export const preventDefault =
     }
   };
 
-export const flatArrayWithKey = <T extends Record<string, any>>(
-  array: T[],
-  key: keyof T,
-): T[] => {
+export const flatArrayWithKey = <T extends Record<string, any>>(array: T[], key: keyof T): T[] => {
   return array.reduce<T[]>((result, item) => {
     if (Array.isArray(item[key]) && item[key].length) {
       return result.concat(item).concat(flatArrayWithKey(item[key], key));
@@ -489,27 +407,18 @@ export const isImageFileName = (fileName: string) => {
   return imageExtensions.test(fileName);
 };
 
-export type GetPath<
-  T extends object,
-  K extends keyof T = keyof T,
-> = K extends string
+export type GetPath<T extends object, K extends keyof T = keyof T> = K extends string
   ? T[K] extends object
     ? `${K}` | `${K}.${GetPath<T[K]>}`
     : `${K}`
   : '';
 
-export type UniformType<
-  O extends object,
-  T = string,
-  R extends boolean = false,
-> = R extends true
+export type UniformType<O extends object, T = string, R extends boolean = false> = R extends true
   ? {
       [K in keyof O]: O[K] extends object ? UniformType<O[K], T, true> : string;
     }
   : {
-      [K in keyof O]?: O[K] extends object
-        ? UniformType<O[K], T, false>
-        : string;
+      [K in keyof O]?: O[K] extends object ? UniformType<O[K], T, false> : string;
     };
 
 export type PromiseValue<T> = T extends Promise<infer R> ? R : never;

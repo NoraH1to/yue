@@ -6,7 +6,7 @@ import { TFsBookWithoutContent, TSourceItemInfo } from '@/modules/fs/Fs';
 import { getParser } from '@/parsers';
 import { ROUTE_PATH } from '@/router';
 import { IDownloadProcessBookInfo, useDownloadStore } from '@/store/downloadProcess';
-import { PROCESS_STATE } from '@/store/helper';
+import { JOB_STATE } from '@/store/helper';
 import { Button } from '@mui/material';
 import { fileOpen } from 'browser-fs-access';
 import { useConfirm } from 'material-ui-confirm';
@@ -23,9 +23,9 @@ const ButtonGotoBookDetail: FC<{ hash: string }> = ({ hash }) => {
 };
 
 const useMgmtBook = (options?: { scopedLoading?: boolean; notice?: boolean }) => {
-  const { state, append } = useDownloadStore();
-  const processList = Array.from(state.process.values());
-  const processStateMap = R.groupBy((process) => process.state.toString(), processList);
+  const { process, append } = useDownloadStore();
+  const jobList = Array.from(process.values());
+  const jobStateMap = R.groupBy((job) => job.state.toString(), jobList);
 
   const { notice = true } = options || {};
   const { enqueueSnackbar } = useSnackbar();
@@ -69,14 +69,14 @@ const useMgmtBook = (options?: { scopedLoading?: boolean; notice?: boolean }) =>
     sourceInfo?: TSourceItemInfo,
   ) => {
     try {
-      const res = append(
-        {
+      const res = append({
+        info: {
           title: data?.info?.title || t('unknown'),
           type: data?.info?.type || t('unknown'),
         },
-        () => _importBook(data?.target, cacheInfo, sourceInfo),
-      );
-      const book = await res.job;
+        run: () => _importBook(data?.target, cacheInfo, sourceInfo),
+      });
+      const book = await res.jobPromise;
       notice && makeActionNotice(true, book, t('actionRes.import book success') as string);
       return book;
     } catch (e) {
@@ -97,11 +97,11 @@ const useMgmtBook = (options?: { scopedLoading?: boolean; notice?: boolean }) =>
 
   return [
     {
-      downloadList: processList,
-      downloadWaitList: processStateMap[PROCESS_STATE.WAITING],
-      downloadIngList: processStateMap[PROCESS_STATE.PENDING],
-      downloadedList: processStateMap[PROCESS_STATE.SUCCESS],
-      downloadFailList: processStateMap[PROCESS_STATE.FAIL],
+      downloadList: jobList,
+      downloadWaitList: jobStateMap[JOB_STATE.WAITING],
+      downloadIngList: jobStateMap[JOB_STATE.PENDING],
+      downloadedList: jobStateMap[JOB_STATE.SUCCESS],
+      downloadFailList: jobStateMap[JOB_STATE.FAIL],
     },
     {
       importBook,

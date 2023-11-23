@@ -18,7 +18,7 @@ import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RouterProvider } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
-import useSetting, { SettingProvide } from './hooks/useSetting';
+import useSetting from '@/hooks/useSetting';
 import router from './router';
 import themeMap from './themes';
 
@@ -119,11 +119,9 @@ const AppContent: FC = () => {
 
 function App() {
   return (
-    <SettingProvide>
-      <ThemeProvide>
-        <AppContent />
-      </ThemeProvide>
-    </SettingProvide>
+    <ThemeProvide>
+      <AppContent />
+    </ThemeProvide>
   );
 }
 

@@ -60,18 +60,19 @@ const FileCard: FC<FileCardProps> = ({ client, file, sourceId }) => {
   const download = async () =>
     importBook(
       {
-        target: new Promise<File>((rs, rj) => {
-          client
-            .getFileContents(file.filename)
-            .then((content) =>
-              rs(
-                new File([content as ArrayBuffer], file.basename, {
-                  type: getMimeByExt(ext) || file.mime || 'application/octet-stream',
-                }),
-              ),
-            )
-            .catch(rj);
-        }),
+        target: () =>
+          new Promise<File>((rs, rj) => {
+            client
+              .getFileContents(file.filename)
+              .then((content) =>
+                rs(
+                  new File([content as ArrayBuffer], file.basename, {
+                    type: getMimeByExt(ext) || file.mime || 'application/octet-stream',
+                  }),
+                ),
+              )
+              .catch(rj);
+          }),
         info: {
           title: getBasenameByFilename(file.filename),
           type: getExtByFilename(file.filename) || getExtByMime(file.mime),

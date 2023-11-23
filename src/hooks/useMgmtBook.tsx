@@ -64,7 +64,10 @@ const useMgmtBook = (options?: { scopedLoading?: boolean; notice?: boolean }) =>
   };
 
   const importBook = async (
-    data?: { target?: File | Promise<File>; info?: IDownloadProcessBookInfo },
+    data?: {
+      target?: File | Promise<File> | (() => Promise<File>);
+      info?: IDownloadProcessBookInfo;
+    },
     cacheInfo?: Partial<ABook>,
     sourceInfo?: TSourceItemInfo,
   ) => {
@@ -74,7 +77,10 @@ const useMgmtBook = (options?: { scopedLoading?: boolean; notice?: boolean }) =>
           title: data?.info?.title || t('unknown'),
           type: data?.info?.type || t('unknown'),
         },
-        run: () => _importBook(data?.target, cacheInfo, sourceInfo),
+        run: () => {
+          const target = data?.target instanceof Function ? data.target() : data?.target;
+          return _importBook(target, cacheInfo, sourceInfo);
+        },
       });
       const book = await res.jobPromise;
       notice && makeActionNotice(true, book, t('actionRes.import book success') as string);

@@ -56,12 +56,7 @@ const router = createBrowserRouter([
           },
           {
             path: `${ROUTE_PATH.DIR}`,
-            element: (
-              <Navigate
-                to={`/${ROUTE_PATH.DIR}/${encodeURIComponent('/')}`}
-                replace
-              />
-            ),
+            element: <Navigate to={`/${ROUTE_PATH.DIR}/${encodeURIComponent('/')}`} replace />,
           },
           {
             path: `${ROUTE_PATH.DIR}/:filename`,

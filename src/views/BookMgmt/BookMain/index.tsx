@@ -8,10 +8,7 @@ import { sortBooksBySorter } from '@/helper';
 import useMgmtBook from '@/hooks/useMgmtBook';
 import useMinDelayData from '@/hooks/useMinDelayData';
 import useStatusLiveQuery from '@/hooks/useStatusLiveQuery';
-import {
-  TFsBookWithoutContent,
-  TFsBookWithoutContentWithTags,
-} from '@/modules/fs/Fs';
+import { TFsBookWithoutContent, TFsBookWithoutContentWithTags } from '@/modules/fs/Fs';
 import { defaultBookSorter } from '@/modules/fs/constant';
 import { ROUTE_PATH } from '@/router';
 import { Box, Grow } from '@mui/material';
@@ -41,11 +38,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
   const [, { deleteBook }] = useMgmtBook();
   const [sorter, setSorter] = useState(defaultBookSorter);
   const [filter, setFilter] = useState<null | IFilter>(null);
-  const { data: originBooks, status } = useStatusLiveQuery(
-    bookGetter,
-    [bookGetter],
-    null,
-  );
+  const { data: originBooks, status } = useStatusLiveQuery(bookGetter, [bookGetter], null);
   const sortedBooks = useMemo(
     () => (originBooks ? sortBooksBySorter(originBooks, sorter) : originBooks),
     [originBooks, sorter],
@@ -53,21 +46,13 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
   // 防止闪烁
   const [searchInput, setSearchInput] = useState('');
   const debounceSearchInput = useDebounce(searchInput, { wait: 250 });
-  const { delayData: books, isDelayed } = useMinDelayData(
-    sortedBooks,
-    [bookGetter],
-    100,
-    null,
-  );
+  const { delayData: books, isDelayed } = useMinDelayData(sortedBooks, [bookGetter], 100, null);
   const loading = !isDelayed || status === 'pending' || books === null;
 
   const [selectedMap, setSelectedMap] = useState<Record<string, boolean>>({});
   const selectedCount = Object.keys(selectedMap).length;
   const selectMode = !!selectedCount;
-  const selectedBookHashList = useMemo(
-    () => Object.keys(selectedMap),
-    [selectedMap],
-  );
+  const selectedBookHashList = useMemo(() => Object.keys(selectedMap), [selectedMap]);
 
   // 为了不触发书本的重渲染
   const selectModeRef = useRef(selectMode);
@@ -91,9 +76,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
 
   const getBookHideStatus = (book: TFsBookWithoutContentWithTags) => {
     return !!(
-      (book &&
-        debounceSearchInput &&
-        !book.title.includes(debounceSearchInput)) ||
+      (book && debounceSearchInput && !book.title.includes(debounceSearchInput)) ||
       (filter &&
         (filter.hasNotTag
           ? book.tags.length > 0
@@ -130,10 +113,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
     [],
   );
 
-  const handleExitSelectedMode = useCallback(
-    () => setSelectedMap({}),
-    [setSelectedMap],
-  );
+  const handleExitSelectedMode = useCallback(() => setSelectedMap({}), [setSelectedMap]);
   const handleSelectAll = useCallback(() => {
     if (!books) return;
     const filterBook = books.filter((b) => !getBookHideStatus(b));
@@ -147,9 +127,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
     handleExitSelectedMode();
   }, [deleteBook, selectedBookHashList, handleExitSelectedMode]);
 
-  const handleFilter = useCallback<
-    NonNullable<ToolbarButtonFilterProps['onFilter']>
-  >(
+  const handleFilter = useCallback<NonNullable<ToolbarButtonFilterProps['onFilter']>>(
     (filter, hasFilter) => {
       setFilter(hasFilter ? filter : null);
     },
@@ -185,13 +163,9 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
   const Content = (
     <BookGridLayout component="main" height={1} pb="0 !important">
       {loading
-        ? [undefined, undefined, undefined].map((book, i) => (
-            <BookItemBaseCardSkeleton key={i} />
-          ))
+        ? [undefined, undefined, undefined].map((book, i) => <BookItemBaseCardSkeleton key={i} />)
         : books!.map((book, i) => (
-            <VisibleWrapper
-              key={book?.hash || i}
-              hide={book ? getBookHideStatus(book) : false}>
+            <VisibleWrapper key={book?.hash || i} hide={book ? getBookHideStatus(book) : false}>
               <BookCard
                 book={book}
                 selected={!!selectedMap[book?.hash || '']}
@@ -227,10 +201,7 @@ const BookMain: FC<BookMainProps> = ({ bookGetter }) => {
         floatToolbarTop
         floatToolbarBottom
       />
-      <BookEditTagDialog
-        {...editTagStatus}
-        onClose={handleCloseEditTagDialog}
-      />
+      <BookEditTagDialog {...editTagStatus} onClose={handleCloseEditTagDialog} />
     </>
   );
 };

@@ -52,15 +52,10 @@ const ContextMenu: FC<ContextMenuProps> = ({ y, x, children, ...props }) => {
             padding: theme.spacing(1),
             zIndex: theme.zIndex.modal,
           }),
-          ...(Array.isArray(props.PaperProps?.sx)
-            ? props.PaperProps!.sx
-            : [props.PaperProps?.sx]),
+          ...(Array.isArray(props.PaperProps?.sx) ? props.PaperProps!.sx : [props.PaperProps?.sx]),
         ],
       }}
-      onContextMenu={mergeEventListener(
-        (e) => e.preventDefault(),
-        props.onContextMenu,
-      )}
+      onContextMenu={mergeEventListener((e) => e.preventDefault(), props.onContextMenu)}
       TransitionProps={{ unmountOnExit: true, ...props.TransitionProps }}>
       {children}
     </Popover>,

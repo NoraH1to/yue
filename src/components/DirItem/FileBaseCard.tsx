@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardActionArea,
-  CardActionAreaProps,
-  Fade,
-  styled,
-} from '@mui/material';
+import { Card, CardActionArea, CardActionAreaProps, Fade, styled } from '@mui/material';
 import { FC, PropsWithChildren, ReactNode, memo } from 'react';
 import { MemoBookItemCover } from '../BookItem/Cover';
 import FixedRatioBookCover from '../FixedRatioWrapper/FixedRatioBookCover';

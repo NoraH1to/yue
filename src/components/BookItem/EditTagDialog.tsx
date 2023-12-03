@@ -28,16 +28,10 @@ export type BookItemEditTagDialogProps = {
   book?: TFsBookWithoutContent;
 } & DialogProps;
 
-const BookItemEditTagDialog: FC<BookItemEditTagDialogProps> = ({
-  book,
-  ...props
-}) => {
+const BookItemEditTagDialog: FC<BookItemEditTagDialogProps> = ({ book, ...props }) => {
   const { t } = useTranslation();
   const tags = useLiveQuery(() => fs.getTags());
-  const booksTag = useLiveQuery(
-    () => book && fs.getTagsByBookHash(book.hash),
-    [book?.hash],
-  );
+  const booksTag = useLiveQuery(() => book && fs.getTagsByBookHash(book.hash), [book?.hash]);
   const booksTagMap = useMemo(() => {
     const map: Record<ITag['id'], ITag> = {};
     booksTag?.forEach((tag) => {
@@ -88,9 +82,7 @@ const BookItemEditTagDialog: FC<BookItemEditTagDialogProps> = ({
                 tags.filter(
                   (tag) =>
                     !booksTagMap[tag.id] &&
-                    (state.inputValue
-                      ? tag.title.includes(state.inputValue)
-                      : true),
+                    (state.inputValue ? tag.title.includes(state.inputValue) : true),
                 )
               }
               /**
@@ -112,10 +104,7 @@ const BookItemEditTagDialog: FC<BookItemEditTagDialogProps> = ({
               }}
               renderOption={(props, option, state) => (
                 // @ts-ignore
-                <ListItemButton
-                  key={option.id}
-                  selected={state.selected}
-                  {...props}>
+                <ListItemButton key={option.id} selected={state.selected} {...props}>
                   <Dot color={option.color} size={theme.spacing(1)} />
                   <Box mr={2} />
                   <ListItemText primary={option.title} />

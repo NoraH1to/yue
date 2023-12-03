@@ -1,9 +1,5 @@
 import { Promiser, flatArrayWithKey, throttle } from '@/helper';
-import {
-  ABook,
-  ReaderCompProps,
-  TBookConstructorInfo,
-} from '@/modules/book/Book';
+import { ABook, ReaderCompProps, TBookConstructorInfo } from '@/modules/book/Book';
 import { IToc } from '@/modules/book/Toc';
 import { Contents, Book as EpubInstance, Spine as __Spine } from 'epubjs';
 import { RenditionOptions } from 'epubjs/types/rendition';
@@ -64,10 +60,8 @@ export class EpubBook extends ABook<string> {
       };
       let re;
       // 这里 if else 是为了 ts 的报错，非常逆天
-      if (typeof container === 'string')
-        re = this.epub.renderTo(container, options);
-      else if (container instanceof Element)
-        re = this.epub.renderTo(container, options);
+      if (typeof container === 'string') re = this.epub.renderTo(container, options);
+      else if (container instanceof Element) re = this.epub.renderTo(container, options);
       else throw new Error('Invalid render container');
       /**
        * 生成 href 获得标题的哈希表，loc 中的 href 不一定会在目录中
@@ -100,11 +94,7 @@ export class EpubBook extends ABook<string> {
     }
   }
 
-  ReaderComponent: FC<ReaderCompProps> = ({
-    readerTheme,
-    readerSetting,
-    colorMode,
-  }) => {
+  ReaderComponent: FC<ReaderCompProps> = ({ readerTheme, readerSetting, colorMode }) => {
     useEffect(() => {
       this.render('epub-reader-content');
     }, []);
@@ -119,9 +109,7 @@ export class EpubBook extends ABook<string> {
         const contents = this.epub.rendition.getContents();
         for (const content of contents as unknown as Contents[]) {
           // @ts-ignore
-          const sheetDom = content?._getStylesheetNode(
-            'default',
-          ) as HTMLStyleElement;
+          const sheetDom = content?._getStylesheetNode('default') as HTMLStyleElement;
           if (!sheetDom) break;
           sheetDom.remove();
         }
@@ -130,9 +118,7 @@ export class EpubBook extends ABook<string> {
           return cssStr ? `${cssStr} !important` : cssStr;
         }
         const color =
-          !readerTheme.color || colorMode === 'light'
-            ? undefined
-            : `${readerTheme.color}`;
+          !readerTheme.color || colorMode === 'light' ? undefined : `${readerTheme.color}`;
         const background = readerTheme.backgroundColor
           ? `${readerTheme.backgroundColor}`
           : undefined;
@@ -157,15 +143,11 @@ export class EpubBook extends ABook<string> {
         });
       })();
     }, [readerTheme, readerSetting, colorMode]);
-    return (
-      <div id="epub-reader-content" style={{ height: '100%', width: '100%' }} />
-    );
+    return <div id="epub-reader-content" style={{ height: '100%', width: '100%' }} />;
   };
 
   getCurrentPage() {
-    return Math.round(
-      this.totalPages * (this.getLoc()?.start?.percentage || 0),
-    );
+    return Math.round(this.totalPages * (this.getLoc()?.start?.percentage || 0));
   }
 
   getPages() {
@@ -268,9 +250,7 @@ export class EpubBook extends ABook<string> {
         ts: Date.now(),
         percent: this.epub.locations.percentageFromCfi(loc.start.cfi),
         // loc 中的 href 只有路径没有参数，toc 中可以带参数
-        navInfo: Object.entries(this.hrefMap).find(([key]) =>
-          key.startsWith(loc.start.href),
-        )?.[1],
+        navInfo: Object.entries(this.hrefMap).find(([key]) => key.startsWith(loc.start.href))?.[1],
       };
       return res;
     } catch (e) {

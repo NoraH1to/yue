@@ -1,9 +1,7 @@
 import useTextOverflowChecker from '@/hooks/useTextOverflowChecker';
 import { Tooltip, TooltipProps } from '@mui/material';
 import { FC, forwardRef, useCallback, useState } from 'react';
-import MuiTypography, {
-  StyledMuiTypographyProps,
-} from '../Styled/MuiTypography';
+import MuiTypography, { StyledMuiTypographyProps } from '../Styled/MuiTypography';
 
 const tooltipComponentsProps: TooltipProps['componentsProps'] = {
   tooltip: {
@@ -16,8 +14,8 @@ const tooltipComponentsProps: TooltipProps['componentsProps'] = {
 export type StyledMuiAutoTooltipTypographyProps = StyledMuiTypographyProps &
   Pick<TooltipProps, 'placement'>;
 
-const StyledMuiAutoTooltipTypography: FC<StyledMuiAutoTooltipTypographyProps> =
-  forwardRef(({ placement, ...props }, fRef) => {
+const StyledMuiAutoTooltipTypography: FC<StyledMuiAutoTooltipTypographyProps> = forwardRef(
+  ({ placement, ...props }, fRef) => {
     const [ref, setRef] = useState<HTMLSpanElement | null>(null);
     const [isOverflow] = useTextOverflowChecker(ref);
     const _ref = useCallback(
@@ -40,7 +38,8 @@ const StyledMuiAutoTooltipTypography: FC<StyledMuiAutoTooltipTypographyProps> =
     ) : (
       Content
     );
-  });
+  },
+);
 
 StyledMuiAutoTooltipTypography.displayName = 'ItemTitle';
 

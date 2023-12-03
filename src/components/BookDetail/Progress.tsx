@@ -14,10 +14,7 @@ const BookDetailProgress: FC<BookDetailProgressProps> = ({ percent }) => {
       <Box flexGrow={1}>
         <LinearProgress variant="determinate" value={value || 0} />
       </Box>
-      <BookDetailInfoItemText
-        variant="body1"
-        color="text.secondary"
-        flexShrink={0}>
+      <BookDetailInfoItemText variant="body1" color="text.secondary" flexShrink={0}>
         {`${value.toFixed(1)}%`}
       </BookDetailInfoItemText>
     </Stack>

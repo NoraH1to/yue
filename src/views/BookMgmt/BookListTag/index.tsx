@@ -7,10 +7,7 @@ import BookMain from '../BookMain';
 
 const BookListTag = () => {
   const { id } = useParams();
-  const bookGetter = useCallback(
-    () => fs.getBooksByTagWithoutContent(id!),
-    [id],
-  );
+  const bookGetter = useCallback(() => fs.getBooksByTagWithoutContent(id!), [id]);
   const { data: tag, status: searchTagStatus } = useStatusLiveQuery(
     () => (id ? fs.getTagById(id) : undefined),
     [id],

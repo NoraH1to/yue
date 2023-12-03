@@ -1,11 +1,5 @@
 import { DoneRounded } from '@mui/icons-material';
-import {
-  Backdrop,
-  Card,
-  CardActionArea,
-  CardActionAreaProps,
-  Fade,
-} from '@mui/material';
+import { Backdrop, Card, CardActionArea, CardActionAreaProps, Fade } from '@mui/material';
 import { BoxProps } from '@mui/system';
 import { FC, memo } from 'react';
 import FixedRatioBookCover from '../FixedRatioWrapper/FixedRatioBookCover';

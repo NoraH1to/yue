@@ -23,10 +23,8 @@ export const YupSchema = {
   title: Yup.string().required(t('formHelper.required') as string),
   color: Yup.string()
     .notRequired()
-    .test(
-      'Legal color values',
-      t('formHelper.incorrect color value') as string,
-      (v) => (!v ? true : isValidColor(v)),
+    .test('Legal color values', t('formHelper.incorrect color value') as string, (v) =>
+      !v ? true : isValidColor(v),
     ),
 };
 

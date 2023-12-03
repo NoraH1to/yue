@@ -8,9 +8,7 @@ import { MenuItemProps } from '@mui/material';
 const MenuSortItem = styled((props: MenuItemProps) => (
   <StyledMuiMenuItem {...props}>
     <ListItemIcon>
-      {props.selected && (
-        <RadioButtonCheckedRounded fontSize="small" color="primary" />
-      )}
+      {props.selected && <RadioButtonCheckedRounded fontSize="small" color="primary" />}
     </ListItemIcon>
     {props.children}
   </StyledMuiMenuItem>

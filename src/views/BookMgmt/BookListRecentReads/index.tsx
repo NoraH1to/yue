@@ -1,13 +1,9 @@
-import BookDetailAuthor, {
-  BookDetailAuthorSkeleton,
-} from '@/components/BookDetail/Author';
+import BookDetailAuthor, { BookDetailAuthorSkeleton } from '@/components/BookDetail/Author';
 import BookDetailInfoItem from '@/components/BookDetail/InfoItem';
 import BookDetailInfoItemText from '@/components/BookDetail/InfoItemText';
 import BookDetailLastReadTime from '@/components/BookDetail/LastReadTime';
 import BookDetailProgress from '@/components/BookDetail/Progress';
-import BookDetailTitle, {
-  BookDetailTitleSkeleton,
-} from '@/components/BookDetail/Title';
+import BookDetailTitle, { BookDetailTitleSkeleton } from '@/components/BookDetail/Title';
 import { BookItemBaseCardCoverSkeleton } from '@/components/BookItem/BaseCard';
 import BookItemCover from '@/components/BookItem/Cover';
 import DetailToolbar from '@/components/DetailToolbar';
@@ -27,13 +23,7 @@ import StatusEmpty from '../components/StatusEmpty';
 const coverSizeSx = { width: '33%', maxWidth: '180px' };
 
 const ItemContainer: FC<StackProps> = (props) => (
-  <Stack
-    p={1.5}
-    width={1}
-    gap={1}
-    direction="row"
-    alignItems="flex-start"
-    {...props}>
+  <Stack p={1.5} width={1} gap={1} direction="row" alignItems="flex-start" {...props}>
     {props.children}
   </Stack>
 );
@@ -83,9 +73,7 @@ const BookListRecentReads = () => {
       <DetailToolbar onBack={() => nav(-1)} title={t('recent reads')} />
       <Stack overflow="auto" flexGrow={1} height={0} p={2} pt={1} gap={1}>
         {loading ? (
-          [undefined, undefined, undefined].map((_, i) => (
-            <ItemSkeleton key={i} />
-          ))
+          [undefined, undefined, undefined].map((_, i) => <ItemSkeleton key={i} />)
         ) : books.length > 0 ? (
           books.map((book) => (
             <StyledMuiListItemButton
@@ -115,9 +103,7 @@ const BookListRecentReads = () => {
                   <BookDetailProgress percent={book.lastProcess.percent} />
                   {book.lastProcess.navInfo && (
                     <BookDetailInfoItem>
-                      <BookDetailInfoItemText
-                        variant="body2"
-                        color="text.secondary">
+                      <BookDetailInfoItemText variant="body2" color="text.secondary">
                         {book.lastProcess.navInfo.title}
                       </BookDetailInfoItemText>
                     </BookDetailInfoItem>

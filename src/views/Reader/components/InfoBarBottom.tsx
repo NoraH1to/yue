@@ -7,11 +7,7 @@ export type InfoBarBottomProps = {
   color?: string;
 };
 
-const InfoBarBottom: FC<InfoBarBottomProps> = ({
-  pages,
-  currentPage,
-  color,
-}) => {
+const InfoBarBottom: FC<InfoBarBottomProps> = ({ pages, currentPage, color }) => {
   return (
     <Stack
       direction="row"
@@ -20,9 +16,7 @@ const InfoBarBottom: FC<InfoBarBottomProps> = ({
       py={0.6}
       sx={{ userSelect: 'none' }}>
       <Typography variant="caption" color={color}>
-        {pages !== undefined &&
-          currentPage !== undefined &&
-          `${currentPage}/${pages}`}
+        {pages !== undefined && currentPage !== undefined && `${currentPage}/${pages}`}
       </Typography>
       <Typography variant="caption" color={color}></Typography>
     </Stack>

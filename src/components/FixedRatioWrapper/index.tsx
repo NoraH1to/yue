@@ -9,24 +9,10 @@ export type FixedRatioProps = PropsWithChildren<{
   BoxProps;
 
 const FixedRatio: FC<FixedRatioProps> = forwardRef(
-  (
-    {
-      fixedWidth = 1,
-      fixedHeight = 1,
-      children,
-      contentWrapperProps,
-      ...props
-    },
-    ref,
-  ) => (
+  ({ fixedWidth = 1, fixedHeight = 1, children, contentWrapperProps, ...props }, ref) => (
     <Box ref={ref} position="relative" {...props}>
       <Box pt={`${(fixedHeight / fixedWidth) * 100}%`}>
-        <Box
-          position="absolute"
-          top={0}
-          width={1}
-          height={1}
-          {...contentWrapperProps}>
+        <Box position="absolute" top={0} width={1} height={1} {...contentWrapperProps}>
           {children}
         </Box>
       </Box>

@@ -1,11 +1,4 @@
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  InputBase,
-  Stack,
-  styled,
-} from '@mui/material';
+import { Box, IconButton, InputAdornment, InputBase, Stack, styled } from '@mui/material';
 import { CloseRounded, SearchRounded } from '@mui/icons-material';
 
 import { FC } from 'react';
@@ -26,10 +19,7 @@ const SearchContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const Search: FC<InputBaseProps & { onClear?: () => void }> = ({
-  onClear,
-  ...props
-}) => {
+const Search: FC<InputBaseProps & { onClear?: () => void }> = ({ onClear, ...props }) => {
   return (
     <SearchContainer>
       <Stack sx={{ height: 1 }} direction="row" gap={1} alignItems="center">

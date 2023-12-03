@@ -10,6 +10,4 @@ import '@/modules/fs';
 import '@/parsers/register';
 import './i18n';
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <App />,
-);
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(<App />);

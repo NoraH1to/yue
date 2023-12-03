@@ -37,12 +37,8 @@ export type TDbBookWithContent = Overwrite<
 
 export type TDbBook = Omit<TFsBook, 'target' | 'cover' | 'archive'>;
 
-export type TDbBookContentV1 =
-  | TDbBookContentWithArchiveV1
-  | TDbBookContentWithoutArchiveV1;
-export type TDbBookContentV2 =
-  | TDbBookContentWithArchiveV2
-  | TDbBookContentWithoutArchiveV2;
+export type TDbBookContentV1 = TDbBookContentWithArchiveV1 | TDbBookContentWithoutArchiveV1;
+export type TDbBookContentV2 = TDbBookContentWithArchiveV2 | TDbBookContentWithoutArchiveV2;
 export type TDbBookContent = TDbBookContentV2;
 
 export type TDbBookCover = {

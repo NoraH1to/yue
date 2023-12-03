@@ -1,10 +1,5 @@
 import { Promiser } from '@/helper';
-import {
-  ABook,
-  IProcess,
-  ReaderCompProps,
-  TBookConstructorInfo,
-} from '@/modules/book/Book';
+import { ABook, IProcess, ReaderCompProps, TBookConstructorInfo } from '@/modules/book/Book';
 import { Box } from '@mui/material';
 import { FilesObject } from 'libarchive.js/src/libarchive';
 import { FC, useEffect, useState } from 'react';
@@ -86,9 +81,7 @@ export class ComicBook extends ABook<number | string> {
           modules={[Virtual]}
           spaceBetween={0}
           slidesPerView={1}
-          onSlideChange={(swiper) =>
-            (this.currentPage = swiper.activeIndex + 1)
-          }
+          onSlideChange={(swiper) => (this.currentPage = swiper.activeIndex + 1)}
           onSwiper={setSwiper}
           virtual={true}>
           {Object.keys(this.archive).map((filename, i) => (

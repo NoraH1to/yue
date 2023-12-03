@@ -39,15 +39,11 @@ const parseToc = async (
     _outline ||
     (await pdf.getOutline())
       ?.filter(Boolean)
-      .filter((o) =>
-        typeof o.dest === 'string' ? !!o.dest : !!o.dest?.[0] && !!o.title,
-      );
+      .filter((o) => (typeof o.dest === 'string' ? !!o.dest : !!o.dest?.[0] && !!o.title));
   if (!outline) return [];
   const dest = await Promise.all(
     outline.map((ol) => {
-      return typeof ol.dest === 'string'
-        ? pdf.getDestination(ol.dest)
-        : ol.dest;
+      return typeof ol.dest === 'string' ? pdf.getDestination(ol.dest) : ol.dest;
     }),
   );
   const pages = await Promise.all(dest.map((d) => pdf.getPageIndex(d![0])));

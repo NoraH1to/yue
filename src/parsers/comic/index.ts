@@ -1,9 +1,4 @@
-import {
-  delFalsy,
-  getBasenameByFilename,
-  getExtByFilename,
-  isImageFileName,
-} from '@/helper';
+import { delFalsy, getBasenameByFilename, getExtByFilename, isImageFileName } from '@/helper';
 import { Archive } from 'libarchive.js';
 import { Parser } from '../';
 import { getHash } from '../helper';
@@ -13,18 +8,13 @@ import { CompressedFile } from 'libarchive.js/src/compressed-file';
 
 const comicExts = ['zip', 'rar', '7z', 'cbz', 'cbr'];
 
-const archiveWorkerUrl = new URL(
-  'libarchive.js/dist/worker-bundle.js',
-  import.meta.url,
-).toString();
+const archiveWorkerUrl = new URL('libarchive.js/dist/worker-bundle.js', import.meta.url).toString();
 
 Archive.init({
   workerUrl: archiveWorkerUrl,
 });
 
-const getNestArchiveContent = async (
-  archive: FilesObject,
-): Promise<FilesObject> => {
+const getNestArchiveContent = async (archive: FilesObject): Promise<FilesObject> => {
   const keys = Object.keys(archive);
   if (!keys.length) throw new Error('Empty archive');
   if (keys.length > 1) return archive;
@@ -34,9 +24,7 @@ const getNestArchiveContent = async (
   const isFile = nestContent instanceof File;
   if (!isArchive && isFile) return archive;
   if (isArchive && isFile)
-    return getNestArchiveContent(
-      await (await Archive.open(nestContent)).extractFiles(),
-    );
+    return getNestArchiveContent(await (await Archive.open(nestContent)).extractFiles());
   if (nestContent instanceof CompressedFile)
     return getNestArchiveContent(
       await (await Archive.open(await nestContent.extract())).extractFiles(),
@@ -44,15 +32,10 @@ const getNestArchiveContent = async (
   return getNestArchiveContent(nestContent as FilesObject);
 };
 
-const comicParse: Parser<typeof ComicBook>['parse'] = async (
-  target,
-  cacheInfo = {},
-) => {
-  if (!cacheInfo.archive && !(target instanceof File))
-    throw new Error('Wrong book data');
+const comicParse: Parser<typeof ComicBook>['parse'] = async (target, cacheInfo = {}) => {
+  if (!cacheInfo.archive && !(target instanceof File)) throw new Error('Wrong book data');
   const archive = await getNestArchiveContent(
-    cacheInfo.archive ||
-      (await (await Archive.open(target as File)).extractFiles()),
+    cacheInfo.archive || (await (await Archive.open(target as File)).extractFiles()),
   );
 
   let keys = Object.keys(archive);
@@ -73,9 +56,7 @@ const comicParse: Parser<typeof ComicBook>['parse'] = async (
     lastProcess: cacheInfo.lastProcess || { ts: 0, percent: 0 },
   });
 };
-const getComicCacheableInfo: Parser<typeof ComicBook>['getCacheableInfo'] = (
-  book,
-) => {
+const getComicCacheableInfo: Parser<typeof ComicBook>['getCacheableInfo'] = (book) => {
   return delFalsy({
     archive: book.archive,
     cover: book.cover,
@@ -88,9 +69,7 @@ const getComicCacheableInfo: Parser<typeof ComicBook>['getCacheableInfo'] = (
   });
 };
 
-export const createComicParser = (
-  exts: string[],
-): Parser<typeof ComicBook>[] => {
+export const createComicParser = (exts: string[]): Parser<typeof ComicBook>[] => {
   return exts.map((ext) => ({
     type: ext,
     Book: class extends ComicBook {

@@ -39,18 +39,12 @@ const ToolbarAction: FC<ToolbarActionProps> = ({
       : LightModeRounded;
   const handleColorModeClick = useCallback(() => {
     onToggleColorMode(
-      setting.colorMode === 'dark'
-        ? 'light'
-        : setting.colorMode === 'light'
-        ? 'system'
-        : 'dark',
+      setting.colorMode === 'dark' ? 'light' : setting.colorMode === 'light' ? 'system' : 'dark',
     );
   }, [setting, onToggleColorMode]);
 
   const [fullscreen, setFullscreen] = useState(false);
-  const FullscreenIcon = !fullscreen
-    ? FullscreenRounded
-    : FullscreenExitRounded;
+  const FullscreenIcon = !fullscreen ? FullscreenRounded : FullscreenExitRounded;
   const handleFullscreenClick = useCallback(() => {
     setFullscreen(!fullscreen);
     onToggleFullscreen(!fullscreen);

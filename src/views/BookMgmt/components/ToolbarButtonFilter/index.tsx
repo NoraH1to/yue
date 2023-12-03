@@ -20,10 +20,7 @@ export type ToolbarButtonFilterProps = PropsWithChildren<{
   onFilter?: (filter: IFilter, hasFilter: boolean) => void;
 }>;
 
-const ToolbarButtonFilter: FC<ToolbarButtonFilterProps> = ({
-  children,
-  onFilter,
-}) => {
+const ToolbarButtonFilter: FC<ToolbarButtonFilterProps> = ({ children, onFilter }) => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleClickButton = useCallback<NonNullable<ButtonProps['onClick']>>(
@@ -34,11 +31,7 @@ const ToolbarButtonFilter: FC<ToolbarButtonFilterProps> = ({
   );
   const handleCloseMenu = useCallback(() => setAnchorEl(null), [setAnchorEl]);
   const open = !!anchorEl;
-  const { data: tags } = useStatusLiveQuery(
-    () => fs.getTags(),
-    undefined,
-    null,
-  );
+  const { data: tags } = useStatusLiveQuery(() => fs.getTags(), undefined, null);
   const [filter, setFilter] = useState<IFilter>({
     tag: {} as Record<string, boolean>,
   });
@@ -62,10 +55,7 @@ const ToolbarButtonFilter: FC<ToolbarButtonFilterProps> = ({
     [setFilter],
   );
   useEffect(() => {
-    onFilter?.(
-      filter,
-      !!(Object.keys(filter.tag).length > 0 || filter.hasNotTag),
-    );
+    onFilter?.(filter, !!(Object.keys(filter.tag).length > 0 || filter.hasNotTag));
   }, [filter]);
   return (
     <>

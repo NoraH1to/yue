@@ -2,10 +2,7 @@ import { Box } from '@mui/material';
 
 import { FC } from 'react';
 
-const Dot: FC<{ size?: string | number; color?: string }> = ({
-  size,
-  color,
-}) => (
+const Dot: FC<{ size?: string | number; color?: string }> = ({ size, color }) => (
   <Box
     sx={[
       {

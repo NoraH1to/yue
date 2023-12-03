@@ -1,14 +1,9 @@
-import BookItemContextMenu, {
-  BookItemContextMenuProps,
-} from '@/components/BookItem/ContextMenu';
+import BookItemContextMenu, { BookItemContextMenuProps } from '@/components/BookItem/ContextMenu';
 import useMgmtBook from '@/hooks/useMgmtBook';
 import { TFsBookWithoutContent } from '@/modules/fs/Fs';
 import { FC, memo } from 'react';
 
-export type BookCardContextMenuProps = Omit<
-  BookItemContextMenuProps,
-  'onMultiSelect'
-> & {
+export type BookCardContextMenuProps = Omit<BookItemContextMenuProps, 'onMultiSelect'> & {
   book: TFsBookWithoutContent;
   onMultiSelect?: (book: TFsBookWithoutContent) => void;
 };

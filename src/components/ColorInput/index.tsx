@@ -7,17 +7,17 @@ import { TextFieldProps } from '@mui/material';
 import StyledMuiIconButton from '../Styled/MuiIconButton';
 
 const ColorInput = (props: TextFieldProps) => {
-  const [pickerAnchorEl, setPickerAnchorEl] = useState<HTMLElement | null>(
-    null,
-  );
+  const [pickerAnchorEl, setPickerAnchorEl] = useState<HTMLElement | null>(null);
   const [_value, setValue] = useState<string>((props.value as string) || '');
 
   const controlled = Object.hasOwn(props, 'value');
 
   const value = controlled ? (props.value as string) : _value;
 
-  const onChange: ComponentProps<typeof HexColorPicker>['onChange'] &
-    TextFieldProps['onChange'] = (e, ...args) => {
+  const onChange: ComponentProps<typeof HexColorPicker>['onChange'] & TextFieldProps['onChange'] = (
+    e,
+    ...args
+  ) => {
     if (typeof e === 'string') {
       !controlled && setValue(e);
       props.onChange?.({ target: { value: e, name: props.name || '' } } as any); // 兼容 formik
@@ -48,9 +48,7 @@ const ColorInput = (props: TextFieldProps) => {
                 overflow: 'hidden',
               })}
               onClick={(e) => {
-                setPickerAnchorEl(
-                  pickerAnchorEl ? null : (e.target as HTMLElement),
-                );
+                setPickerAnchorEl(pickerAnchorEl ? null : (e.target as HTMLElement));
               }}>
               <Box sx={{ backgroundColor: value, width: 1, height: 1 }}></Box>
             </StyledMuiIconButton>

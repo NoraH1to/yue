@@ -3,10 +3,7 @@ import { IBookInfo } from '@/modules/book/Book';
 import { ITag } from '@/modules/book/Tag';
 import { WebDAVClient } from 'webdav';
 
-export type TFsBase = { addTs: number } & Pick<
-  TFsItemFile | TFsItemDir,
-  'lastmodTs'
->;
+export type TFsBase = { addTs: number } & Pick<TFsItemFile | TFsItemDir, 'lastmodTs'>;
 
 export type TFsBook = IBookInfo & TFsBase;
 export type TFsBookWithoutContent = Omit<TFsBook, 'target' | 'archive'>;
@@ -15,10 +12,7 @@ export type TFsBookWithTags = TFsBook & {
   tags: string[];
   tagsMap: Record<string, boolean>;
 };
-export type TFsBookWithoutContentWithTags = Omit<
-  TFsBookWithTags,
-  'target' | 'archive'
->;
+export type TFsBookWithoutContentWithTags = Omit<TFsBookWithTags, 'target' | 'archive'>;
 
 export interface TFsItemFile {
   id: string;
@@ -58,9 +52,7 @@ export interface ISorter<T extends object = object, K = keyof T> {
   key: K;
 }
 
-export type TBookSorter = ISorter<
-  Record<GetPath<Omit<TFsBook, 'target'>>, unknown>
->;
+export type TBookSorter = ISorter<Record<GetPath<Omit<TFsBook, 'target'>>, unknown>>;
 
 export type TDirItemSorter = ISorter<
   Record<GetPath<Omit<TFsItemDir | TFsItemFile, 'type'>>, unknown>
@@ -88,24 +80,18 @@ export interface IFs {
    * @param limit 最大数量
    */
   getRecentReadsBooks(limit: number): Promise<TFsBookWithTags[]>;
-  getRecentReadsBooksWithoutContent(
-    limit: number,
-  ): Promise<TFsBookWithoutContentWithTags[]>;
+  getRecentReadsBooksWithoutContent(limit: number): Promise<TFsBookWithoutContentWithTags[]>;
   /**
    * 根据哈希值获得一本图书信息
    * @param hash 图书哈希值
    */
   getBookByHash(hash: string): Promise<TFsBook | undefined>;
-  getBookByHashWithoutContent(
-    hash: string,
-  ): Promise<TFsBookWithoutContent | undefined>;
+  getBookByHashWithoutContent(hash: string): Promise<TFsBookWithoutContent | undefined>;
   /**
    * 查找本地是否有指定的源中书籍
    * @param sourceInfo 源中的书本信息
    */
-  getBookBySourceItemInfo(
-    sourceInfo: TSourceItemInfo,
-  ): Promise<TFsBook | undefined>;
+  getBookBySourceItemInfo(sourceInfo: TSourceItemInfo): Promise<TFsBook | undefined>;
   getBookBySourceItemInfoWithoutContent(
     sourceInfo: TSourceItemInfo,
   ): Promise<TFsBookWithoutContent | undefined>;
@@ -114,18 +100,13 @@ export interface IFs {
    * @param tagID 标签唯一键
    */
   getBooksByTag(tagID: string): Promise<TFsBookWithTags[]>;
-  getBooksByTagWithoutContent(
-    tagID: string,
-  ): Promise<TFsBookWithoutContentWithTags[]>;
+  getBooksByTagWithoutContent(tagID: string): Promise<TFsBookWithoutContentWithTags[]>;
   /**
    * 更新一本图书的信息
    * @param info.hash 图书哈希值
    * @param info.info 需要更新的内容
    */
-  updateBook(info: {
-    hash: string;
-    info: Partial<Omit<TFsBook, 'hash'>>;
-  }): Promise<void>;
+  updateBook(info: { hash: string; info: Partial<Omit<TFsBook, 'hash'>> }): Promise<void>;
   /**
    * 给图书打标签
    * @param info.hash 图书哈希值
@@ -185,10 +166,7 @@ export interface IFs {
    * @param info.id 标签唯一键
    * @param info.info 标签信息
    */
-  updateTag(info: {
-    id: string;
-    info: Partial<Omit<TFsTag, 'id'>>;
-  }): Promise<TFsTag>;
+  updateTag(info: { id: string; info: Partial<Omit<TFsTag, 'id'>> }): Promise<TFsTag>;
   /**
    * 删除标签
    * @param id 标签唯一键，可以是列表
@@ -197,16 +175,10 @@ export interface IFs {
   /**
    * 将 source 标签移动到 target 的位置
    */
-  moveTag(
-    sourceID: string,
-    targetID: string,
-    sort: TBookSorter['sort'],
-  ): Promise<void>;
+  moveTag(sourceID: string, targetID: string, sort: TBookSorter['sort']): Promise<void>;
   /**
    * 获得图书的哈希分布
    * @param bookHashList 书籍哈希列表
    */
-  getTagDistributionByBookHashList(
-    bookHashList: string[],
-  ): Promise<TTagDistribution[]>;
+  getTagDistributionByBookHashList(bookHashList: string[]): Promise<TTagDistribution[]>;
 }

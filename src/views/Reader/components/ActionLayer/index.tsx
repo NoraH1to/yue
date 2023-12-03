@@ -22,16 +22,8 @@ const ContentWrapper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-const ActionLayer: FC<ActionLayerProps> = ({
-  open,
-  onClose,
-  ContentBottom,
-  ContentTop,
-}) => {
-  const handleClickBackdrop = useCallback(
-    mergeEventListener(onClose, prevent),
-    [onClose, prevent],
-  );
+const ActionLayer: FC<ActionLayerProps> = ({ open, onClose, ContentBottom, ContentTop }) => {
+  const handleClickBackdrop = useCallback(mergeEventListener(onClose, prevent), [onClose, prevent]);
   return (
     <Backdrop open={open} onClick={handleClickBackdrop}>
       <Slide in={open}>

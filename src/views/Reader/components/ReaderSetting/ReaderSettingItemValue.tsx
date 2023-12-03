@@ -3,9 +3,7 @@ import StyledMuiAutoTooltipTypography, {
 } from '@/components/Styled/MuiAutoTooltipTypography';
 import { FC } from 'react';
 
-const ReaderSettingItemValue: FC<StyledMuiAutoTooltipTypographyProps> = ({
-  ...props
-}) => (
+const ReaderSettingItemValue: FC<StyledMuiAutoTooltipTypographyProps> = ({ ...props }) => (
   <StyledMuiAutoTooltipTypography
     lineClampCount={1}
     variant="subtitle2"

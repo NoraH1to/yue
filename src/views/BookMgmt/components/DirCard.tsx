@@ -14,11 +14,7 @@ const DirCard: FC<DirCardProps> = ({ dirItem }) => {
   const handleClick = useCallback(() => {
     nav(`/${ROUTE_PATH.DIR}/${encodeURIComponent(dirItem.filename)}`);
   }, [dirItem.filename]);
-  return (
-    <MemoDirItemDirBaseCard dirname={dirItem.basename} onClick={handleClick} />
-  );
+  return <MemoDirItemDirBaseCard dirname={dirItem.basename} onClick={handleClick} />;
 };
 
-export default memo(DirCard, ({ dirItem: pd }, { dirItem: nd }) =>
-  shallowEqual(pd, nd),
-);
+export default memo(DirCard, ({ dirItem: pd }, { dirItem: nd }) => shallowEqual(pd, nd));

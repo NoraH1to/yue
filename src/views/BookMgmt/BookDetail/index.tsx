@@ -49,10 +49,7 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
     book?.title && (document.title = book.title);
   }, [book?.title]);
 
-  const cover = useMemo(
-    () => book?.cover && URL.createObjectURL(book.cover),
-    [book?.cover],
-  );
+  const cover = useMemo(() => book?.cover && URL.createObjectURL(book.cover), [book?.cover]);
 
   const handleBack = () => {
     nav(-1);
@@ -96,11 +93,7 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
           )
         }
       />
-      <Stack
-        direction="row"
-        alignItems="flex-start"
-        gap={{ xs: 2, md: 3, xl: 4 }}
-        px={4}>
+      <Stack direction="row" alignItems="flex-start" gap={{ xs: 2, md: 3, xl: 4 }} px={4}>
         <Card
           variant="outlined"
           sx={{
@@ -119,24 +112,14 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
                 <BookItemBaseCardCoverSkeleton />
               </Fade>
             ) : (
-              <BookItemCover
-                width={1}
-                height={1}
-                src={cover}
-                textCover={book.type}
-              />
+              <BookItemCover width={1} height={1} src={cover} textCover={book.type} />
             )}
           </FixedRatioBookCover>
         </Card>
         {loading ? (
           <DetailInfoSkeleton flexGrow={1} />
         ) : (
-          <DetailInfo
-            flexGrow={1}
-            tags={tags}
-            book={book}
-            onClickTag={handleClickTag}
-          />
+          <DetailInfo flexGrow={1} tags={tags} book={book} onClickTag={handleClickTag} />
         )}
       </Stack>
       <Box flexGrow={1} height={0} px={3} pb={2} overflow="auto">
@@ -150,10 +133,7 @@ const BookDetailContent: FC<BookDetailContentProps> = ({ hash }) => {
         )}
       </Box>
       <Zoom in={!loading} unmountOnExit>
-        <DetailFabRead
-          hasRead={!!book?.lastProcess?.ts}
-          onClick={handleClickFabRead}
-        />
+        <DetailFabRead hasRead={!!book?.lastProcess?.ts} onClick={handleClickFabRead} />
       </Zoom>
     </Stack>
   );

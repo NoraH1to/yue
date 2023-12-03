@@ -1,12 +1,7 @@
 import StyledMuiListItemButton from '@/components/Styled/MuiListItemButton';
 import useSetting from '@/hooks/useSetting';
 import { SyncRounded } from '@mui/icons-material';
-import {
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-  Switch,
-} from '@mui/material';
+import { ListItemIcon, ListItemSecondaryAction, ListItemText, Switch } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 const WebDAVSyncProcessSetting = () => {

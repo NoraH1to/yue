@@ -19,10 +19,7 @@ import { Optional } from 'utility-types';
 import * as Yup from 'yup';
 import FormTag, { YupSchema } from '../Form/Tag';
 
-const TagAddDialog = ({
-  initValue,
-  ...props
-}: DialogProps & { initValue?: Partial<ITag> }) => {
+const TagAddDialog = ({ initValue, ...props }: DialogProps & { initValue?: Partial<ITag> }) => {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   return (

@@ -24,15 +24,12 @@ const useSyncProcess = () => {
     let cloudData;
     try {
       const content = await client.getFileContents(pathname);
-      cloudData = JSON.parse(
-        ab2str(content),
-      ) as IBookInfoWithoutContent['lastProcess'];
+      cloudData = JSON.parse(ab2str(content)) as IBookInfoWithoutContent['lastProcess'];
     } catch (e) {
       // ignore
     }
     if (cloudData && cloudData.ts > process.ts) return cloudData;
-    else if (!cloudData || (cloudData && cloudData.ts < process.ts))
-      return 'updateCloud';
+    else if (!cloudData || (cloudData && cloudData.ts < process.ts)) return 'updateCloud';
   };
 
   const updateLocal = async (

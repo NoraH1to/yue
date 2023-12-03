@@ -29,10 +29,7 @@ export type EditTagDialogBulkProps = {
   bookHashList: string[];
 } & DialogProps;
 
-const EditTagDialogBulk: FC<EditTagDialogBulkProps> = ({
-  bookHashList,
-  ...props
-}) => {
+const EditTagDialogBulk: FC<EditTagDialogBulkProps> = ({ bookHashList, ...props }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const matchUpSm = useMediaQuery(theme.breakpoints.up('sm'));
@@ -95,9 +92,7 @@ const EditTagDialogBulk: FC<EditTagDialogBulkProps> = ({
             placeholder={t('tag')!}
             InputProps={{
               endAdornment: (
-                <Button onClick={() => setOpenAddTagDialog(true)}>
-                  {t('action.create')}
-                </Button>
+                <Button onClick={() => setOpenAddTagDialog(true)}>{t('action.create')}</Button>
               ),
             }}
             inputRef={inputRef}
@@ -118,9 +113,7 @@ const EditTagDialogBulk: FC<EditTagDialogBulkProps> = ({
                   <CircularProgress size="42px" />
                 ) : (
                   <Checkbox
-                    onChange={(e, value) =>
-                      handleToggleTag(value, tag, tags, bookHashList)
-                    }
+                    onChange={(e, value) => handleToggleTag(value, tag, tags, bookHashList)}
                     checked={tag.distribution !== 'none'}
                     indeterminate={tag.distribution === 'partial'}
                   />

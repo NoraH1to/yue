@@ -13,19 +13,13 @@ export const epubToc2CommonToc = (toc: NavItem[]): IToc[] => {
   }));
 };
 
-const parser: Parser<typeof EpubBook>['parse'] = async (
-  target,
-  cacheInfo = {},
-) => {
+const parser: Parser<typeof EpubBook>['parse'] = async (target, cacheInfo = {}) => {
   const epub = Epub(await target.arrayBuffer());
   const meta = await epub.loaded.metadata;
   const manualCover = epub.packaging.manifest['cover.jpg'];
   const coverUrl =
     (await epub.coverUrl()) ||
-    (manualCover &&
-      (await epub.resources.createUrl(
-        `${epub.path.resolve(manualCover.href)}`,
-      )));
+    (manualCover && (await epub.resources.createUrl(`${epub.path.resolve(manualCover.href)}`)));
   // epub.js 中 `navigation.toc` 的目录数据有些问题，部分多余的东西没过滤，导致经常跳转不了
   const toc: IToc[] =
     cacheInfo.toc ||
@@ -39,9 +33,7 @@ const parser: Parser<typeof EpubBook>['parse'] = async (
   const info: TEpubBookInfo = {
     epub,
     target: cacheInfo.target || target,
-    cover:
-      cacheInfo.cover ||
-      (coverUrl ? await (await fetch(coverUrl)).blob() : undefined),
+    cover: cacheInfo.cover || (coverUrl ? await (await fetch(coverUrl)).blob() : undefined),
     title: cacheInfo.title || meta.title,
     author: cacheInfo.author || meta.creator,
     description: cacheInfo.description || meta.description,

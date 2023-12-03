@@ -1,12 +1,7 @@
 import EditTagDialogBatch from '@/components/BookItem/EditTagDialogBatch';
 import StyledMuiIconButton from '@/components/Styled/MuiIconButton';
 import Toolbar from '@/components/Toolbar';
-import {
-  CloseRounded,
-  DeleteRounded,
-  SelectAllRounded,
-  SellRounded,
-} from '@mui/icons-material';
+import { CloseRounded, DeleteRounded, SelectAllRounded, SellRounded } from '@mui/icons-material';
 import { DialogProps, Theme, Tooltip, Typography } from '@mui/material';
 import { FC, memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,9 +26,7 @@ const ToolbarBottom: FC<ToolbarBottomProps> = ({
   const handleBatchEditTag = useCallback(() => {
     setOpenBatchEditTagDialog(true);
   }, []);
-  const handleCloseBatchEditTagDialog = useCallback<
-    NonNullable<DialogProps['onClose']>
-  >(
+  const handleCloseBatchEditTagDialog = useCallback<NonNullable<DialogProps['onClose']>>(
     (e, r) => {
       setOpenBatchEditTagDialog(false);
       r === 'escapeKeyDown' && onClose?.();

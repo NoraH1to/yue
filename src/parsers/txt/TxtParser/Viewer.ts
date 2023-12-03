@@ -23,12 +23,10 @@ export default class Viewer {
   constructor(private parser: Parser) {}
 
   render(el: string | HTMLElement) {
-    if (!this.parser.nodeList)
-      throw new Error('Need load content before render.');
+    if (!this.parser.nodeList) throw new Error('Need load content before render.');
     this.targetEl && (this.targetEl.innerHTML = '');
     this.targetEl = el instanceof Element ? el : document.querySelector(el);
-    const container =
-      this.containerEl || (this.containerEl = document.createElement('div'));
+    const container = this.containerEl || (this.containerEl = document.createElement('div'));
     container.innerHTML = '';
     container.style.opacity = '0';
     container.append(...nodeList2ElList(this.parser.nodeList));
@@ -77,8 +75,7 @@ export default class Viewer {
   private jumpPage(step: number, smooth?: boolean) {
     if (!this.containerEl) return this.location;
     const newPage = this.location.currentPage + step;
-    if (newPage < 1 || newPage > this.location.totalPage)
-      return this.updateLocation(true);
+    if (newPage < 1 || newPage > this.location.totalPage) return this.updateLocation(true);
     this.containerEl.scrollBy({
       top: 0,
       left: (this.containerEl as HTMLElement).offsetWidth * step,
@@ -93,8 +90,7 @@ export default class Viewer {
 
   private updateLocation(next: boolean) {
     if (!this.containerEl) return this.location;
-    const startNode =
-      this.locationNode?.el || (this.containerEl.children[0] as HTMLElement);
+    const startNode = this.locationNode?.el || (this.containerEl.children[0] as HTMLElement);
     let index = this.locationNode?.index || 0;
     if (!next && index === 0) {
       this.locationNode = {
@@ -140,19 +136,11 @@ export default class Viewer {
 
   private updateContainerStyle(container: HTMLDivElement) {
     if (!this.targetEl) return;
-    container.style.width = this.targetEl
-      .computedStyleMap()
-      .get('width')!
-      .toString();
-    container.style.height = this.targetEl
-      .computedStyleMap()
-      .get('height')!
-      .toString();
+    container.style.width = this.targetEl.computedStyleMap().get('width')!.toString();
+    container.style.height = this.targetEl.computedStyleMap().get('height')!.toString();
     container.style.overflow = 'hidden';
     container.style.columnFill = 'auto';
-    container.style.columnWidth = `${
-      (this.targetEl as HTMLElement).offsetWidth
-    }px`;
+    container.style.columnWidth = `${(this.targetEl as HTMLElement).offsetWidth}px`;
     container.style.columnGap = '0px';
   }
 }

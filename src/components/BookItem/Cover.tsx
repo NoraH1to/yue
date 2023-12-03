@@ -21,13 +21,7 @@ const BookItemCover: FC<BookItemCoverProps> = forwardRef(
     const Cover = (
       <Box position="relative" ref={ref} {...props}>
         <Fade in={!src || !imgLoaded} unmountOnExit>
-          <Box
-            position="absolute"
-            display="flex"
-            alignItems="center"
-            top={0}
-            height={1}
-            width={1}>
+          <Box position="absolute" display="flex" alignItems="center" top={0} height={1} width={1}>
             <StyledMuiTypography
               lineClampCount={2}
               textTransform="uppercase"

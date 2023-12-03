@@ -1,12 +1,6 @@
 import { IToc } from '@/modules/book/Toc';
 import { ExpandLessRounded, ExpandMoreRounded } from '@mui/icons-material';
-import {
-  Collapse,
-  IconButton,
-  List,
-  ListItemText,
-  ListProps,
-} from '@mui/material';
+import { Collapse, IconButton, List, ListItemText, ListProps } from '@mui/material';
 import { FC, Fragment, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ContextMenuTrigger from '../ContextMenu/Trigger';
@@ -25,21 +19,12 @@ export type TocListProps = {
 const hasChildProcess = (target?: IToc, children?: IToc[]): boolean => {
   if (!children || !target) return false;
   return children.some((child) => {
-    return (
-      child.href === target.href || hasChildProcess(target, child.children)
-    );
+    return child.href === target.href || hasChildProcess(target, child.children);
   });
 };
 
 const TocList: FC<TocListProps> = (props) => {
-  const {
-    tocList,
-    current,
-    currentTitle,
-    onClickToc,
-    deep = 0,
-    ...restProps
-  } = props;
+  const { tocList, current, currentTitle, onClickToc, deep = 0, ...restProps } = props;
   const { t } = useTranslation();
   const [collapseMap, setCollapseMap] = useState<Record<string, boolean>>({});
   const handleToggleCollapse = (toc: IToc, open?: boolean) => {
@@ -60,12 +45,9 @@ const TocList: FC<TocListProps> = (props) => {
   ) : (
     <List {...restProps}>
       {tocList.map((toc) => {
-        const Icon = collapseMap[toc.href]
-          ? ExpandLessRounded
-          : ExpandMoreRounded;
+        const Icon = collapseMap[toc.href] ? ExpandLessRounded : ExpandMoreRounded;
         const isChildrenSelected = hasChildProcess(current, toc.children);
-        const selected =
-          current && (current.href === toc.href || isChildrenSelected);
+        const selected = current && (current.href === toc.href || isChildrenSelected);
         if (selected && isChildrenSelected && !collapseMap[toc.href]) {
           handleToggleCollapse(toc, true);
         }

@@ -63,10 +63,7 @@ const TagList: FC<Pick<GrowProps, 'timeout' | 'style' | 'in'> & ListProps> = ({
       ]}>
       <ListItem sx={{ py: 1 }}>
         {/* 添加 dialog */}
-        <TagAddDialog
-          open={openDialogAddTag}
-          onClose={() => setOpenDialogAddTag(false)}
-        />
+        <TagAddDialog open={openDialogAddTag} onClose={() => setOpenDialogAddTag(false)} />
         <ListItemText secondary={t('tag')} />
         <ListItemSecondaryAction>
           <Tooltip title={t('action.create tag')}>
@@ -78,17 +75,12 @@ const TagList: FC<Pick<GrowProps, 'timeout' | 'style' | 'in'> & ListProps> = ({
       </ListItem>
       <DragDropContext
         onDragEnd={({ destination, source }) => {
-          if (!destination || !tagList || destination.index === source.index)
-            return;
+          if (!destination || !tagList || destination.index === source.index) return;
           const t = tagList[destination.index];
           const s = tagList[source.index];
           moveArrayItem(tagList, source.index, destination.index);
           setTagList([...tagList]);
-          fs.moveTag(
-            s.id,
-            t.id,
-            source.index < destination.index ? 'asc' : 'desc',
-          );
+          fs.moveTag(s.id, t.id, source.index < destination.index ? 'asc' : 'desc');
         }}>
         <Droppable droppableId="tags">
           {(provided) => (
@@ -106,11 +98,7 @@ const TagList: FC<Pick<GrowProps, 'timeout' | 'style' | 'in'> & ListProps> = ({
                     dragHandleProps,
                     innerRef,
                   }) => (
-                    <Grow
-                      in={In}
-                      timeout={timeout}
-                      style={animeStyle}
-                      ref={innerRef}>
+                    <Grow in={In} timeout={timeout} style={animeStyle} ref={innerRef}>
                       {/* Grow 的动画会生效在最近的真实元素，需要与拽托样式隔离 ，否则会有 bug*/}
                       <Box>
                         <Box
@@ -122,13 +110,12 @@ const TagList: FC<Pick<GrowProps, 'timeout' | 'style' | 'in'> & ListProps> = ({
                               height: `${
                                 theme.typography.htmlFontSize *
                                   parseFloat(
-                                    (
-                                      theme.typography.subtitle2
-                                        .fontSize! as string
-                                    ).replace('rem', ''),
+                                    (theme.typography.subtitle2.fontSize! as string).replace(
+                                      'rem',
+                                      '',
+                                    ),
                                   ) *
-                                  (theme.typography.subtitle2
-                                    .lineHeight! as number) +
+                                  (theme.typography.subtitle2.lineHeight! as number) +
                                 parseFloat(theme.spacing(3).replace('px', ''))
                               }px`,
                             }),
@@ -154,8 +141,7 @@ const TagList: FC<Pick<GrowProps, 'timeout' | 'style' | 'in'> & ListProps> = ({
                                         (
                                           <ListItemIcon
                                             sx={(theme) => ({
-                                              color:
-                                                theme.palette.action.disabled,
+                                              color: theme.palette.action.disabled,
                                               mr: `-${theme.spacing(2)}`,
                                             })}>
                                             <Box

@@ -16,19 +16,17 @@ export type BookDetailTitleProps = Overwrite<
   }
 >;
 
-const BookDetailTitle: FC<BookDetailTitleProps> = forwardRef(
-  ({ title, ...props }, ref) => (
-    <StyledMuiAutoTooltipTypography
-      variant="h5"
-      fontWeight={100}
-      color="text.primary"
-      lineClampCount={1}
-      ref={ref}
-      {...props}>
-      {title}
-    </StyledMuiAutoTooltipTypography>
-  ),
-);
+const BookDetailTitle: FC<BookDetailTitleProps> = forwardRef(({ title, ...props }, ref) => (
+  <StyledMuiAutoTooltipTypography
+    variant="h5"
+    fontWeight={100}
+    color="text.primary"
+    lineClampCount={1}
+    ref={ref}
+    {...props}>
+    {title}
+  </StyledMuiAutoTooltipTypography>
+));
 
 BookDetailTitle.displayName = 'BookDetailTitle';
 

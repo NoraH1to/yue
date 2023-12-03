@@ -41,7 +41,7 @@ const readerSetting: UniformType<TReaderSetting> = {
 };
 
 export default {
-  'unknown': 'unknown',
+  unknown: 'unknown',
   'import ebook': 'import',
   'all book': 'all book',
   all: 'all',
@@ -61,8 +61,7 @@ export default {
   unsetting: 'not set',
   connected: 'connected',
   'webDAV Configuration': 'webDAV Configuration',
-  'webDAV error msg':
-    'webDAV error, please ensure your network environment and service status',
+  'webDAV error msg': 'webDAV error, please ensure your network environment and service status',
   'nothing here': 'nothing here',
   'empty toc': 'TOC is empty',
   'page not found': 'page not found',

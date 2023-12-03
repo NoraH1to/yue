@@ -15,15 +15,11 @@ const I18nSetting = () => {
   const open = !!menuAnchorEl;
   return (
     <>
-      <StyledMuiListItemButton
-        onClick={(e) => setMenuAnchorEl(e.currentTarget as HTMLDivElement)}>
+      <StyledMuiListItemButton onClick={(e) => setMenuAnchorEl(e.currentTarget as HTMLDivElement)}>
         <ListItemIcon>
           <TranslateRounded />
         </ListItemIcon>
-        <ListItemText
-          primary={langMap[i18n.resolvedLanguage]}
-          secondary={i18n.resolvedLanguage}
-        />
+        <ListItemText primary={langMap[i18n.resolvedLanguage]} secondary={i18n.resolvedLanguage} />
       </StyledMuiListItemButton>
       <Menu
         open={open}

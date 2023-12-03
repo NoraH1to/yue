@@ -38,9 +38,7 @@ export class DB extends Dexie {
         sourceIdAndBookHash: '[id+etag+bookHash],[id+etag],id,etag,bookHash',
       })
       .upgrade(async (trans) => {
-        const books: TDbBookWithContent[] = await trans
-          .table('books')
-          .toArray();
+        const books: TDbBookWithContent[] = await trans.table('books').toArray();
         const map: Record<string, TDbBookWithContent> = {};
         await DB.waitFor(
           Promise.all(

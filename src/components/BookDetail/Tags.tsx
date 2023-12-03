@@ -17,11 +17,7 @@ export type BookDetailTagsProps = {
   onClickTag?: (tag: ITag) => void;
 };
 
-const BookDetailTags: FC<BookDetailTagsProps> = ({
-  type,
-  tags,
-  onClickTag,
-}) => {
+const BookDetailTags: FC<BookDetailTagsProps> = ({ type, tags, onClickTag }) => {
   return (
     <BookDetailInfoItem>
       <Chip label={type} sx={{ textTransform: 'uppercase' }} />

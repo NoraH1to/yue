@@ -6,12 +6,9 @@ const useSorter = <T extends object>(
   keyList: Array<keyof T>,
   defaultSorter?: ISorter<T>,
 ) => {
-  defaultSorter =
-    defaultSorter || ({ key: keyList[0], sort: 'desc' } as ISorter<T>);
-  const [
-    { status: curSorter, remember },
-    { setStatus: setCurSorter, setRemember },
-  ] = useRememberState(sorterName, defaultSorter, false);
+  defaultSorter = defaultSorter || ({ key: keyList[0], sort: 'desc' } as ISorter<T>);
+  const [{ status: curSorter, remember }, { setStatus: setCurSorter, setRemember }] =
+    useRememberState(sorterName, defaultSorter, false);
 
   const toggleSorter = (sort?: ISorter<T>['sort']) => {
     if (sort) return setCurSorter({ ...curSorter, sort });

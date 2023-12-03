@@ -80,12 +80,7 @@ const DirContent: FC<DirContentProps> = ({ filename }) => {
     'loading' as const,
   );
 
-  const { delayData: delayDir } = useMinDelayData(
-    originDir,
-    [filename],
-    250,
-    'loading' as const,
-  );
+  const { delayData: delayDir } = useMinDelayData(originDir, [filename], 250, 'loading' as const);
   const dir = useMemo(
     () =>
       delayDir === 'loading' || delayDir === undefined
@@ -102,9 +97,7 @@ const DirContent: FC<DirContentProps> = ({ filename }) => {
 
   const getItemHideStatus = useCallback(
     (item: TFsItemDir | TFsItemFile) =>
-      debounceSearchInput
-        ? !item.basename.includes(debounceSearchInput)
-        : false,
+      debounceSearchInput ? !item.basename.includes(debounceSearchInput) : false,
     [debounceSearchInput],
   );
 
@@ -164,12 +157,7 @@ const DirContent: FC<DirContentProps> = ({ filename }) => {
     <Box>empty</Box>
   );
 
-  return (
-    <MainLayout
-      ToolbarTop={!error && info && ToolbarContent}
-      Content={Content}
-    />
-  );
+  return <MainLayout ToolbarTop={!error && info && ToolbarContent} Content={Content} />;
 };
 
 const Dir = () => {

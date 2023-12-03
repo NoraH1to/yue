@@ -27,8 +27,7 @@ const About = () => {
             <Avatar src="/author_avatar.jpg" />
           </ListItemIcon>
           <ListItemText primary={'NoraH1to'} secondary={authorMail} />
-          <ListItemSecondaryAction
-            sx={{ display: 'flex', alignItems: 'center' }}>
+          <ListItemSecondaryAction sx={{ display: 'flex', alignItems: 'center' }}>
             <MailRounded />
           </ListItemSecondaryAction>
         </StyledMuiListItemButton>
@@ -38,8 +37,7 @@ const About = () => {
             <GitHub />
           </ListItemIcon>
           <ListItemText primary={t('repository')} secondary={resUrl} />
-          <ListItemSecondaryAction
-            sx={{ display: 'flex', alignItems: 'center' }}>
+          <ListItemSecondaryAction sx={{ display: 'flex', alignItems: 'center' }}>
             <OpenInNewRounded />
           </ListItemSecondaryAction>
         </StyledMuiListItemButton>

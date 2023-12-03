@@ -8,10 +8,7 @@ import { MemoReaderSettingNumberItem } from './ReaderSettingNumberItem';
 const ReaderSetting = () => {
   const [{ readerSetting }, { setReaderSetting }] = useSetting();
   const { t } = useTranslation();
-  const set = <T extends keyof TReaderSetting>(
-    key: T,
-    value: TReaderSetting[T],
-  ) => {
+  const set = <T extends keyof TReaderSetting>(key: T, value: TReaderSetting[T]) => {
     setReaderSetting({ ...readerSetting, [key]: value });
   };
   return (

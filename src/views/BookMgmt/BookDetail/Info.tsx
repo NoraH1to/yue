@@ -1,12 +1,8 @@
-import BookDetailAuthor, {
-  BookDetailAuthorSkeleton,
-} from '@/components/BookDetail/Author';
+import BookDetailAuthor, { BookDetailAuthorSkeleton } from '@/components/BookDetail/Author';
 import BookDetailInfoItemText from '@/components/BookDetail/InfoItemText';
 import BookDetailLastReadTime from '@/components/BookDetail/LastReadTime';
 import BookDetailProgress from '@/components/BookDetail/Progress';
-import BookDetailTags, {
-  BookDetailTagsSkeleton,
-} from '@/components/BookDetail/Tags';
+import BookDetailTags, { BookDetailTagsSkeleton } from '@/components/BookDetail/Tags';
 import { ITag } from '@/modules/book/Tag';
 import { TFsBookWithoutContent } from '@/modules/fs/Fs';
 import { Skeleton, Stack, StackProps } from '@mui/material';

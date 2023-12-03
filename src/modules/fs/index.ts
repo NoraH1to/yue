@@ -13,36 +13,23 @@ import {
   TTagDistribution,
 } from './Fs';
 import db, { DB } from './indexedDB';
-import {
-  dbBook2FsBook,
-  dbBook2fsBookWithTag,
-  getBookHashListByTagId,
-} from './indexedDB/helper';
+import { dbBook2FsBook, dbBook2fsBookWithTag, getBookHashListByTagId } from './indexedDB/helper';
 import { isDirectory, isFile } from './webDAV';
 
 async function _getBooks(withoutContent?: false): Promise<TFsBookWithTags[]>;
-async function _getBooks(
-  withoutContent: true,
-): Promise<TFsBookWithoutContentWithTags[]>;
+async function _getBooks(withoutContent: true): Promise<TFsBookWithoutContentWithTags[]>;
 async function _getBooks(
   withoutContent?: boolean,
 ): Promise<TFsBookWithoutContentWithTags[] | TFsBookWithTags[]> {
-  return db.transaction(
-    'r!',
-    db.books,
-    db.bookAndTag,
-    db.bookContents,
-    db.bookCovers,
-    async () => {
-      const books = await db.books.toArray();
-      return Promise.all(
-        books.map((book) => {
-          // @ts-ignore
-          return dbBook2fsBookWithTag(book, withoutContent);
-        }),
-      );
-    },
-  );
+  return db.transaction('r!', db.books, db.bookAndTag, db.bookContents, db.bookCovers, async () => {
+    const books = await db.books.toArray();
+    return Promise.all(
+      books.map((book) => {
+        // @ts-ignore
+        return dbBook2fsBookWithTag(book, withoutContent);
+      }),
+    );
+  });
 }
 
 async function _getRecentReadsBooks(
@@ -54,46 +41,26 @@ async function _getRecentReadsBooks(
   withoutContent: true,
 ): Promise<TFsBookWithoutContentWithTags[]>;
 async function _getRecentReadsBooks(limit: number, withoutContent?: boolean) {
-  return db.transaction(
-    'r',
-    db.books,
-    db.bookAndTag,
-    db.bookContents,
-    db.bookCovers,
-    async () => {
-      const books = (await db.books.toCollection().sortBy('lastProcess.ts'))
-        .reverse()
-        .slice(0, limit)
-        .filter((book) => !!book.lastProcess.ts);
-      return Promise.all(
-        // @ts-ignore
-        books.map((book) => dbBook2fsBookWithTag(book, withoutContent)),
-      );
-    },
-  );
+  return db.transaction('r', db.books, db.bookAndTag, db.bookContents, db.bookCovers, async () => {
+    const books = (await db.books.toCollection().sortBy('lastProcess.ts'))
+      .reverse()
+      .slice(0, limit)
+      .filter((book) => !!book.lastProcess.ts);
+    return Promise.all(
+      // @ts-ignore
+      books.map((book) => dbBook2fsBookWithTag(book, withoutContent)),
+    );
+  });
 }
 
-async function _getBookByHash(
-  hash: string,
-  withoutContent?: false,
-): Promise<TFsBook>;
-async function _getBookByHash(
-  hash: string,
-  withoutContent: true,
-): Promise<TFsBookWithoutContent>;
+async function _getBookByHash(hash: string, withoutContent?: false): Promise<TFsBook>;
+async function _getBookByHash(hash: string, withoutContent: true): Promise<TFsBookWithoutContent>;
 async function _getBookByHash(hash: string, withoutContent?: boolean) {
-  return db.transaction(
-    'r',
-    db.books,
-    db.bookAndTag,
-    db.bookContents,
-    db.bookCovers,
-    async () => {
-      const book = await db.books.get(hash);
-      if (!book) return book;
-      return dbBook2FsBook(book, withoutContent);
-    },
-  );
+  return db.transaction('r', db.books, db.bookAndTag, db.bookContents, db.bookCovers, async () => {
+    const book = await db.books.get(hash);
+    if (!book) return book;
+    return dbBook2FsBook(book, withoutContent);
+  });
 }
 
 async function _getBookBySourceItemInfo(
@@ -104,10 +71,7 @@ async function _getBookBySourceItemInfo(
   sourceInfo: TSourceItemInfo,
   withoutContent: true,
 ): Promise<TFsBookWithoutContent>;
-async function _getBookBySourceItemInfo(
-  sourceInfo: TSourceItemInfo,
-  withoutContent?: boolean,
-) {
+async function _getBookBySourceItemInfo(sourceInfo: TSourceItemInfo, withoutContent?: boolean) {
   return db.transaction(
     'r',
     db.books,
@@ -125,32 +89,22 @@ async function _getBookBySourceItemInfo(
   );
 }
 
-async function _getBooksByTag(
-  tagID: string,
-  withoutContent?: false,
-): Promise<TFsBookWithTags[]>;
+async function _getBooksByTag(tagID: string, withoutContent?: false): Promise<TFsBookWithTags[]>;
 async function _getBooksByTag(
   tagID: string,
   withoutContent: true,
 ): Promise<TFsBookWithoutContentWithTags[]>;
 async function _getBooksByTag(tagID: string, withoutContent?: boolean) {
-  return db.transaction(
-    'r',
-    db.books,
-    db.bookAndTag,
-    db.bookContents,
-    db.bookCovers,
-    async () => {
-      const bookHashList = await DB.waitFor(getBookHashListByTagId(tagID));
-      const books = await db.books.bulkGet(bookHashList);
-      return Promise.all(
-        books.map((book) => {
-          // @ts-ignore
-          return dbBook2fsBookWithTag(book!, withoutContent);
-        }),
-      );
-    },
-  );
+  return db.transaction('r', db.books, db.bookAndTag, db.bookContents, db.bookCovers, async () => {
+    const bookHashList = await DB.waitFor(getBookHashListByTagId(tagID));
+    const books = await db.books.bulkGet(bookHashList);
+    return Promise.all(
+      books.map((book) => {
+        // @ts-ignore
+        return dbBook2fsBookWithTag(book!, withoutContent);
+      }),
+    );
+  });
 }
 
 const fs: IFs = {
@@ -222,9 +176,7 @@ const fs: IFs = {
         return hash;
       },
     );
-    return (await DB.waitFor(
-      this.getBookByHashWithoutContent(hash as string),
-    ))!;
+    return (await DB.waitFor(this.getBookByHashWithoutContent(hash as string)))!;
   },
 
   async getBooks() {
@@ -305,18 +257,14 @@ const fs: IFs = {
 
   async deleteBookTag({ hash, tagID }) {
     return db.transaction('rw', db.bookAndTag, async () => {
-      return (
-        (await db.bookAndTag.where({ bookHash: hash, tagID }).delete()) !== 0
-      );
+      return (await db.bookAndTag.where({ bookHash: hash, tagID }).delete()) !== 0;
     });
   },
 
   async getDir(client, filename, { sorter }) {
     return db.transaction('rw', db.dirs, async () => {
       try {
-        const dirInfo = (await DB.waitFor(
-          client.getDirectoryContents(filename),
-        )) as FileStat[];
+        const dirInfo = (await DB.waitFor(client.getDirectoryContents(filename))) as FileStat[];
         await db.dirs.put({
           filename,
           items: dirInfo.map((d) => {

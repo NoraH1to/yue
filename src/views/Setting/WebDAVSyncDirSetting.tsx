@@ -35,10 +35,7 @@ const WebDAVSyncDirSetting = () => {
         <ListItemIcon>
           <FolderRounded />
         </ListItemIcon>
-        <ListItemText
-          primary={t('source sync dir')}
-          secondary={sourceDataDir}
-        />
+        <ListItemText primary={t('source sync dir')} secondary={sourceDataDir} />
         <ListItemSecondaryAction
           sx={{
             minWidth: '56px',
@@ -50,9 +47,7 @@ const WebDAVSyncDirSetting = () => {
           </IconButton>
         </ListItemSecondaryAction>
       </StyledMuiListItemButton>
-      <Dialog
-        open={openEditSyncDirDialog}
-        onClose={handleCloseEditSyncDirDialog}>
+      <Dialog open={openEditSyncDirDialog} onClose={handleCloseEditSyncDirDialog}>
         <DialogTitle>{t('source sync dir')}</DialogTitle>
         <Formik
           initialValues={{

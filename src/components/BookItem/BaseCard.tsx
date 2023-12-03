@@ -19,12 +19,7 @@ const MemoMuiAutoTooltipTypography = memo(MuiAutoTooltipTypography);
 export const BookItemBaseCardCoverSkeleton = forwardRef((props, ref) => (
   <FixedRatioBookCover ref={ref}>
     <Card elevation={0} variant="elevation" sx={{ height: 1, width: 1 }}>
-      <Skeleton
-        width="100%"
-        height="100%"
-        variant="rectangular"
-        animation="wave"
-      />
+      <Skeleton width="100%" height="100%" variant="rectangular" animation="wave" />
     </Card>
   </FixedRatioBookCover>
 ));
@@ -52,15 +47,7 @@ export type BookItemBaseCardProps = {
   CardActionAreaProps;
 
 const BookItemBaseCard: FC<BookItemBaseCardProps> = forwardRef((props, ref) => {
-  const {
-    scaleOnHover,
-    ComponentsProps,
-    image,
-    loaded,
-    title,
-    ext,
-    ...restProps
-  } = props;
+  const { scaleOnHover, ComponentsProps, image, loaded, title, ext, ...restProps } = props;
   const imgSx = useMemo<SxProps>(
     () => ({
       height: 1,
@@ -107,10 +94,7 @@ const BookItemBaseCard: FC<BookItemBaseCardProps> = forwardRef((props, ref) => {
           ]}>
           {useMemo(
             () => (
-              <CardActionArea
-                {...restProps}
-                sx={{ height: 1, width: 1 }}
-                ref={ref}>
+              <CardActionArea {...restProps} sx={{ height: 1, width: 1 }} ref={ref}>
                 <MemoBookItemCover src={image} textCover={ext} sx={imgSx} />
               </CardActionArea>
             ),
@@ -119,12 +103,7 @@ const BookItemBaseCard: FC<BookItemBaseCardProps> = forwardRef((props, ref) => {
         </Card>
       </FixedRatioBookCover>
       <Box display="flex">
-        <MemoMuiAutoTooltipTypography
-          lineClampCount={1}
-          pt={1}
-          pl="0.025em"
-          width={0}
-          flexGrow={1}>
+        <MemoMuiAutoTooltipTypography lineClampCount={1} pt={1} pl="0.025em" width={0} flexGrow={1}>
           {title}
         </MemoMuiAutoTooltipTypography>
       </Box>

@@ -1,10 +1,7 @@
 import StyledMuiIconButton from '@/components/Styled/MuiIconButton';
 import ToolbarColumn from '@/components/Toolbar/ToolbarColumn';
 import ToolbarRow from '@/components/Toolbar/ToolbarRow';
-import {
-  NavigateBeforeRounded,
-  NavigateNextRounded,
-} from '@mui/icons-material';
+import { NavigateBeforeRounded, NavigateNextRounded } from '@mui/icons-material';
 import { Slider, Typography } from '@mui/material';
 import { FC, memo } from 'react';
 
@@ -38,9 +35,7 @@ const ToolbarNavigate: FC<ToolbarNavigateProps> = ({
           onChangeCommitted={(e, v) => onPercentCommit(v as number)}
           onChange={(e, v) => onPercent(v as number)}
         />
-        <Typography>
-          {`${((percent / maxPercent) * 100).toFixed(1)}%`}
-        </Typography>
+        <Typography>{`${((percent / maxPercent) * 100).toFixed(1)}%`}</Typography>
         <StyledMuiIconButton onClick={onNext}>
           <NavigateNextRounded />
         </StyledMuiIconButton>

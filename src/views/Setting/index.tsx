@@ -75,10 +75,7 @@ const Setting = () => {
           <ListItemIcon>
             <InfoRounded />
           </ListItemIcon>
-          <ListItemText
-            primary={t('about')}
-            onClick={() => nav(`/${ROUTE_PATH.ABOUT}`)}
-          />
+          <ListItemText primary={t('about')} onClick={() => nav(`/${ROUTE_PATH.ABOUT}`)} />
         </StyledMuiListItemButton>
       </List>
     </Stack>

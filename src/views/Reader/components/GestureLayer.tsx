@@ -30,12 +30,7 @@ const GestureLayer: FC<GestureLayerProps> = ({
     const centerXEnd = centerXStart * 2;
     const centerYStart = height / 4;
     const centerYEnd = centerYStart * 3;
-    if (
-      x < centerXStart ||
-      x > centerXEnd ||
-      y < centerYStart ||
-      y > centerYEnd
-    ) {
+    if (x < centerXStart || x > centerXEnd || y < centerYStart || y > centerYEnd) {
       if (x > width / 2) onPageNext();
       else onPagePrev();
     } else onOpenAction();

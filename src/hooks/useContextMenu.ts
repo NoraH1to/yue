@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-function whenTouchOrPen<E>(
-  handler: React.PointerEventHandler<E>,
-): React.PointerEventHandler<E> {
-  return (event) =>
-    event.pointerType !== 'mouse' ? handler(event) : undefined;
+function whenTouchOrPen<E>(handler: React.PointerEventHandler<E>): React.PointerEventHandler<E> {
+  return (event) => (event.pointerType !== 'mouse' ? handler(event) : undefined);
 }
 
 const useContextMenu = <
@@ -16,9 +13,7 @@ const useContextMenu = <
   const position = useRef({ x: -999, y: -999 });
 
   const whenEnable = useCallback(
-    function <E>(
-      handler: React.PointerEventHandler<E>,
-    ): React.PointerEventHandler<E> {
+    function <E>(handler: React.PointerEventHandler<E>): React.PointerEventHandler<E> {
       return (event) => (!disabled ? handler(event) : undefined);
     },
     [disabled],
@@ -73,10 +68,10 @@ const useContextMenu = <
     [whenEnable, clearLongPress],
   );
 
-  const onPointerUp: T['onPointerUp'] = useCallback(
-    whenEnable(whenTouchOrPen(clearLongPress)),
-    [whenEnable, clearLongPress],
-  );
+  const onPointerUp: T['onPointerUp'] = useCallback(whenEnable(whenTouchOrPen(clearLongPress)), [
+    whenEnable,
+    clearLongPress,
+  ]);
 
   return [
     {

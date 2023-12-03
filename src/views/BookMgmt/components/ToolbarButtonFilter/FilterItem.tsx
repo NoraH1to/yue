@@ -11,12 +11,7 @@ export type FilterItemProps = {
   onClick?: () => void;
 };
 
-const FilterItem: FC<FilterItemProps> = ({
-  title,
-  append,
-  selected,
-  onClick,
-}) => {
+const FilterItem: FC<FilterItemProps> = ({ title, append, selected, onClick }) => {
   const color = selected ? 'primary' : undefined;
   const Icon = selected ? CheckBox : CheckBoxOutlineBlankRounded;
   return (

@@ -16,12 +16,7 @@ export type DetailToolbarProps = {
   append?: ReactNode;
 } & Pick<ToolbarProps, 'sx'>;
 
-const DetailToolbar: FC<DetailToolbarProps> = ({
-  title,
-  onBack,
-  sx,
-  append,
-}) => {
+const DetailToolbar: FC<DetailToolbarProps> = ({ title, onBack, sx, append }) => {
   const nav = useNavigate();
   const _onBack = () => nav(-1);
   return (
@@ -29,11 +24,7 @@ const DetailToolbar: FC<DetailToolbarProps> = ({
       variant="elevation"
       elevation={0}
       sx={useMemo(
-        () =>
-          mergeSxProps(
-            { backgroundColor: 'transparent', backdropFilter: 'none' },
-            sx,
-          ),
+        () => mergeSxProps({ backgroundColor: 'transparent', backdropFilter: 'none' }, sx),
         [sx],
       )}>
       <IconButton onClick={onBack || _onBack}>

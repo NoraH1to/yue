@@ -1,10 +1,5 @@
 import { Promiser } from '@/helper';
-import {
-  ABook,
-  IProcess,
-  ReaderCompProps,
-  TBookConstructorInfo,
-} from '@/modules/book/Book';
+import { ABook, IProcess, ReaderCompProps, TBookConstructorInfo } from '@/modules/book/Book';
 import { Box } from '@mui/material';
 import { PlainTextViewer } from './TxtParser';
 import { FC, useEffect, useState } from 'react';
@@ -58,14 +53,8 @@ export class TxtBook extends ABook<number | string> {
   async destroy(): Promise<void> {
     return;
   }
-  ReaderComponent: FC<ReaderCompProps> = ({
-    colorMode,
-    readerSetting,
-    readerTheme,
-  }) => {
-    const [containerDom, setContainerDom] = useState<HTMLDivElement | null>(
-      null,
-    );
+  ReaderComponent: FC<ReaderCompProps> = ({ colorMode, readerSetting, readerTheme }) => {
+    const [containerDom, setContainerDom] = useState<HTMLDivElement | null>(null);
     // TODO: 监听字体设置重新渲染
     useEffect(() => {
       if (!containerDom) return;

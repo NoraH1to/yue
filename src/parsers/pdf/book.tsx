@@ -1,11 +1,6 @@
 import { Promiser, emptyAsyncFn } from '@/helper';
 import useResizeObserver from '@/hooks/useResizeObserver';
-import {
-  ABook,
-  IProcess,
-  ReaderCompProps,
-  TBookConstructorInfo,
-} from '@/modules/book/Book';
+import { ABook, IProcess, ReaderCompProps, TBookConstructorInfo } from '@/modules/book/Book';
 import { Box } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { Document, DocumentProps, Page, pdfjs } from 'react-pdf';
@@ -60,9 +55,7 @@ export class PdfBook extends ABook<number | string> {
   }
   ReaderComponent: FC<ReaderCompProps> = ({ colorMode }) => {
     const [pageNumber, setPageNumber] = useState(1);
-    const [containerDom, setContainerDom] = useState<HTMLDivElement | null>(
-      null,
-    );
+    const [containerDom, setContainerDom] = useState<HTMLDivElement | null>(null);
     const [size, setSize] = useState({ width: 0, height: 0 });
     useResizeObserver(containerDom, ([entry]) => {
       setSize({
@@ -82,9 +75,7 @@ export class PdfBook extends ABook<number | string> {
         this.currentPage > 1 ? this.currentPage-- : (this.currentPage = 1);
       };
       this.nextPage = async function () {
-        setPageNumber((prevPage) =>
-          prevPage < this.totalPage ? prevPage + 1 : this.totalPage,
-        );
+        setPageNumber((prevPage) => (prevPage < this.totalPage ? prevPage + 1 : this.totalPage));
         this.currentPage < this.totalPage
           ? this.currentPage++
           : (this.currentPage = this.totalPage);
@@ -115,10 +106,7 @@ export class PdfBook extends ABook<number | string> {
               }
             : undefined
         }>
-        <Document
-          file={this.target}
-          onLoadSuccess={onDocumentLoadSuccess}
-          loading={''}>
+        <Document file={this.target} onLoadSuccess={onDocumentLoadSuccess} loading={''}>
           <Page
             pageNumber={pageNumber}
             height={size.height}

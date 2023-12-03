@@ -2,11 +2,7 @@ import StyledMuiIconButton from '@/components/Styled/MuiIconButton';
 import StyledMuiMenuItem from '@/components/Styled/MuiMenuItem';
 import useSorter from '@/hooks/useSorter';
 import type { ISorter } from '@/modules/fs/Fs';
-import {
-  CheckBoxOutlineBlankRounded,
-  CheckBoxRounded,
-  SortRounded,
-} from '@mui/icons-material';
+import { CheckBoxOutlineBlankRounded, CheckBoxRounded, SortRounded } from '@mui/icons-material';
 import { Divider, ListItemIcon, ListItemText } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,9 +17,7 @@ type Node<T extends object> =
       ...args: ReturnType<typeof useSorter<T>>
     ) => ReactNode);
 
-export type ToolbarButtonSortProps<T extends object> = Partial<
-  MenuSortProps<T>
-> & {
+export type ToolbarButtonSortProps<T extends object> = Partial<MenuSortProps<T>> & {
   onSort: (sorter: ISorter<T>) => void;
   defaultSorter: ISorter<T>;
   sortKeys: Array<{ key: keyof T; title: string }>;
@@ -47,15 +41,12 @@ const ToolbarButtonSort = <T extends object>({
     sortKeys.map((s) => s.key),
     defaultSorter,
   );
-  const [{ sorter, remember }, { toggleSorter, setSorterKey, setRemember }] =
-    useSorterRes;
+  const [{ sorter, remember }, { toggleSorter, setSorterKey, setRemember }] = useSorterRes;
   useEffect(() => {
     onSort(sorter);
   }, [sorter]);
   // 排序菜单
-  const [menuSortAnchorEl, setMenuSortAnchorEl] = useState<null | HTMLElement>(
-    null,
-  );
+  const [menuSortAnchorEl, setMenuSortAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(menuSortAnchorEl);
   const handleClose = () => {
     setMenuSortAnchorEl(null);
@@ -67,11 +58,7 @@ const ToolbarButtonSort = <T extends object>({
   const Remember = (
     <StyledMuiMenuItem onClick={handleClickRemember}>
       <ListItemIcon>
-        {remember ? (
-          <CheckBoxRounded color="primary" />
-        ) : (
-          <CheckBoxOutlineBlankRounded />
-        )}
+        {remember ? <CheckBoxRounded color="primary" /> : <CheckBoxOutlineBlankRounded />}
       </ListItemIcon>
       <ListItemText primary={t('remember setting')} />
     </StyledMuiMenuItem>
@@ -79,8 +66,7 @@ const ToolbarButtonSort = <T extends object>({
 
   return (
     <>
-      <StyledMuiIconButton
-        onClick={(e) => setMenuSortAnchorEl(e.currentTarget)}>
+      <StyledMuiIconButton onClick={(e) => setMenuSortAnchorEl(e.currentTarget)}>
         <SortRounded />
       </StyledMuiIconButton>
       <MenuSort
@@ -91,9 +77,7 @@ const ToolbarButtonSort = <T extends object>({
         anchorEl={menuSortAnchorEl}
         onSortChange={(sort) => toggleSorter(sort)}
         append={Remember}>
-        {typeof prepend === 'function'
-          ? prepend(sortKeys, ...useSorterRes)
-          : prepend}
+        {typeof prepend === 'function' ? prepend(sortKeys, ...useSorterRes) : prepend}
         {prepend && <Divider />}
         {sortKeys.map((v) => (
           <MenuSortItem
@@ -112,9 +96,7 @@ const ToolbarButtonSort = <T extends object>({
           </MenuSortItem>
         ))}
         {append && <Divider />}
-        {typeof append === 'function'
-          ? append(sortKeys, ...useSorterRes)
-          : append}
+        {typeof append === 'function' ? append(sortKeys, ...useSorterRes) : append}
       </MenuSort>
     </>
   );

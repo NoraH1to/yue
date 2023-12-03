@@ -41,7 +41,7 @@ const readerSetting: UniformType<TReaderSetting> = {
 };
 
 export default {
-  'unknown': '未知',
+  unknown: '未知',
   'import ebook': '导入',
   'all book': '全部电子书',
   all: '全部',
@@ -126,7 +126,7 @@ export default {
     'start reading': '开始阅读',
     'continue reading': '继续阅读',
     'sync process': '同步进度',
-    'check': '查看',
+    check: '查看',
   },
   actionRes: {
     'import book success': '成功导入书籍',

@@ -14,12 +14,8 @@ export type MainLayoutProps = {
 };
 
 const MainLayout: FC<MainLayoutProps> = (props) => {
-  const TbWrapperTop = props.floatToolbarTop
-    ? ToolbarWrapperFloat
-    : ToolbarWrapper;
-  const TbWrapperBottom = props.floatToolbarBottom
-    ? ToolbarWrapperFloat
-    : ToolbarWrapper;
+  const TbWrapperTop = props.floatToolbarTop ? ToolbarWrapperFloat : ToolbarWrapper;
+  const TbWrapperBottom = props.floatToolbarBottom ? ToolbarWrapperFloat : ToolbarWrapper;
   return (
     <Stack width={1} height={1} overflow="auto">
       {props.ToolbarTop && (

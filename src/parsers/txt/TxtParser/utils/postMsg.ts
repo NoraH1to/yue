@@ -14,10 +14,7 @@ export type IMessage<T = unknown> = {
   data?: T;
 };
 
-export const createPostMsg = <T>(
-  type: IMessage['type'],
-  data?: T,
-): IMessage<T> => ({
+export const createPostMsg = <T>(type: IMessage['type'], data?: T): IMessage<T> => ({
   type,
   data,
 });
@@ -30,10 +27,7 @@ export const handleMessage = (
   return () => target.removeEventListener('message', handler);
 };
 
-export const handleError = (
-  target: Worker,
-  handler: (this: Worker, ev: ErrorEvent) => any,
-) => {
+export const handleError = (target: Worker, handler: (this: Worker, ev: ErrorEvent) => any) => {
   target.addEventListener('error', handler);
   return () => target.removeEventListener('error', handler);
 };

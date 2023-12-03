@@ -12,19 +12,14 @@ import { TDbBook } from './types';
  * @transactionDB `bookAndTag`
  */
 export const getBookHashListByTagId = async (tagID: string) => {
-  return (await db.bookAndTag.where({ tagID }).distinct().toArray()).map(
-    (v) => v.bookHash,
-  );
+  return (await db.bookAndTag.where({ tagID }).distinct().toArray()).map((v) => v.bookHash);
 };
 
 /**
  * @transactionDB `bookAndTag`
  */
 export const getTagMapByBookHash = async (hash: string) => {
-  const tabList = await db.bookAndTag
-    .where('bookHash')
-    .equals(hash)
-    .primaryKeys();
+  const tabList = await db.bookAndTag.where('bookHash').equals(hash).primaryKeys();
   const m: Record<string, boolean> = {};
   for (const tab of tabList) {
     // @ts-ignore
@@ -36,10 +31,7 @@ export const getTagMapByBookHash = async (hash: string) => {
 /**
  * @transactionDB `bookContents`, `bookCovers`
  */
-export async function dbBook2FsBook(
-  book: TDbBook,
-  withoutContent?: false,
-): Promise<TFsBook>;
+export async function dbBook2FsBook(book: TDbBook, withoutContent?: false): Promise<TFsBook>;
 export async function dbBook2FsBook(
   book: TDbBook,
   withoutContent: true,
@@ -53,9 +45,7 @@ export async function dbBook2FsBook(
   withoutContent?: boolean,
 ): Promise<TFsBook | TFsBookWithoutContent> {
   return db.transaction('r', db.bookContents, db.bookCovers, async () => {
-    const bookContent = withoutContent
-      ? undefined
-      : (await db.bookContents.get(book.hash))!;
+    const bookContent = withoutContent ? undefined : (await db.bookContents.get(book.hash))!;
     const bookCover = (await db.bookCovers.get(book.hash))!;
     const cover = bookCover?.cover
       ? new Blob([bookCover.cover.buffer], { type: bookCover.cover.type })
@@ -74,13 +64,9 @@ export async function dbBook2FsBook(
         }
       : {
           ...book,
-          target: new File(
-            [bookContent!.target.buffer],
-            bookContent!.target.name,
-            {
-              type: bookContent!.target.type,
-            },
-          ),
+          target: new File([bookContent!.target.buffer], bookContent!.target.name, {
+            type: bookContent!.target.type,
+          }),
           cover,
         };
   });

@@ -5,9 +5,7 @@ import { FC, memo, useEffect } from 'react';
 export type ContextMenuTriggerProps = {
   onOpen?: Parameters<typeof useContextMenu>[0];
   disabled?: boolean;
-  children:
-    | React.ReactNode
-    | ((...props: ReturnType<typeof useContextMenu>) => React.ReactNode);
+  children: React.ReactNode | ((...props: ReturnType<typeof useContextMenu>) => React.ReactNode);
 };
 
 const ContextMenuTrigger: FC<ContextMenuTriggerProps> = (props) => {
@@ -16,9 +14,7 @@ const ContextMenuTrigger: FC<ContextMenuTriggerProps> = (props) => {
   useEffect(() => {
     hookRes[1].setDisabled(disabled);
   }, [disabled]);
-  return (
-    <>{typeof children === 'function' ? children(...hookRes) : children}</>
-  );
+  return <>{typeof children === 'function' ? children(...hookRes) : children}</>;
 };
 
 export const MemoContextMenuTrigger = memo(ContextMenuTrigger);

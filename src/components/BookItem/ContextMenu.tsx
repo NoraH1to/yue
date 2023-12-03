@@ -1,8 +1,4 @@
-import {
-  ChecklistRounded,
-  DeleteRounded,
-  SellRounded,
-} from '@mui/icons-material';
+import { ChecklistRounded, DeleteRounded, SellRounded } from '@mui/icons-material';
 import { Divider, ListItemIcon, ListItemText } from '@mui/material';
 import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';

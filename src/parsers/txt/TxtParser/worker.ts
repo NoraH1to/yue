@@ -25,10 +25,7 @@ const handleRawContent = async (content: string | Blob) => {
   if (typeof content === 'string') {
     if (!content.length)
       return postMessage(
-        createPostMsg(
-          MSG_POST_WORKER.RAW_CONTENT_ERROR,
-          new Error(ERROR_WORKER.RAW_CONTENT_EMPTY),
-        ),
+        createPostMsg(MSG_POST_WORKER.RAW_CONTENT_ERROR, new Error(ERROR_WORKER.RAW_CONTENT_EMPTY)),
       );
     content = new Blob([toArrayBuffer(content)]);
   }

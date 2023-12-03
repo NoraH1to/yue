@@ -1,11 +1,7 @@
 import { useLocalStorageState } from 'ahooks';
 import { useState } from 'react';
 
-const useRememberState = <T>(
-  key: string,
-  defaultValue: T,
-  defaultRemember = false,
-) => {
+const useRememberState = <T>(key: string, defaultValue: T, defaultRemember = false) => {
   const [remember, _setRemember] = useLocalStorageState(`remember-${key}`, {
     defaultValue: defaultRemember,
   });

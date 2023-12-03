@@ -26,10 +26,7 @@ export default class Parser {
   }
 
   async load(target: ITarget) {
-    target =
-      typeof target === 'string' || target instanceof Blob
-        ? target
-        : await target;
+    target = typeof target === 'string' || target instanceof Blob ? target : await target;
 
     const worker = (this.worker = new Worker(this.config.workerUrl, {
       type: 'module',
@@ -45,9 +42,7 @@ export default class Parser {
       }
     });
 
-    handleError(worker, () =>
-      promiser.reject(new Error('Generate nodes fail.')),
-    );
+    handleError(worker, () => promiser.reject(new Error('Generate nodes fail.')));
     return promiser.promise;
   }
 

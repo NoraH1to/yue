@@ -1,9 +1,6 @@
 import { useEffect, useMemo } from 'react';
 
-const useMutationObserver = (
-  target: HTMLElement | null,
-  callback: MutationCallback,
-) => {
+const useMutationObserver = (target: HTMLElement | null, callback: MutationCallback) => {
   const ob = useMemo(() => new MutationObserver(callback), [callback]);
   useEffect(() => {
     if (!target) return;

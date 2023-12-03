@@ -2,6 +2,7 @@ import { Theme } from '@mui/material';
 import { SxProps } from '@mui/system';
 import anysort from 'anysort-typed';
 import mime from 'mime';
+import { sortBy } from 'ramda';
 import { BaseSyntheticEvent, ReactEventHandler } from 'react';
 import Md5 from 'spark-md5';
 import { ResponseDataDetailed } from 'webdav';
@@ -405,6 +406,23 @@ export const isWebDAVDetail = <T>(
 export const isImageFileName = (fileName: string) => {
   const imageExtensions = /\.(jpg|jpeg|png)$/i;
   return imageExtensions.test(fileName);
+};
+
+export const getObjectHash = <O extends object>(
+  target: O,
+  deep = Infinity,
+  toHash: (value: unknown) => string = (value: any) => value?.toString?.() || 'unknown',
+): string => {
+  if (!deep) return '';
+  let hash = '';
+  sortBy((item) => item, Object.keys(target)).forEach((key) => {
+    const value = target[key as keyof typeof target];
+    if (typeof value === 'function') hash += `${key}-function:`;
+    else if (value === null) hash += 'null';
+    else if (typeof value === 'object') hash += getObjectHash(value, deep - 1, toHash);
+    else hash += toHash(value);
+  });
+  return hash;
 };
 
 export type GetPath<T extends object, K extends keyof T = keyof T> = K extends string

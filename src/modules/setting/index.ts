@@ -1,4 +1,5 @@
 export type TSource = {
+  name: string;
   type: 'webdav';
   info: {
     url: string;
@@ -12,7 +13,7 @@ export type TAppSetting = {
   colorMode: 'dark' | 'light' | 'system';
   readerTheme: Record<'dark' | 'light', TReaderTheme>;
   readerSetting: TReaderSetting;
-  source: Record<string, TSource | undefined>;
+  source: TSource[];
   autoSyncProcess: boolean;
   sourceDataDir: string;
 };

@@ -9,10 +9,10 @@ import ab2str from 'arraybuffer-to-string';
 window.global = window; // fix ab2str's bug
 
 const useSyncProcess = () => {
-  const [{ client, loadingPromise, syncProcessDir, error: clientError }] =
-    useWebDAVClient();
+  const [{ client, sourceDataDir, error: clientError }] = useWebDAVClient();
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<Error>();
+  const syncProcessDir = urlJoin(sourceDataDir, 'process');
 
   const getPathname = (book: IBookInfoWithoutContent) =>
     urlJoin(syncProcessDir, `${book.hash}.json`);
@@ -20,7 +20,6 @@ const useSyncProcess = () => {
   const check = async (book: IBookInfoWithoutContent) => {
     if (!client) return;
     const pathname = getPathname(book);
-    await loadingPromise;
     const { lastProcess: process } = book;
     let cloudData;
     try {
@@ -40,7 +39,6 @@ const useSyncProcess = () => {
     book: IBookInfoWithoutContent,
     process: IBookInfoWithoutContent['lastProcess'],
   ) => {
-    await loadingPromise;
     await fs.updateBook({
       hash: book.hash,
       info: {
@@ -55,7 +53,6 @@ const useSyncProcess = () => {
   ) => {
     if (!client) return;
     const pathname = getPathname(book);
-    await loadingPromise;
     await client.putFileContents(pathname, JSON.stringify(process), {
       overwrite: true,
     });
@@ -63,7 +60,6 @@ const useSyncProcess = () => {
 
   const sync = async (book: IBookInfoWithoutContent) => {
     setSyncing(true);
-    await loadingPromise;
     try {
       const checkRes = await check(book);
       if (checkRes === 'updateCloud') updateCloud(book, book.lastProcess);

@@ -24,18 +24,20 @@ import * as Yup from 'yup';
 
 const WebDAVSetting = () => {
   const { t } = useTranslation();
-  const [{ info, error, loading: loadingWebDAV }, { setInfo }] =
-    useWebDAVClient();
+  const [{ info, error, testing: loadingWebDAV }, { setInfo, test }] = useWebDAVClient({
+    autoTest: true,
+  });
   const [openEditInfoDialog, setOpenEditInfoDialog] = useState(false);
   const handleClickClientInfoItem = () => setOpenEditInfoDialog(true);
   const handleCloseEditInfoDialog = () => setOpenEditInfoDialog(false);
-  const handleSubmitInfo = (i: typeof info) => {
+  const handleSubmitInfo = (i?: typeof info) => {
     setInfo(i);
+    test();
     handleCloseEditInfoDialog();
   };
+
   const webDAVTitle = useMemo(() => {
-    if (loadingWebDAV)
-      return <Skeleton variant="rounded" animation="wave" width="50%" />;
+    if (loadingWebDAV) return <Skeleton variant="rounded" animation="wave" width="50%" />;
     if (!info) return t('unsetting');
     const url = new URL(info?.url);
     return `${url.host}${url.pathname}`;
@@ -43,14 +45,7 @@ const WebDAVSetting = () => {
 
   const webDAVSubtitle = useMemo(() => {
     if (loadingWebDAV)
-      return (
-        <Skeleton
-          variant="rounded"
-          animation="wave"
-          width="30%"
-          sx={{ mt: 1 }}
-        />
-      );
+      return <Skeleton variant="rounded" animation="wave" width="30%" sx={{ mt: 1 }} />;
     return error ? error.message : info ? t('connected') : t('unsetting');
   }, [info, error, loadingWebDAV, t]);
 
@@ -62,9 +57,7 @@ const WebDAVSetting = () => {
 
   return (
     <>
-      <StyledMuiListItemButton
-        onClick={handleClickClientInfoItem}
-        disabled={loadingWebDAV}>
+      <StyledMuiListItemButton onClick={handleClickClientInfoItem} disabled={loadingWebDAV}>
         <ListItemIcon>
           <StorageRounded />
         </ListItemIcon>
@@ -75,9 +68,7 @@ const WebDAVSetting = () => {
           primary={webDAVTitle}
           secondary={webDAVSubtitle}
         />
-        <ListItemIcon sx={{ justifyContent: 'center' }}>
-          {webDAVIcon}
-        </ListItemIcon>
+        <ListItemIcon sx={{ justifyContent: 'center' }}>{webDAVIcon}</ListItemIcon>
       </StyledMuiListItemButton>
       <Dialog open={openEditInfoDialog} onClose={handleCloseEditInfoDialog}>
         <DialogTitle>{t('webDAV Configuration')}</DialogTitle>

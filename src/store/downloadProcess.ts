@@ -3,4 +3,6 @@ import { createProcessStore } from './helper';
 
 export type IDownloadProcessBookInfo = Pick<IBookInfo, 'title' | 'type'>;
 
-export const useDownloadStore = createProcessStore<IDownloadProcessBookInfo>(true);
+export const useDownloadStore = createProcessStore<IDownloadProcessBookInfo>({
+  immediateStart: true,
+});

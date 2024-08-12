@@ -68,7 +68,7 @@ type DirContentProps = {
 const DirContent: FC<DirContentProps> = ({ filename }) => {
   const { t } = useTranslation();
   const [sorter, setSorter] = useState(defaultDirItemSorter);
-  const [{ info, client, error, loading: loadingClient }] = useWebDAVClient();
+  const [{ info, client, error, testing: testingClient }] = useWebDAVClient();
 
   useEffect(() => {
     document.title = filename || '';
@@ -89,7 +89,7 @@ const DirContent: FC<DirContentProps> = ({ filename }) => {
     [delayDir, sorter],
   );
 
-  const loading = dir === 'loading' || status === 'pending' || loadingClient;
+  const loading = dir === 'loading' || status === 'pending' || testingClient;
 
   // 防止闪烁
   const [searchInput, setSearchInput] = useState('');

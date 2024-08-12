@@ -11,7 +11,6 @@ const parser: Parser<typeof TxtBook> = {
   parse: async (target, cacheInfo = {}) => {
     return new TxtBook({
       ...cacheInfo,
-      // @ts-ignore
       target,
       title: cacheInfo?.title || getBasenameByFilename(target.name),
       hash: await getHash(cacheInfo, target),

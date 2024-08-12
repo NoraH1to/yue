@@ -9,7 +9,7 @@ export type TTxtBookInfo = TBookConstructorInfo<number | string> & {
 };
 
 export class TxtBook extends ABook<number | string> {
-  target: Blob;
+  target: File;
   type = 'txt';
   promiser = new Promiser<void>();
   ready = this.promiser.promise;

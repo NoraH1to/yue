@@ -4,7 +4,7 @@ import {
   TDbBook,
   TDbBookAndTag,
   TDbBookContent,
-  TDbBookContentV1,
+  TPrevDbBookContent,
   TDbBookCover,
   TDbBookWithContent,
   TDbDir,
@@ -80,7 +80,7 @@ export class DB extends Dexie {
         bookContents: 'hash',
       })
       .upgrade(async (trans) => {
-        const map: Record<string, TDbBookContentV1> = {};
+        const map: Record<string, TPrevDbBookContent> = {};
         await DB.waitFor(
           trans
             .table('books')
@@ -119,7 +119,7 @@ export class DB extends Dexie {
           trans
             .table('bookContents')
             .toCollection()
-            .modify((item: TDbBookContentV1) => {
+            .modify((item: TPrevDbBookContent) => {
               coverList.push({ hash: item.hash, cover: item.cover });
               delete item.cover;
               return item;

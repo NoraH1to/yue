@@ -2,31 +2,33 @@ import { FilesObject } from 'libarchive.js/src/libarchive';
 import { Overwrite } from 'utility-types';
 import { TFsBook, TFsDir, TFsTag, TFsBase } from '../Fs';
 
-interface TDbBookContentBaseV1 {
+// #region prev version types
+interface TPrevDbBookContentBase {
   hash: string;
   cover?: { buffer: ArrayBuffer; type: string };
 }
-interface TDbBookContentBaseV2 {
+interface TPrevBookContentWithArchive extends TPrevDbBookContentBase {
+  target: { type: string; name: string };
+  archive: FilesObject;
+}
+interface TPrevDbBookContentWithoutArchive extends TPrevDbBookContentBase {
+  target: { buffer: ArrayBuffer; type: string; name: string };
+  archive?: never;
+}
+export type TPrevDbBookContent = TPrevBookContentWithArchive | TPrevDbBookContentWithoutArchive;
+// #endregion
+
+interface TDbBookContentBase {
   hash: string;
 }
-
-interface TDbBookContentWithArchiveV2 extends TDbBookContentBaseV2 {
+interface TDbBookContentWithArchive extends TDbBookContentBase {
   target: { type: string; name: string };
   archive: FilesObject;
 }
-interface TDbBookContentWithoutArchiveV2 extends TDbBookContentBaseV2 {
+interface TDbBookContentWithoutArchive extends TDbBookContentBase {
   target: { buffer: ArrayBuffer; type: string; name: string };
   archive?: never;
 }
-interface TDbBookContentWithArchiveV1 extends TDbBookContentBaseV1 {
-  target: { type: string; name: string };
-  archive: FilesObject;
-}
-interface TDbBookContentWithoutArchiveV1 extends TDbBookContentBaseV1 {
-  target: { buffer: ArrayBuffer; type: string; name: string };
-  archive?: never;
-}
-
 export type TDbBookWithContent = Overwrite<
   TFsBook,
   {
@@ -34,12 +36,8 @@ export type TDbBookWithContent = Overwrite<
     target: { buffer: ArrayBuffer; type: string; name: string };
   }
 >;
-
 export type TDbBook = Omit<TFsBook, 'target' | 'cover' | 'archive'>;
-
-export type TDbBookContentV1 = TDbBookContentWithArchiveV1 | TDbBookContentWithoutArchiveV1;
-export type TDbBookContentV2 = TDbBookContentWithArchiveV2 | TDbBookContentWithoutArchiveV2;
-export type TDbBookContent = TDbBookContentV2;
+export type TDbBookContent = TDbBookContentWithArchive | TDbBookContentWithoutArchive;
 
 export type TDbBookCover = {
   hash: string;

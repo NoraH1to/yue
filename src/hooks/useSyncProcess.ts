@@ -5,21 +5,23 @@ import urlJoin from 'url-join';
 import useWebDAVClient from './useWebDAVClient';
 // @ts-ignore
 import ab2str from 'arraybuffer-to-string';
+import { useSyncProcessStore } from '@/store/syncProcess';
 
 window.global = window; // fix ab2str's bug
 
-const useSyncProcess = () => {
+const useSyncProcess = (options: { book?: IBookInfoWithoutContent }) => {
+  const { book } = options;
+  const { append } = useSyncProcessStore();
   const [{ client, sourceDataDir, error: clientError }] = useWebDAVClient();
-  const [syncing, setSyncing] = useState(false);
+  const [isSyncing, setSyncing] = useState(false);
   const [error, setError] = useState<Error>();
   const syncProcessDir = urlJoin(sourceDataDir, 'process');
 
-  const getPathname = (book: IBookInfoWithoutContent) =>
-    urlJoin(syncProcessDir, `${book.hash}.json`);
+  const getPathname = () => urlJoin(syncProcessDir, `${book?.hash}.json`);
 
-  const check = async (book: IBookInfoWithoutContent) => {
-    if (!client) return;
-    const pathname = getPathname(book);
+  const check = async () => {
+    if (!client || !book) return;
+    const pathname = getPathname();
     const { lastProcess: process } = book;
     let cloudData;
     try {
@@ -32,10 +34,8 @@ const useSyncProcess = () => {
     else if (!cloudData || (cloudData && cloudData.ts < process.ts)) return 'updateCloud';
   };
 
-  const updateLocal = async (
-    book: IBookInfoWithoutContent,
-    process: IBookInfoWithoutContent['lastProcess'],
-  ) => {
+  const updateLocal = async (process: IBookInfoWithoutContent['lastProcess']) => {
+    if (!book) return;
     await fs.updateBook({
       hash: book.hash,
       info: {
@@ -44,33 +44,38 @@ const useSyncProcess = () => {
     });
   };
 
-  const updateCloud = async (
-    book: IBookInfoWithoutContent,
-    process: IBookInfoWithoutContent['lastProcess'],
-  ) => {
+  const updateCloud = async (process: IBookInfoWithoutContent['lastProcess']) => {
     if (!client) return;
-    const pathname = getPathname(book);
+    const pathname = getPathname();
     await client.putFileContents(pathname, JSON.stringify(process), {
       overwrite: true,
     });
   };
 
-  const sync = async (book: IBookInfoWithoutContent) => {
+  const sync = async () => {
+    if (!book) return;
     setSyncing(true);
-    try {
-      const checkRes = await check(book);
-      if (checkRes === 'updateCloud') updateCloud(book, book.lastProcess);
-      else if (checkRes) updateLocal(book, checkRes);
-      setError(void 0);
-    } catch (e) {
-      setError(e as Error);
-    } finally {
-      setSyncing(false);
-    }
+    setError(void 0);
+    append({
+      id: book.hash,
+      info: {
+        title: book.title,
+        type: book.type,
+        cover: book.cover,
+      },
+      run: () =>
+        check()
+          .then((checkRes) => {
+            if (checkRes === 'updateCloud') return updateCloud(book.lastProcess);
+            else if (checkRes) return updateLocal(checkRes);
+          })
+          .catch((e) => setError(e as Error))
+          .finally(() => setSyncing(false)),
+    });
   };
 
   return [
-    { syncing, error: error || clientError },
+    { isSyncing, error: error || clientError },
     { sync, check, updateCloud, updateLocal },
   ] as const;
 };

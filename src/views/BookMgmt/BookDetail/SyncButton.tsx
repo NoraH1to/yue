@@ -15,11 +15,11 @@ const rotate = keyframes({
 
 const SyncButton = ({ book }: { book: IBookInfoWithoutContent }) => {
   const { t } = useTranslation();
-  const [{ syncing, error }, { sync }] = useSyncProcess();
+  const [{ isSyncing: syncing, error }, { sync }] = useSyncProcess({ book });
   const [{ autoSyncProcess }] = useSetting();
   useEffect(() => {
     if (!autoSyncProcess) return;
-    sync(book);
+    sync();
   }, []);
 
   useUpdateEffect(() => {
@@ -33,7 +33,7 @@ const SyncButton = ({ book }: { book: IBookInfoWithoutContent }) => {
   }, [syncing, error, t, enqueueSnackbar]);
 
   return (
-    <IconButton disabled={syncing} onClick={() => sync(book)}>
+    <IconButton disabled={syncing} onClick={sync}>
       <Tooltip title={t('action.sync process')}>
         <SyncRounded
           sx={

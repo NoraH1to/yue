@@ -54,7 +54,7 @@ const Reader = () => {
       updateProcess,
     },
   ] = useBook();
-  const [{ syncing }, { check, updateCloud, updateLocal }] = useSyncProcess();
+  const [, { check, updateCloud }] = useSyncProcess({ book });
   const loading = globalLoading || !book;
   const [currentPage, setCurrentPage] = useState(0);
   const BookComponent = useMemo(() => (book ? memo(book.ReaderComponent) : undefined), [book]);
@@ -143,7 +143,7 @@ const Reader = () => {
       const dbBookData = await fs.getBookByHash(book.hash);
       if (signal?.aborted) return;
       if (!dbBookData) return 'unsync';
-      const checkRes = await check(dbBookData);
+      const checkRes = await check();
       if (signal?.aborted) return;
       // 需要同步到本地，询问是否跳转
       if (checkRes && checkRes !== 'updateCloud') {
@@ -178,7 +178,7 @@ const Reader = () => {
       // 如果使用了本地的进度，需要更新其时间戳，然后上传到云端
       if (checkRes === 'cancel' && dbBookData) {
         dbBookData.lastProcess.ts = Date.now();
-        updateCloud(dbBookData, dbBookData.lastProcess);
+        updateCloud(dbBookData.lastProcess);
         updateProcess(dbBookData.lastProcess);
         updateCurrentInfo(dbBookData.lastProcess);
       }
@@ -187,8 +187,8 @@ const Reader = () => {
       if (!book || !autoSyncProcess || !loaded) return;
       const dbBookData = await fs.getBookByHash(book.hash);
       if (!dbBookData) return;
-      const checkRes = await check(dbBookData);
-      if (checkRes === 'updateCloud') updateCloud(dbBookData, dbBookData.lastProcess);
+      const checkRes = await check();
+      if (checkRes === 'updateCloud') updateCloud(dbBookData.lastProcess);
     },
   });
 
@@ -207,7 +207,7 @@ const Reader = () => {
           // 如果没有同步，表示使用本地的进度，将本地进度更新到云端
           if (checkRes !== 'sync' && autoSyncProcess) {
             try {
-              await updateCloud(book, (await fs.getBookByHash(book.hash))!.lastProcess);
+              await updateCloud((await fs.getBookByHash(book.hash))!.lastProcess);
             } catch {
               // 不处理错误
             }

@@ -60,9 +60,13 @@ export type IProcessStore<T> = {
   reset: () => void;
 };
 
-export const createProcessStore = <T = unknown>(immediateStart?: boolean) =>
+export const createProcessStore = <T = unknown>(options?: {
+  immediateStart?: boolean;
+  overwriteSameJob?: boolean;
+}) =>
   create(
     immer<IProcessStore<T>>((set, get) => {
+      const { immediateStart, overwriteSameJob } = options || {};
       const maxPendingCount = 4;
       const getJobList = () => Array.from(get().process.values());
       const updateJob = (id: IJob<T>['id'], updateContent: Partial<IJob<T>>) =>
@@ -125,6 +129,11 @@ export const createProcessStore = <T = unknown>(immediateStart?: boolean) =>
           promiser,
         };
         set((store) => {
+          const existJob = store.process.get(id);
+          if (existJob) {
+            if (!overwriteSameJob && ![JOB_STATE.FAIL, JOB_STATE.SUCCESS].includes(existJob.state)) return;
+            existJob.actions.cancel();
+          }
           store.process.set(id, job as any);
         });
         return { ...actions, jobPromise: promiser.promise as ReturnType<typeof run> };

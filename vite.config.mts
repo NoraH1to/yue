@@ -98,5 +98,12 @@ export default defineConfig({
   server: {
     port: process.env.pwa ? 5112 : 5111,
     host: '0.0.0.0',
+    proxy: {
+      '/dav': {
+        target: 'https://dav.jianguoyun.com/dav',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/dav/, ''),
+      },
+    },
   },
 });
